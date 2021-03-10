@@ -292,33 +292,7 @@
       <Option type="double" name="component_width" value="200"/>
       <Option name="dependencies"/>
       <Option type="QString" name="id" value="gdal:rastercalculator_11"/>
-      <Option type="Map" name="outputs">
-        <Option type="Map" name="Confidence Map">
-          <Option type="QString" name="child_id" value="gdal:rastercalculator_11"/>
-          <Option type="QString" name="color" value=""/>
-          <Option type="Map" name="comment">
-            <Option type="QString" name="color" value=""/>
-            <Option type="QString" name="component_description" value=""/>
-            <Option type="double" name="component_height" value="60"/>
-            <Option type="double" name="component_pos_x" value="0"/>
-            <Option type="double" name="component_pos_y" value="0"/>
-            <Option type="double" name="component_width" value="100"/>
-            <Option type="bool" name="outputs_collapsed" value="true"/>
-            <Option type="bool" name="parameters_collapsed" value="true"/>
-          </Option>
-          <Option type="QString" name="component_description" value="Confidence Map"/>
-          <Option type="double" name="component_height" value="30"/>
-          <Option type="double" name="component_pos_x" value="1657.6"/>
-          <Option type="double" name="component_pos_y" value="1583.65"/>
-          <Option type="double" name="component_width" value="200"/>
-          <Option type="invalid" name="default_value"/>
-          <Option type="bool" name="mandatory" value="false"/>
-          <Option type="QString" name="name" value="Confidence Map"/>
-          <Option type="QString" name="output_name" value="OUTPUT"/>
-          <Option type="bool" name="outputs_collapsed" value="true"/>
-          <Option type="bool" name="parameters_collapsed" value="true"/>
-        </Option>
-      </Option>
+      <Option name="outputs"/>
       <Option type="bool" name="outputs_collapsed" value="true"/>
       <Option type="bool" name="parameters_collapsed" value="true"/>
       <Option type="Map" name="params">
@@ -1668,7 +1642,7 @@
         </Option>
         <Option type="List" name="input">
           <Option type="Map">
-            <Option type="QString" name="parameter_name" value="DEMDFM (2)"/>
+            <Option type="QString" name="parameter_name" value="LowVegetation"/>
             <Option type="int" name="source" value="0"/>
           </Option>
         </Option>
@@ -1707,6 +1681,47 @@
       <Option type="bool" name="outputs_collapsed" value="true"/>
       <Option type="bool" name="parameters_collapsed" value="true"/>
       <Option name="params"/>
+    </Option>
+    <Option type="Map" name="native:loadlayer_1">
+      <Option type="bool" name="active" value="true"/>
+      <Option name="alg_config"/>
+      <Option type="QString" name="alg_id" value="native:loadlayer"/>
+      <Option type="QString" name="color" value=""/>
+      <Option type="Map" name="comment">
+        <Option type="QString" name="color" value=""/>
+        <Option type="QString" name="component_description" value=""/>
+        <Option type="double" name="component_height" value="60"/>
+        <Option type="double" name="component_pos_x" value="1209.6"/>
+        <Option type="double" name="component_pos_y" value="2135.8"/>
+        <Option type="double" name="component_width" value="100"/>
+        <Option type="bool" name="outputs_collapsed" value="true"/>
+        <Option type="bool" name="parameters_collapsed" value="true"/>
+      </Option>
+      <Option type="QString" name="component_description" value="Load result"/>
+      <Option type="double" name="component_height" value="30"/>
+      <Option type="double" name="component_pos_x" value="1009.6"/>
+      <Option type="double" name="component_pos_y" value="2180.8"/>
+      <Option type="double" name="component_width" value="200"/>
+      <Option name="dependencies"/>
+      <Option type="QString" name="id" value="native:loadlayer_1"/>
+      <Option name="outputs"/>
+      <Option type="bool" name="outputs_collapsed" value="true"/>
+      <Option type="bool" name="parameters_collapsed" value="true"/>
+      <Option type="Map" name="params">
+        <Option type="List" name="INPUT">
+          <Option type="Map">
+            <Option type="QString" name="child_id" value="gdal:rastercalculator_11"/>
+            <Option type="QString" name="output_name" value="OUTPUT"/>
+            <Option type="int" name="source" value="1"/>
+          </Option>
+        </Option>
+        <Option type="List" name="NAME">
+          <Option type="Map">
+            <Option type="int" name="source" value="2"/>
+            <Option type="QString" name="static_value" value="DFM confidence map"/>
+          </Option>
+        </Option>
+      </Option>
     </Option>
     <Option type="Map" name="native:reclassifybytable_1">
       <Option type="bool" name="active" value="true"/>
@@ -2619,7 +2634,7 @@
       <Option type="Map" name="params">
         <Option type="List" name="INPUT">
           <Option type="Map">
-            <Option type="QString" name="child_id" value="gdal:rastercalculator_11"/>
+            <Option type="QString" name="child_id" value="native:loadlayer_1"/>
             <Option type="QString" name="output_name" value="OUTPUT"/>
             <Option type="int" name="source" value="1"/>
           </Option>
@@ -2635,11 +2650,11 @@
   </Option>
   <Option type="Map" name="designerParameterValues">
     <Option type="QString" name="DEMDFM" value="SI1_DFM_8f09c432_2543_47ee_b202_7adb54855e40"/>
-    <Option type="QString" name="DEMDFM (2)" value="SI1_VegDensity_67db9375_c4bf_4275_a56a_fd274dc933d0"/>
     <Option type="QString" name="Groundlayer" value="SI1_GrndDensity_ac319565_d56f_44ae_ae9f_0543dfce7944"/>
+    <Option type="QString" name="LowVegetation" value="SI1_VegDensity_67db9375_c4bf_4275_a56a_fd274dc933d0"/>
     <Option type="QString" name="SelectStyleFile" value="/home/stefan/Dropbox/lidar/decisiontree/test/stylefile.qml"/>
     <Option type="double" name="SetCellSize" value="3"/>
-    <Option type="bool" name="VERBOSE_LOG" value="false"/>
+    <Option type="bool" name="VERBOSE_LOG" value="true"/>
     <Option type="QgsProcessingOutputLayerDefinition" name="gdal:rastercalculator_11:Confidence Map">
       <Option type="Map">
         <Option type="Map" name="create_options">
@@ -2660,9 +2675,9 @@
     <Option type="QString" name="ALG_HELP_CREATOR" value="Benjamin Štular, Ediza Lozić, Stefan Eichert"/>
     <Option type="QString" name="ALG_VERSION" value=""/>
     <Option type="QString" name="DEMDFM" value="DFM (or any DEM) with cell size 0.5m in raster format"/>
-    <Option type="QString" name="DEMDFM (2)" value="Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
     <Option type="QString" name="Groundlayer" value="Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
     <Option type="QString" name="HELP_URL" value=""/>
+    <Option type="QString" name="LowVegetation" value="Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
     <Option type="QString" name="SHORT_DESCRIPTION" value="Digital Feature Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.&#xa;This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.&#xa;&#xa;For more information, see Štular, Lozić, Eichert 2021 (in press)."/>
     <Option type="QString" name="SelectExtendbyLayer" value="Use DFM/DEM.&#xa;"/>
     <Option type="QString" name="SelectStyleFile" value="To adhere to the original colour style (red - low confidence; blue - high confidence), select the &quot;stylefile.qml&quot; file included in the download. Otherwise, the system default colours will be used.&#xa;"/>
@@ -2684,16 +2699,6 @@
       <Option type="QString" name="name" value="DEMDFM"/>
       <Option type="QString" name="parameter_type" value="raster"/>
     </Option>
-    <Option type="Map" name="DEMDFM (2)">
-      <Option type="invalid" name="default"/>
-      <Option type="invalid" name="defaultGui"/>
-      <Option type="QString" name="description" value="Low Vegetation Density Layer"/>
-      <Option type="int" name="flags" value="0"/>
-      <Option type="QString" name="help" value="Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
-      <Option name="metadata"/>
-      <Option type="QString" name="name" value="DEMDFM (2)"/>
-      <Option type="QString" name="parameter_type" value="raster"/>
-    </Option>
     <Option type="Map" name="Groundlayer">
       <Option type="invalid" name="default"/>
       <Option type="invalid" name="defaultGui"/>
@@ -2702,6 +2707,16 @@
       <Option type="QString" name="help" value="Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
       <Option name="metadata"/>
       <Option type="QString" name="name" value="Groundlayer"/>
+      <Option type="QString" name="parameter_type" value="raster"/>
+    </Option>
+    <Option type="Map" name="LowVegetation">
+      <Option type="invalid" name="default"/>
+      <Option type="invalid" name="defaultGui"/>
+      <Option type="QString" name="description" value="Low Vegetation Density Layer"/>
+      <Option type="int" name="flags" value="0"/>
+      <Option type="QString" name="help" value="Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>
+      <Option name="metadata"/>
+      <Option type="QString" name="name" value="LowVegetation"/>
       <Option type="QString" name="parameter_type" value="raster"/>
     </Option>
     <Option type="Map" name="SelectStyleFile">
@@ -2730,18 +2745,6 @@
       <Option type="QString" name="name" value="SetCellSize"/>
       <Option type="QString" name="parameter_type" value="number"/>
     </Option>
-    <Option type="Map" name="gdal:rastercalculator_11:Confidence Map">
-      <Option type="bool" name="create_by_default" value="true"/>
-      <Option type="invalid" name="default"/>
-      <Option type="invalid" name="defaultGui"/>
-      <Option type="QString" name="description" value="Confidence Map"/>
-      <Option type="int" name="flags" value="0"/>
-      <Option type="QString" name="help" value=""/>
-      <Option name="metadata"/>
-      <Option type="QString" name="name" value="gdal:rastercalculator_11:Confidence Map"/>
-      <Option type="QString" name="parameter_type" value="rasterDestination"/>
-      <Option type="bool" name="supports_non_file_outputs" value="false"/>
-    </Option>
   </Option>
   <Option name="parameterOrder"/>
   <Option type="Map" name="parameters">
@@ -2766,27 +2769,6 @@
       <Option type="bool" name="outputs_collapsed" value="true"/>
       <Option type="bool" name="parameters_collapsed" value="true"/>
     </Option>
-    <Option type="Map" name="DEMDFM (2)">
-      <Option type="QString" name="color" value=""/>
-      <Option type="Map" name="comment">
-        <Option type="QString" name="color" value=""/>
-        <Option type="QString" name="component_description" value=""/>
-        <Option type="double" name="component_height" value="60"/>
-        <Option type="double" name="component_pos_x" value="376"/>
-        <Option type="double" name="component_pos_y" value="332"/>
-        <Option type="double" name="component_width" value="100"/>
-        <Option type="bool" name="outputs_collapsed" value="true"/>
-        <Option type="bool" name="parameters_collapsed" value="true"/>
-      </Option>
-      <Option type="QString" name="component_description" value="DEMDFM (2)"/>
-      <Option type="double" name="component_height" value="30"/>
-      <Option type="double" name="component_pos_x" value="106"/>
-      <Option type="double" name="component_pos_y" value="684"/>
-      <Option type="double" name="component_width" value="200"/>
-      <Option type="QString" name="name" value="DEMDFM (2)"/>
-      <Option type="bool" name="outputs_collapsed" value="true"/>
-      <Option type="bool" name="parameters_collapsed" value="true"/>
-    </Option>
     <Option type="Map" name="Groundlayer">
       <Option type="QString" name="color" value=""/>
       <Option type="Map" name="comment">
@@ -2805,6 +2787,27 @@
       <Option type="double" name="component_pos_y" value="39"/>
       <Option type="double" name="component_width" value="200"/>
       <Option type="QString" name="name" value="Groundlayer"/>
+      <Option type="bool" name="outputs_collapsed" value="true"/>
+      <Option type="bool" name="parameters_collapsed" value="true"/>
+    </Option>
+    <Option type="Map" name="LowVegetation">
+      <Option type="QString" name="color" value=""/>
+      <Option type="Map" name="comment">
+        <Option type="QString" name="color" value=""/>
+        <Option type="QString" name="component_description" value=""/>
+        <Option type="double" name="component_height" value="60"/>
+        <Option type="double" name="component_pos_x" value="376"/>
+        <Option type="double" name="component_pos_y" value="332"/>
+        <Option type="double" name="component_width" value="100"/>
+        <Option type="bool" name="outputs_collapsed" value="true"/>
+        <Option type="bool" name="parameters_collapsed" value="true"/>
+      </Option>
+      <Option type="QString" name="component_description" value="LowVegetation"/>
+      <Option type="double" name="component_height" value="30"/>
+      <Option type="double" name="component_pos_x" value="106"/>
+      <Option type="double" name="component_pos_y" value="684"/>
+      <Option type="double" name="component_width" value="200"/>
+      <Option type="QString" name="name" value="LowVegetation"/>
       <Option type="bool" name="outputs_collapsed" value="true"/>
       <Option type="bool" name="parameters_collapsed" value="true"/>
     </Option>
