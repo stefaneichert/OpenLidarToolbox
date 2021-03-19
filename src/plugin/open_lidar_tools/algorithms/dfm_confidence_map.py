@@ -717,9 +717,6 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     <p>Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
     <h3>Ground Point Density Layer</h3>
     <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
-    <h3>Select Style File</h3>
-    <p>To adhere to the original colour style (red - low confidence; blue - high confidence), select the "stylefile.qml" file included in the download. Otherwise, the system default colours will be used.
-    </p>
     <h3>Cell Size:</h3>
     <p>Define the cell size of the Confidence Map. 0.5 or 1 m is recommended.</p>
 
