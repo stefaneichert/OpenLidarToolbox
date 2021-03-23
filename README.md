@@ -5,3 +5,5 @@ Published so far:
 https://www.mdpi.com/2076-3263/11/1/26
 
 https://www.mdpi.com/2072-4292/12/18/3025
+
+The plugin is developed by Stefan Eichert, Benjamin Štular and Edisa Lozić 2021
