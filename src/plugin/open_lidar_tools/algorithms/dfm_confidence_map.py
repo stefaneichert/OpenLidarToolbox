@@ -805,9 +805,9 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>Calculates Confidence map for 0.5 m DFM.
+    <p>Calculates Confidence maps for DFM.
 
-    Digital Feature Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
+    Digital Feature Model (DFM) is an archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
     This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.
     For more information, see Štular, Lozić, Eichert 2021 (in press).</p>
     <h2>Input parameters</h2>

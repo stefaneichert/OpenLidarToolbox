@@ -1,7 +1,7 @@
 #/***************************************************************************
 # OpenLidarTools
 #
-# Open Lidar Tools for Archaeology
+# Open Lidar Tools
 #							 -------------------
 #		begin				: 2021-03-10
 #		git sha				: $Format:%H$
