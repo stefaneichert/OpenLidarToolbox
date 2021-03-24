@@ -6,7 +6,7 @@
 name=Open LiDAR Tools
 qgisMinimumVersion=3.0
 description=Open Tools for LiDAR Data Preparation and Analysis in Archaeology
-version=0.1
+version=1
 author=Stefan Eichert, Benjamin Štular, Edisa Lozić
 email=stefaneichert@gmail.com, bstular@zrc-sazu.si, Edisa.lozic@gmail.com
 
