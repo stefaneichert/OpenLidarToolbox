@@ -33,7 +33,7 @@ __revision__ = '$Format:%H$'
 import inspect
 import os
 import pathlib
-
+from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (QgsProcessing,
                        QgsFeatureSink,
@@ -47,7 +47,7 @@ from qgis.core import QgsProcessingParameterRasterLayer
 from qgis.core import QgsProcessingParameterFile
 from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterRasterDestination
-from qgis.core import QgsProcessingParameterBoolean
+from qgis.core import QgsProcessingParameterEnum
 import processing
 from os.path import exists
 
@@ -74,26 +74,65 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     INPUT = 'INPUT'
 
     def initAlgorithm(self, config=None):
+        self.addParameter(QgsProcessingParameterEnum('Createconfidencemapfor', 'Create confidence map for:',
+                                                     options=['0.25m', '0.5m', '1m', '2m'], allowMultiple=True,
+                                                     defaultValue=[1]))
         self.addParameter(QgsProcessingParameterRasterLayer('DEMDFM', 'DEM/DFM Layer', defaultValue=None))
-        self.addParameter(
-            QgsProcessingParameterRasterLayer('LowVegetation', 'Low Vegetation Density Layer', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterRasterLayer('Groundlayer', 'Ground Point Density Layer', defaultValue=None))
         self.addParameter(
+            QgsProcessingParameterRasterLayer('LowVegetation', 'Low Vegetation Density Layer', defaultValue=None))
+        self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size:', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
-        self.addParameter(
-            QgsProcessingParameterRasterDestination('ConfidenceMap', 'Confidence Map', createByDefault=True,
-                                                    defaultValue=None))
-        self.addParameter(
-            QgsProcessingParameterBoolean('VERBOSE_LOG', 'Verbose logging', optional=True, defaultValue=False))
+#        self.addParameter(
+#            QgsProcessingParameterRasterDestination('ConfidenceMap', 'Confidence Map', createByDefault=True,
+#                                                    defaultValue=None))
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(27, model_feedback)
+        confidenceParams = (parameters['Createconfidencemapfor'])
+        steps = len(confidenceParams) * 19 + 8
+        feedback = QgsProcessingMultiStepFeedback(steps, model_feedback)
         results = {}
         outputs = {}
+
+
+
+        # reclass tables
+        half_meter = {
+            'denshi': [0, 4, 0, 4.000000001, 100000, 1],
+            'densmid': [0, 2, 0, 2.000001, 4, 1, 4.000001, 100000, 0],
+            'denslow': [0, 1, 0, 1.00000001, 2, 1, 2.00000001, 100000, 0],
+            'densvlow': [0, 1, 1, 1.00000001, 100000, 0],
+            'veghigh': [0, 4, 0, 4.00000001, 100000, 1],
+            'veglow': [0, 4, 1, 4.00000001, 100000, 0]
+        }
+        quarter_meter = {
+            'denshi': [0, 16, 0, 16.000000001, 100000, 1],
+            'densmid': [0, 8, 0, 8.000001, 16, 1, 16.000001, 100000, 0],
+            'denslow': [0, 4, 0, 4.00000001, 8, 1, 8.00000001, 100000, 0],
+            'densvlow': [0, 4, 1, 4.00000001, 100000, 0],
+            'veghigh': [0, 16, 0, 16.00000001, 100000, 1],
+            'veglow': [0, 16, 1, 16.00000001, 100000, 0]
+        }
+        one_meter = {
+            'denshi': [0, 1, 0, 1.000000001, 100000, 1],
+            'densmid': [0, 0.5, 0, 0.5000001, 1, 1, 1.000001, 100000, 0],
+            'denslow': [0, 0.25, 0, 0.25000001, 0.5, 1, 0.50000001, 100000, 0],
+            'densvlow': [0, 0.25, 1, 0.25000001, 100000, 0],
+            'veghigh': [0, 1, 0, 1.00000001, 100000, 1],
+            'veglow': [0, 1, 1, 1.00000001, 100000, 0]
+        }
+        two_meter = {
+            'denshi': [0, 0.25, 0, 0.250000001, 100000, 1],
+            'densmid': [0, 0.125, 0, 0.1250001, 0.25, 1, 0.2500001, 100000, 0],
+            'denslow': [0, 0.0625, 0, 0.06250001, 0.125, 1, 0.12500001, 100000, 0],
+            'densvlow': [0, 0.0625, 1, 0.06250001, 100000, 0],
+            'veghigh': [0, 0.25, 0, 0.25000001, 100000, 1],
+            'veglow': [0, 0.25, 1, 0.25000001, 100000, 0]
+        }
 
         # resampleVEG
         alg_params = {
@@ -137,24 +176,6 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
 
-        # Density Hi
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resamplegpd']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 4, 0, 4.000000001, 100000, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['DensityHi'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                              feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(4)
-        if feedback.isCanceled():
-            return {}
-
         # resampleDEM
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
@@ -167,63 +188,139 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         outputs['Resampledem'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(4)
         if feedback.isCanceled():
             return {}
 
-        # Density Mid
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resamplegpd']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 2, 0, 2.000001, 4, 1, 4.000001, 100000, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['DensityMid'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                               feedback=feedback, is_child_algorithm=True)
+        iter = 4
 
-        feedback.setCurrentStep(6)
-        if feedback.isCanceled():
-            return {}
+        for row in confidenceParams:
+            if row == 0:
+                intermed_params = quarter_meter
+                appendix = ' 0.25m'
+            if row == 1:
+                intermed_params = half_meter
+                appendix = ' 0.5m'
+            if row == 2:
+                intermed_params = one_meter
+                appendix = ' 1m'
+            if row == 3:
+                intermed_params = two_meter
+                appendix = ' 2m'
 
-        # Density Low
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resamplegpd']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 1,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 1, 0, 1.00000001, 2, 1, 2.00000001, 100000, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['DensityLow'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                               feedback=feedback, is_child_algorithm=True)
+            # Density Hi
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resamplegpd']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 2,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['denshi'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['DensityHi' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                                             feedback=feedback, is_child_algorithm=True)
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        feedback.setCurrentStep(7)
-        if feedback.isCanceled():
-            return {}
+            # Density Mid
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resamplegpd']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 2,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['densmid'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['DensityMid' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                                   feedback=feedback, is_child_algorithm=True)
 
-        # Density Vlow
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resamplegpd']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 1,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 1, 1, 1.00000001, 100000, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['DensityVlow'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                feedback=feedback, is_child_algorithm=True)
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        feedback.setCurrentStep(8)
-        if feedback.isCanceled():
-            return {}
+            # Density Low
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resamplegpd']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 1,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['denslow'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['DensityLow' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                                   feedback=feedback, is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # Density Vlow
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resamplegpd']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 1,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['densvlow'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['DensityVlow' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                                    feedback=feedback, is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # VegLow
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resampleveg']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 2,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['veglow'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Veglow' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                               feedback=feedback,
+                                               is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # VegHi
+            alg_params = {
+                'DATA_TYPE': 3,
+                'INPUT_RASTER': outputs['Resampleveg']['output'],
+                'NODATA_FOR_MISSING': True,
+                'NO_DATA': -9999,
+                'RANGE_BOUNDARIES': 2,
+                'RASTER_BAND': 1,
+                'TABLE': intermed_params['veghigh'],
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Veghi' + appendix] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
+                                              is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
         # Slope Qgis
         alg_params = {
@@ -234,7 +331,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         outputs['SlopeQgis'] = processing.run('native:slope', alg_params, context=context, feedback=feedback,
                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(9)
+        iter = iter + 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
 
@@ -252,7 +350,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         outputs['Slope12'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
                                             is_child_algorithm=True)
 
-        feedback.setCurrentStep(10)
+        iter = iter + 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
 
@@ -270,91 +369,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         outputs['Slope22'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
                                             is_child_algorithm=True)
 
-        feedback.setCurrentStep(11)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 4b
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*(B+C)*4',
-            'INPUT_A': outputs['DensityMid']['OUTPUT'],
-            'INPUT_B': outputs['Slope12']['OUTPUT'],
-            'INPUT_C': outputs['Slope22']['OUTPUT'],
-            'INPUT_D': None,
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc4b'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
-
-        feedback.setCurrentStep(12)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 1b
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*(B+C)',
-            'INPUT_A': outputs['DensityVlow']['OUTPUT'],
-            'INPUT_B': outputs['Slope12']['OUTPUT'],
-            'INPUT_C': outputs['Slope22']['OUTPUT'],
-            'INPUT_D': None,
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc1b'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
-
-        feedback.setCurrentStep(13)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 3
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*(B+C)*3',
-            'INPUT_A': outputs['DensityLow']['OUTPUT'],
-            'INPUT_B': outputs['Slope12']['OUTPUT'],
-            'INPUT_C': outputs['Slope22']['OUTPUT'],
-            'INPUT_D': None,
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc3'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                          is_child_algorithm=True)
-
-        feedback.setCurrentStep(14)
+        iter = iter + 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
 
@@ -369,10 +385,12 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'TABLE': [0, 22.5, 0, 22.50000001, 42.5, 1, 42.50000001, 90, 0],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['Slope42'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
+        outputs['Slope42'] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                            feedback=feedback,
                                             is_child_algorithm=True)
 
-        feedback.setCurrentStep(15)
+        iter = iter + 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
 
@@ -387,297 +405,376 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'TABLE': [0, 42.5, 0, 42.50000001, 90, 1],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['Slope90'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
+        outputs['Slope90'] = processing.run('native:reclassifybytable', alg_params, context=context,
+                                            feedback=feedback,
                                             is_child_algorithm=True)
 
-        feedback.setCurrentStep(16)
+        iter = iter + 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
 
-        # Calc 1a
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': '(A+B+C)*D',
-            'INPUT_A': outputs['DensityMid']['OUTPUT'],
-            'INPUT_B': outputs['DensityLow']['OUTPUT'],
-            'INPUT_C': outputs['DensityVlow']['OUTPUT'],
-            'INPUT_D': outputs['Slope90']['OUTPUT'],
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc1a'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
 
-        feedback.setCurrentStep(17)
-        if feedback.isCanceled():
-            return {}
+        for row in confidenceParams:
+            if row == 0:
+                appendix = ' 0.25m'
+            if row == 1:
+                appendix = ' 0.5m'
+            if row == 2:
+                appendix = ' 1m'
+            if row == 3:
+                appendix = ' 2m'
 
-        # Calc 2
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': '(A+B+C)*D*2',
-            'INPUT_A': outputs['DensityMid']['OUTPUT'],
-            'INPUT_B': outputs['DensityLow']['OUTPUT'],
-            'INPUT_C': outputs['DensityVlow']['OUTPUT'],
-            'INPUT_D': outputs['Slope42']['OUTPUT'],
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc2'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                          is_child_algorithm=True)
+            # Calc 1a
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': '(A+B+C)*D',
+                'INPUT_A': outputs['DensityMid' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['DensityLow' + appendix]['OUTPUT'],
+                'INPUT_C': outputs['DensityVlow' + appendix]['OUTPUT'],
+                'INPUT_D': outputs['Slope90']['OUTPUT'],
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc1a' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(18)
-        if feedback.isCanceled():
-            return {}
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        # VegLow
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resampleveg']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 4, 1, 4.00000001, 100000, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Veglow'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
+            # Calc 1b
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*(B+C)',
+                'INPUT_A': outputs['DensityVlow' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope12']['OUTPUT'],
+                'INPUT_C': outputs['Slope22']['OUTPUT'],
+                'INPUT_D': None,
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc1b' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(19)
-        if feedback.isCanceled():
-            return {}
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        # Calc 5b
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': 1,
-            'BAND_E': 1,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*(B+C+D)*E*5',
-            'INPUT_A': outputs['DensityHi']['OUTPUT'],
-            'INPUT_B': outputs['Slope22']['OUTPUT'],
-            'INPUT_C': outputs['Slope42']['OUTPUT'],
-            'INPUT_D': outputs['Slope90']['OUTPUT'],
-            'INPUT_E': outputs['Veglow']['OUTPUT'],
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc5b'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
 
-        feedback.setCurrentStep(20)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 6
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*B*C*6',
-            'INPUT_A': outputs['DensityHi']['OUTPUT'],
-            'INPUT_B': outputs['Slope12']['OUTPUT'],
-            'INPUT_C': outputs['Veglow']['OUTPUT'],
-            'INPUT_D': None,
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc6'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                          is_child_algorithm=True)
-
-        feedback.setCurrentStep(21)
-        if feedback.isCanceled():
-            return {}
-
-        # VegHi
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['Resampleveg']['output'],
-            'NODATA_FOR_MISSING': True,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [0, 4, 0, 4.00000001, 100000, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Veghi'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
-                                          is_child_algorithm=True)
-
-        feedback.setCurrentStep(22)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 4a
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': 1,
-            'BAND_E': 1,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*(B+C+D)*E*4',
-            'INPUT_A': outputs['DensityHi']['OUTPUT'],
-            'INPUT_B': outputs['Slope22']['OUTPUT'],
-            'INPUT_C': outputs['Slope42']['OUTPUT'],
-            'INPUT_D': outputs['Slope90']['OUTPUT'],
-            'INPUT_E': outputs['Veghi']['OUTPUT'],
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc4a'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
-
-        feedback.setCurrentStep(23)
-        if feedback.isCanceled():
-            return {}
-
-        # Calc 5a
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': None,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A*B*C*5',
-            'INPUT_A': outputs['DensityHi']['OUTPUT'],
-            'INPUT_B': outputs['Slope12']['OUTPUT'],
-            'INPUT_C': outputs['Veghi']['OUTPUT'],
-            'INPUT_D': None,
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calc5a'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
-                                           is_child_algorithm=True)
-
-        feedback.setCurrentStep(24)
-        if feedback.isCanceled():
-            return {}
-
-        # CalcCran1
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': 1,
-            'BAND_E': 1,
-            'BAND_F': 1,
-            'EXTRA': '',
-            'FORMULA': 'A+B+C+D+E+F',
-            'INPUT_A': outputs['Calc6']['OUTPUT'],
-            'INPUT_B': outputs['Calc5a']['OUTPUT'],
-            'INPUT_C': outputs['Calc5b']['OUTPUT'],
-            'INPUT_D': outputs['Calc4a']['OUTPUT'],
-            'INPUT_E': outputs['Calc4b']['OUTPUT'],
-            'INPUT_F': outputs['Calc3']['OUTPUT'],
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['Calccran1'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+            # Calc 2
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': '(A+B+C)*D*2',
+                'INPUT_A': outputs['DensityMid' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['DensityLow' + appendix]['OUTPUT'],
+                'INPUT_C': outputs['DensityVlow' + appendix]['OUTPUT'],
+                'INPUT_D': outputs['Slope42']['OUTPUT'],
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc2' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(25)
-        if feedback.isCanceled():
-            return {}
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        # CalcCranFinal
-        alg_params = {
-            'BAND_A': 1,
-            'BAND_B': 1,
-            'BAND_C': 1,
-            'BAND_D': 1,
-            'BAND_E': None,
-            'BAND_F': None,
-            'EXTRA': '',
-            'FORMULA': 'A+B+C+D',
-            'INPUT_A': outputs['Calccran1']['OUTPUT'],
-            'INPUT_B': outputs['Calc2']['OUTPUT'],
-            'INPUT_C': outputs['Calc1a']['OUTPUT'],
-            'INPUT_D': outputs['Calc1b']['OUTPUT'],
-            'INPUT_E': None,
-            'INPUT_F': None,
-            'NO_DATA': None,
-            'OPTIONS': '',
-            'RTYPE': 4,
-            'OUTPUT': parameters['ConfidenceMap']
-        }
-        outputs['Calccranfinal'] = processing.run('gdal:rastercalculator', alg_params, context=context,
-                                                  feedback=feedback, is_child_algorithm=True)
-        results['ConfidenceMap'] = outputs['Calccranfinal']['OUTPUT']
+            # Calc 3
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*(B+C)*3',
+                'INPUT_A': outputs['DensityLow' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope12']['OUTPUT'],
+                'INPUT_C': outputs['Slope22']['OUTPUT'],
+                'INPUT_D': None,
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc3' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                              is_child_algorithm=True)
 
-        feedback.setCurrentStep(26)
-        if feedback.isCanceled():
-            return {}
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        # Load result
-        alg_params = {
-            'INPUT': outputs['Calccranfinal']['OUTPUT'],
-            'NAME': 'DFM confidence map'
-        }
-        outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+            # Calc 4a
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': 1,
+                'BAND_E': 1,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*(B+C+D)*E*4',
+                'INPUT_A': outputs['DensityHi' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope22']['OUTPUT'],
+                'INPUT_C': outputs['Slope42']['OUTPUT'],
+                'INPUT_D': outputs['Slope90']['OUTPUT'],
+                'INPUT_E': outputs['Veghi' + appendix]['OUTPUT'],
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc4a' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(27)
-        if feedback.isCanceled():
-            return {}
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
 
-        # Set style for raster layer
-        # Set style for raster layer
-        folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
+            # Calc 4b
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*(B+C)*4',
+                'INPUT_A': outputs['DensityMid' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope12']['OUTPUT'],
+                'INPUT_C': outputs['Slope22']['OUTPUT'],
+                'INPUT_D': None,
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc4b' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
 
-        alg_params = {
-            'INPUT': outputs['LoadResult']['OUTPUT'],
-            'STYLE': styleFile
-        }
-        if exists(styleFile) == True:
-                outputs['SetStyleForRasterLayer'] = processing.run('qgis:setstyleforrasterlayer', alg_params, context=context,
-                                                           feedback=feedback, is_child_algorithm=True)
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+
+            # Calc 5a
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*B*C*5',
+                'INPUT_A': outputs['DensityHi' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope12']['OUTPUT'],
+                'INPUT_C': outputs['Veghi' + appendix]['OUTPUT'],
+                'INPUT_D': None,
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc5a' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+
+            # Calc 5b
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': 1,
+                'BAND_E': 1,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*(B+C+D)*E*5',
+                'INPUT_A': outputs['DensityHi' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope22']['OUTPUT'],
+                'INPUT_C': outputs['Slope42']['OUTPUT'],
+                'INPUT_D': outputs['Slope90']['OUTPUT'],
+                'INPUT_E': outputs['Veglow' + appendix]['OUTPUT'],
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc5b' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                               is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # Calc 6
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': None,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A*B*C*6',
+                'INPUT_A': outputs['DensityHi' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Slope12']['OUTPUT'],
+                'INPUT_C': outputs['Veglow' + appendix]['OUTPUT'],
+                'INPUT_D': None,
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calc6' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                              is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+
+            # CalcCran1
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': 1,
+                'BAND_E': 1,
+                'BAND_F': 1,
+                'EXTRA': '',
+                'FORMULA': 'A+B+C+D+E+F',
+                'INPUT_A': outputs['Calc6' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Calc5a' + appendix]['OUTPUT'],
+                'INPUT_C': outputs['Calc5b' + appendix]['OUTPUT'],
+                'INPUT_D': outputs['Calc4a' + appendix]['OUTPUT'],
+                'INPUT_E': outputs['Calc4b' + appendix]['OUTPUT'],
+                'INPUT_F': outputs['Calc3' + appendix]['OUTPUT'],
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calccran1' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback,
+                                                  is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # CalcCranFinal
+            alg_params = {
+                'BAND_A': 1,
+                'BAND_B': 1,
+                'BAND_C': 1,
+                'BAND_D': 1,
+                'BAND_E': None,
+                'BAND_F': None,
+                'EXTRA': '',
+                'FORMULA': 'A+B+C+D',
+                'INPUT_A': outputs['Calccran1' + appendix]['OUTPUT'],
+                'INPUT_B': outputs['Calc2' + appendix]['OUTPUT'],
+                'INPUT_C': outputs['Calc1a' + appendix]['OUTPUT'],
+                'INPUT_D': outputs['Calc1b' + appendix]['OUTPUT'],
+                'INPUT_E': None,
+                'INPUT_F': None,
+                'NO_DATA': None,
+                'OPTIONS': '',
+                'RTYPE': 4,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['Calccranfinal' + appendix] = processing.run('gdal:rastercalculator', alg_params, context=context,
+                                                      feedback=feedback, is_child_algorithm=True)
+            results['ConfidenceMap' + appendix] = outputs['Calccranfinal' + appendix]['OUTPUT']
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # Load result
+            alg_params = {
+                'INPUT': outputs['Calccranfinal' + appendix]['OUTPUT'],
+                'NAME': 'DFM confidence map' + appendix
+            }
+            outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
+                                                   is_child_algorithm=True)
+
+            iter = iter + 1
+            feedback.setCurrentStep(iter)
+            if feedback.isCanceled():
+                return {}
+
+            # Set style for raster layer
+            # Set style for raster layer
+            folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+            styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
+
+            alg_params = {
+                'INPUT': outputs['LoadResult']['OUTPUT'],
+                'STYLE': styleFile
+            }
+            if exists(styleFile) == True:
+                outputs['SetStyleForRasterLayer'] = processing.run('qgis:setstyleforrasterlayer', alg_params,
+                                                                   context=context,
+                                                                   feedback=feedback, is_child_algorithm=True)
         return results
 
     def name(self):
@@ -692,6 +789,11 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         should be localised.
         """
         return self.tr(self.groupId())
+
+    def icon(self):
+        cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'confidencemap.png')))
+        return icon
 
     def groupId(self):
         """
