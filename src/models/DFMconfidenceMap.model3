@@ -2670,9 +2670,9 @@
   </Option>
   <Option name="groupBoxes"/>
   <Option type="Map" name="help">
-    <Option type="QString" name="ALG_CREATOR" value="Benjamin Štular, Ediza Lozić, Stefan Eichert "/>
+    <Option type="QString" name="ALG_CREATOR" value="Benjamin Štular, Edisa Lozić, Stefan Eichert "/>
     <Option type="QString" name="ALG_DESC" value="Calculates Confidence map for 0.5 m DFM.&#xa;&#xa;Digital Feature Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.&#xa;This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.&#xa;For more information, see Štular, Lozić, Eichert 2021 (in press)."/>
-    <Option type="QString" name="ALG_HELP_CREATOR" value="Benjamin Štular, Ediza Lozić, Stefan Eichert"/>
+    <Option type="QString" name="ALG_HELP_CREATOR" value="Benjamin Štular, Edisa Lozić, Stefan Eichert"/>
     <Option type="QString" name="ALG_VERSION" value=""/>
     <Option type="QString" name="DEMDFM" value="DFM (or any DEM) with cell size 0.5m in raster format"/>
     <Option type="QString" name="Groundlayer" value="Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file)."/>

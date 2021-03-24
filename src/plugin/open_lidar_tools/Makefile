@@ -5,7 +5,7 @@
 #							 -------------------
 #		begin				: 2021-03-10
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2021 by Benjamin Štular, Ediza Lozić, Stefan Eichert
+#		copyright			: (C) 2021 by Benjamin Štular, Edisa Lozić, Stefan Eichert
 #		email				: stefaneichert@gmail.com
 # ***************************************************************************/
 #

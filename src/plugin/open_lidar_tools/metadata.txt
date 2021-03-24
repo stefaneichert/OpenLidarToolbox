@@ -7,7 +7,7 @@ name=Open Lidar Tools for Archaeology
 qgisMinimumVersion=3.0
 description=Open Tools for Lidar Data Preparation and Analysis in Archaeology
 version=0.1
-author=Benjamin Štular, Ediza Lozić, Stefan Eichert
+author=Benjamin Štular, Edisa Lozić, Stefan Eichert
 email=bstular@zrc-sazu.si, Edisa.lozic@gmail.com, stefaneichert@gmail.com
 
 about=Open Tools for LiDAR is part of the MALiAp scientific research project, which aims at the strives towards methodological maturity of airborne LiDAR in archaeology. Our intention is to provide open access tools for QGIS to assist archaeologists in processing point cloud LiDAR data. Each of the tools we are developing is based on over a decade of experience. The scientific background for the tool is/will be published in open access peer reviewed papers.
