@@ -31,6 +31,7 @@ __copyright__ = '(C) 2021 by Benjamin Štular, Edisa Lozić, Stefan Eichert'
 __revision__ = '$Format:%H$'
 
 from qgis.core import QgsProcessingProvider
+from .algorithms.lidar_prep import LidarPipeline
 from .algorithms.dfm_confidence_map import dfmConfidenceMap
 import os
 import inspect
@@ -57,6 +58,7 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         Loads all algorithms belonging to this provider.
         """
         self.addAlgorithm(dfmConfidenceMap())
+        self.addAlgorithm((LidarPipeline()))
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 
