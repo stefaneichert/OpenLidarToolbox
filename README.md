@@ -2,7 +2,7 @@
 
 ![Logo]( src/plugin/open_lidar_tools/icon.png "Open LiDAR Tools")
 
-Under active development, please check for updates!
+Under active development, please check for updates! (Currently only one module is available)
 
 Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. The tools are optimised for archaeology, but have broader application for anyone primarily interested in visual inspection of LiDAR data.
 
@@ -19,7 +19,7 @@ The input required is an unclassified point cloud in LAZ /LAS format. The tool r
   5. Low vegetation point density - GeoTIFF, values in pnts/m2
   6. DFM confidence map -  - GeoTIFF, custom values, higher is better
 
-In addition to the one-click solution, several stand-alone tools are available:
+In addition to the one-click solution, several stand-alone modules are available:
 1. Point cloud classification
 2. Interpolation of DFM/DEM
 3. DFM confidence map
