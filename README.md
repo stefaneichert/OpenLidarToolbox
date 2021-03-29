@@ -5,12 +5,21 @@
 Under active development, please check for updates!
 
 Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. It is optimised for archaeology, but has broader application for anyone primarily interested in visual inspection of LiDAR data.
-The input required is an unclassified point cloud in LAZ /LAS format. The tool returns several outputs needed for interpretative mapping of archaeological features. Data: classified point cloud (LAZ), digital feature model (DFM, also known as "archaeological DEM), LiDAR visualisations (Sky View Factor, Archaeological VAT, Difference from Man Elevation also known as Local Relief Model). Metadata: Ground point density in pnts/m2 (GeoTIFF), low vegetation point density in pnts/m2 (GeoTIFF), DFM confidence map.
-In addition to the one-click solution, several stand-alone tools are available:
-1. Point cloud classification, 2. Interpolation of DFM/DEM, 3. DFM confidence map, 4. Low vegetation density, 5. Ground point density.
-For most users, the best way to use the Open LiDAR tools is to install the QGIS plug-in from the ZIP file. Users who need deeper access to even more settings can download individual QGIS models here.
 
-Open LiDAR tools are a "shell" that uses several excellent tools under the hood: GDAL, GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before the Open LiDAR tools: LAStools, Whitebox Tools and RVT.
+The input required is an unclassified point cloud in LAZ /LAS format. The tool returns several outputs needed for interpretative mapping of archaeological features. Data:
+  Classified point cloud  - LAZ
+  Digital feature model (DFM, also known as "archaeological DEM) - GeoTIFF
+  LiDAR visualisations (Sky View Factor, Archaeological VAT, Difference from Man Elevation also known as Local Relief Model) - GeoTIFFs
+Metadata:
+  Ground point density - GeoTIFF,values in pnts/m2
+  Low vegetation point density - GeoTIFF,values in pnts/m2
+  DFM confidence map -  - GeoTIFF, custom values, higher is better
+In addition to the one-click solution, several stand-alone tools are available:
+1. Point cloud classification
+2. Interpolation of DFM/DEM
+3. DFM confidence map
+4. Low vegetation density
+5. Ground point density.
 
 Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:
 https://www.mdpi.com/2076-3263/11/1/26
@@ -20,7 +29,12 @@ https://www.mdpi.com/2072-4292/12/18/3025
 
 The easiest way to install it, is to [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").
 Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu.
-Then Open LiDAR Tools will then show up in the processing toolbox
+Then Open LiDAR Tools will then show up in the processing toolbox.
+Users who need deeper access to even more settings can download individual QGIS models here.
+
+### **Dependancies**
+
+Open LiDAR tools are a "shell" that uses several excellent tools under the hood: GDAL, GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before the Open LiDAR tools: LAStools, Whitebox Tools and RVT.
 
 
 ### **Modules**
