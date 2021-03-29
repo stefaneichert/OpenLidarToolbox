@@ -4,7 +4,7 @@
 
 Under active development, please check for updates!
 
-Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. It is optimised for archaeology, but has broader application for anyone primarily interested in visual inspection of LiDAR data.
+Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. The tools are optimised for archaeology, but have broader application for anyone primarily interested in visual inspection of LiDAR data.
 
 The input required is an unclassified point cloud in LAZ /LAS format. The tool returns several outputs needed for interpretative mapping of archaeological features. Data:
   Classified point cloud  - LAZ
