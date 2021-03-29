@@ -6,14 +6,23 @@ Under active development, please check for updates!
 
 Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. The tools are optimised for archaeology, but have broader application for anyone primarily interested in visual inspection of LiDAR data.
 
-The input required is an unclassified point cloud in LAZ /LAS format. The tool returns several outputs needed for interpretative mapping of archaeological features. Data:
-  Classified point cloud  - LAZ
-  Digital feature model (DFM, also known as "archaeological DEM) - GeoTIFF
-  LiDAR visualisations (Sky View Factor, Archaeological VAT, Difference from Man Elevation also known as Local Relief Model) - GeoTIFFs
-Metadata:
-  Ground point density - GeoTIFF,values in pnts/m2
-  Low vegetation point density - GeoTIFF,values in pnts/m2
-  DFM confidence map -  - GeoTIFF, custom values, higher is better
+The input required is an unclassified point cloud in LAZ /LAS format. The tool returns several outputs needed for interpretative mapping of archaeological features. 
+
+**Data**
+  1. Classified point cloud  - LAZ
+  2. Digital feature model (DFM, also known as "archaeological DEM) - GeoTIFF
+  3. LiDAR visualisations (Sky View Factor, Archaeological VAT, Difference from Man Elevation also known as Local Relief Model) - GeoTIFFs
+
+**Metadata**
+
+
+
+
+
+  4. Ground point density - GeoTIFF,values in pnts/m2
+  5. Low vegetation point density - GeoTIFF,values in pnts/m2
+  6. DFM confidence map -  - GeoTIFF, custom values, higher is better
+
 In addition to the one-click solution, several stand-alone tools are available:
 1. Point cloud classification
 2. Interpolation of DFM/DEM
