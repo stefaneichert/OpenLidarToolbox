@@ -11,13 +11,9 @@ The input required is an unclassified point cloud in LAZ /LAS format. The tool r
 **Data**
   1. Classified point cloud  - LAZ
   2. Digital feature model (DFM, also known as "archaeological DEM") - GeoTIFF
-  3. LiDAR visualisations (Sky View Factor, Archaeological VAT, Difference from Man Elevation also known as Local Relief Model) - GeoTIFFs
+  3. LiDAR visualisations (Sky View Factor, Opennes, Archaeological VAT, and Difference from Mean Elevation also known as Local Relief Model) - GeoTIFFs
 
 **Metadata**
-
-
-
-
 
   4. Ground point density - GeoTIFF, values in pnts/m2
   5. Low vegetation point density - GeoTIFF, values in pnts/m2
