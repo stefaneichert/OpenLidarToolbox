@@ -37,7 +37,7 @@ Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Inst
 Then Open LiDAR Tools will then show up in the processing toolbox.
 Users who need deeper access to even more settings can download individual QGIS models here.
 
-### **Dependancies**
+### **Dependencies**
 
 Open LiDAR tools are a "shell" that uses several excellent tools under the hood: GDAL, GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before the Open LiDAR tools: LAStools, Whitebox Tools and RVT.
 
