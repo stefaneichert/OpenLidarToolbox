@@ -47,3 +47,7 @@ Open LiDAR tools are a "shell" that uses several excellent tools under the hood:
 **Confidence Map**  
 This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
 
+**Hybrid Interpolation**
+
+The module is a hybrid interpolation of DFM/DEM. It uses TLI (Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6) and IDW (Inverse distance Weighing) interpolation in areas of low DFM confidence (levels 1-3). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
+
