@@ -26,8 +26,8 @@ In addition to the one-click solution, several stand-alone modules are available
 4. Low vegetation density
 5. Ground point density.
 
-Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:
-https://www.mdpi.com/2076-3263/11/1/26
+Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:  
+https://www.mdpi.com/2076-3263/11/1/26  
 https://www.mdpi.com/2072-4292/12/18/3025
 
 ### **Installation**
