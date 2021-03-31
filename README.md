@@ -2,7 +2,7 @@
 
 ![Logo]( src/plugin/open_lidar_tools/icon.png "Open LiDAR Tools")
 
-Under active development, please check for updates! (Currently only one module is available)
+Under active development, please check for updates! (Currently only one module is available: [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").)
 
 Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. The tools are optimised for archaeology, but have broader application for anyone primarily interested in visual inspection of LiDAR data.
 
