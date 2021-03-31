@@ -17,14 +17,14 @@ The input required is an unclassified point cloud in LAZ /LAS format. The tool r
 
   4. Ground point density - GeoTIFF, values in pnts/m2
   5. Low vegetation point density - GeoTIFF, values in pnts/m2
-  6. DFM confidence map -  - GeoTIFF, custom values, higher is better
+  6. DFM confidence map - GeoTIFF, custom values, higher is better
 
 In addition to the one-click solution, several stand-alone modules are available:
-1. Point cloud classification
-2. Interpolation of DFM/DEM
-3. DFM confidence map
-4. Low vegetation density
-5. Ground point density.
+ 1. Point cloud classification
+ 2. Interpolation of DFM/DEM
+ 3. DFM confidence map
+ 4. Low vegetation density
+ 5. Ground point density.
 
 Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:  
 https://www.mdpi.com/2076-3263/11/1/26  
