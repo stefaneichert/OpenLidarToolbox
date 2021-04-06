@@ -2,7 +2,7 @@
 
 ![Logo]( src/plugin/open_lidar_tools/icon.png "Open LiDAR Tools")
 
-Under active development, please check for updates! (Currently only one module is available)
+Under active development, please check for updates! (Currently only one module is available: [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").)
 
 Open LiDAR Tools provides one-click processing of airborne LiDAR data from point cloud to LiDAR visualisation. The tools are optimised for archaeology, but have broader application for anyone primarily interested in visual inspection of LiDAR data.
 
@@ -17,17 +17,17 @@ The input required is an unclassified point cloud in LAZ /LAS format. The tool r
 
   4. Ground point density - GeoTIFF, values in pnts/m2
   5. Low vegetation point density - GeoTIFF, values in pnts/m2
-  6. DFM confidence map -  - GeoTIFF, custom values, higher is better
+  6. DFM confidence map - GeoTIFF, custom values, higher is better
 
 In addition to the one-click solution, several stand-alone modules are available:
-1. Point cloud classification
-2. Interpolation of DFM/DEM
-3. DFM confidence map
-4. Low vegetation density
-5. Ground point density.
+ 1. Point cloud classification
+ 2. Interpolation of DFM/DEM
+ 3. DFM confidence map
+ 4. Low vegetation density
+ 5. Ground point density.
 
-Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:
-https://www.mdpi.com/2076-3263/11/1/26
+Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien and ZRC SAZU as part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:  
+https://www.mdpi.com/2076-3263/11/1/26  
 https://www.mdpi.com/2072-4292/12/18/3025
 
 ### **Installation**
@@ -46,4 +46,8 @@ Open LiDAR tools are a "shell" that uses several excellent tools under the hood:
 
 **Confidence Map**  
 This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
+
+**Hybrid Interpolation**  
+Currently under development  
+This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance Weighing) interpolation in areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
 
