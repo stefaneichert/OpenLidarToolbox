@@ -33,6 +33,7 @@ __revision__ = '$Format:%H$'
 from qgis.core import QgsProcessingProvider
 from .algorithms.lidar_prep import LidarPipeline
 from .algorithms.dfm_confidence_map import dfmConfidenceMap
+from .algorithms.hybrid_interpolation import HybridInterpolation
 import os
 import inspect
 from qgis.PyQt.QtGui import QIcon
@@ -59,6 +60,7 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         """
         self.addAlgorithm(dfmConfidenceMap())
         self.addAlgorithm((LidarPipeline()))
+        self.addAlgorithm((HybridInterpolation()))
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 
