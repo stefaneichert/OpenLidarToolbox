@@ -7,4 +7,5 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 /.idea/*
-**/*.pyc
+__pycache__/
+*.py[cod]
