@@ -49,5 +49,5 @@ This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. 
 
 **Hybrid Interpolation**  
 Currently under development  
-The module is a hybrid interpolation of DFM/DEM. It uses TLI (Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6) and IDW (Inverse distance Weighing) interpolation in areas of low DFM confidence (levels 1-3). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
+This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance Weighing) interpolation in areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
 
