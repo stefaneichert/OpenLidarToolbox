@@ -7,4 +7,4 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 /.idea/*
-
+/src/plugin/open_lidar_tools/algorithms/__pycache__/
