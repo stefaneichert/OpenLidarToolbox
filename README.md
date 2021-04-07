@@ -2,12 +2,12 @@
 
 ![Logo]( src/plugin/open_lidar_tools/icon.png "Open LiDAR Tools")
 
-- [**Data**](#--data--)
-- [**Metadata**](#--metadata--)
+- [**Data**](#data)
+- [**Metadata**](#metadata)
 - [**Installation**](#--installation--)
 - [**Dependencies**](#--dependencies--)
 - [**Modules**](#--modules--)
-  * [**Confidence Map**](#--confidence-map--)
+  * [**Confidence Map**](#confidence-map)
   * [**Hybrid Interpolation**](#--hybrid-interpolation--)
 
 Under active development, please check for updates! (Currently only one module is available: [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").)
