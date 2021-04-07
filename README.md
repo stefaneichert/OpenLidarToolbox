@@ -102,7 +102,8 @@ The resolution or cell size of the final DFM/DEM. For best results, all inputs s
 Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.  
 
 ![correct]( src/plugin/open_lidar_tools/help/correct.jpg "Correct radius (3)")  
-correct radius (3)  
+correct radius (3) 
+
 ![wrong]( src/plugin/open_lidar_tools/help/wrong.jpg "Wrong radius (2)")  
 wrong radius (1)  
 
