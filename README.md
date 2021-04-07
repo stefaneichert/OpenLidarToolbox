@@ -14,7 +14,7 @@ The input required is an unclassified point cloud in LAZ /LAS format. The tool r
 [Metadata](#Metadata)  
 [Installation](#Installation)  
 
-#Data
+#**Data**
   1. Classified point cloud  - LAZ
   2. Digital feature model (DFM, also known as "archaeological DEM") - GeoTIFF
   3. LiDAR visualisations (Sky View Factor, Opennes, Archaeological VAT, and Difference from Mean Elevation also known as Local Relief Model) - GeoTIFFs
@@ -36,7 +36,7 @@ Open LiDAR Tools is a QGIS plug-in developed in collaboration between NHM Wien a
 https://www.mdpi.com/2076-3263/11/1/26  
 https://www.mdpi.com/2072-4292/12/18/3025
 
-# Installation
+#**Installation**
 
 The easiest way to install it, is to [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").
 Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu.
