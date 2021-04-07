@@ -112,4 +112,4 @@ wrong radius (1)
 I have NoData holes in my DFM/DEM.
 Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.
 
-**Literature:** Štular, Lozić, Eichert 2021a (in press).
+**Literature:** Štular, Lozić, Eichert 2021b (in press).
