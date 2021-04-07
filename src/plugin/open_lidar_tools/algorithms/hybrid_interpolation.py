@@ -53,21 +53,16 @@ import inspect
 class HybridInterpolation(QgsProcessingAlgorithm):
 
     def initAlgorithm(self, config=None):
-        self.addParameter(
-            QgsProcessingParameterRasterLayer('ConfidenceMapRaster', 'DFM Confidence Map', defaultValue=None))
+        self.addParameter(QgsProcessingParameterRasterLayer('ConfidenceMapRaster', 'DFM Confidence Map', defaultValue=None))
         self.addParameter(QgsProcessingParameterRasterLayer('TLI (2)', 'IDW Interpolation', defaultValue=None))
         self.addParameter(QgsProcessingParameterRasterLayer('TLI', 'TLI (TIN) Interpolation', defaultValue=None))
-        self.addParameter(
-            QgsProcessingParameterNumber('CellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
-                                         minValue=0.1, defaultValue=0.5))
-        self.addParameter(QgsProcessingParameterNumber('REDgrowradiusinrastercells', 'Grow Radius (Cell Size)',
-                                                       type=QgsProcessingParameterNumber.Integer, minValue=0,
-                                                       maxValue=9999, defaultValue=3))
+        self.addParameter(QgsProcessingParameterNumber('CellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double, minValue=0.1, defaultValue=0.5))
+        self.addParameter(QgsProcessingParameterNumber('REDgrowradiusinrastercells', 'RED grow radius in raster cells', type=QgsProcessingParameterNumber.Integer, minValue=0, maxValue=9999, defaultValue=3))
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(16, model_feedback)
         results = {}
         outputs = {}
 
@@ -80,8 +75,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'input': parameters['ConfidenceMapRaster'],
             'output': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['RresampleCfm'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                 is_child_algorithm=True)
+        outputs['RresampleCfm'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
@@ -95,29 +89,12 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NO_DATA': -9999,
             'RANGE_BOUNDARIES': 0,
             'RASTER_BAND': 1,
-            'TABLE': [-0.001, 3, 1, 3, 6, 0],
+            'TABLE': [-0.001,3,1,3,6,0],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['RedtmpClassify'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                   feedback=feedback, is_child_algorithm=True)
+        outputs['RedtmpClassify'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(2)
-        if feedback.isCanceled():
-            return {}
-
-        # r.resample IDW
-        alg_params = {
-            'GRASS_RASTER_FORMAT_META': '',
-            'GRASS_RASTER_FORMAT_OPT': '',
-            'GRASS_REGION_CELLSIZE_PARAMETER': parameters['CellSize'],
-            'GRASS_REGION_PARAMETER': parameters['ConfidenceMapRaster'],
-            'input': parameters['TLI (2)'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['RresampleIdw'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                 is_child_algorithm=True)
-
-        feedback.setCurrentStep(3)
         if feedback.isCanceled():
             return {}
 
@@ -130,8 +107,22 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'input': parameters['TLI'],
             'output': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['RresampleTli'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                 is_child_algorithm=True)
+        outputs['RresampleTli'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(3)
+        if feedback.isCanceled():
+            return {}
+
+        # r.resample IDW
+        alg_params = {
+            'GRASS_RASTER_FORMAT_META': '',
+            'GRASS_RASTER_FORMAT_OPT': '',
+            'GRASS_REGION_CELLSIZE_PARAMETER': parameters['CellSize'],
+            'GRASS_REGION_PARAMETER': parameters['ConfidenceMapRaster'],
+            'input': parameters['TLI (2)'],
+            'output': QgsProcessing.TEMPORARY_OUTPUT
+        }
+        outputs['RresampleIdw'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(4)
         if feedback.isCanceled():
@@ -154,8 +145,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'weight': '',
             'output': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['TmpredNeighbours'] = processing.run('grass7:r.neighbors', alg_params, context=context,
-                                                     feedback=feedback, is_child_algorithm=True)
+        outputs['TmpredNeighbours'] = processing.run('grass7:r.neighbors', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(5)
         if feedback.isCanceled():
@@ -169,11 +159,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NO_DATA': -9999,
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
-            'TABLE': [1, 1, 1],
+            'TABLE': [1,1,1],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['ReclassifyRedtmponenodata'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                              feedback=feedback, is_child_algorithm=True)
+        outputs['ReclassifyRedtmponenodata'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(6)
         if feedback.isCanceled():
@@ -193,8 +182,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'radius': parameters['REDgrowradiusinrastercells'],
             'output': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['Rgrow2CellsTmpred'] = processing.run('grass7:r.grow', alg_params, context=context, feedback=feedback,
-                                                      is_child_algorithm=True)
+        outputs['Rgrow2CellsTmpred'] = processing.run('grass7:r.grow', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(7)
         if feedback.isCanceled():
@@ -211,28 +199,9 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'TARGET_CRS': None,
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['TranslateRedgrow'] = processing.run('gdal:translate', alg_params, context=context, feedback=feedback,
-                                                     is_child_algorithm=True)
+        outputs['TranslateRedgrow'] = processing.run('gdal:translate', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(8)
-        if feedback.isCanceled():
-            return {}
-
-        # Reclassify nodata to zero red
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['TranslateRedgrow']['OUTPUT'],
-            'NODATA_FOR_MISSING': False,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [-999999, 0.09, 0, 1, 1.01, 1, 2, 999999, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['ReclassifyNodataToZeroRed'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                              feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(9)
         if feedback.isCanceled():
             return {}
 
@@ -248,8 +217,24 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'units': 0,
             'output': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['Rbuffer'] = processing.run('grass7:r.buffer', alg_params, context=context, feedback=feedback,
-                                            is_child_algorithm=True)
+        outputs['Rbuffer'] = processing.run('grass7:r.buffer', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(9)
+        if feedback.isCanceled():
+            return {}
+
+        # Reclassify nodata to zero red
+        alg_params = {
+            'DATA_TYPE': 3,
+            'INPUT_RASTER': outputs['TranslateRedgrow']['OUTPUT'],
+            'NODATA_FOR_MISSING': False,
+            'NO_DATA': -9999,
+            'RANGE_BOUNDARIES': 2,
+            'RASTER_BAND': 1,
+            'TABLE': [-999999,0.09,0,1,1.01,1,2,999999,0],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+        }
+        outputs['ReclassifyNodataToZeroRed'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(10)
         if feedback.isCanceled():
@@ -266,20 +251,24 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'TARGET_CRS': None,
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['TranslateConvertFormat'] = processing.run('gdal:translate', alg_params, context=context,
-                                                           feedback=feedback, is_child_algorithm=True)
+        outputs['TranslateConvertFormat'] = processing.run('gdal:translate', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(11)
         if feedback.isCanceled():
             return {}
 
-        # Load Red
+        # blueTmp reclass
         alg_params = {
-            'INPUT': outputs['ReclassifyNodataToZeroRed']['OUTPUT'],
-            'NAME': 'Red'
+            'DATA_TYPE': 3,
+            'INPUT_RASTER': outputs['ReclassifyNodataToZeroRed']['OUTPUT'],
+            'NODATA_FOR_MISSING': False,
+            'NO_DATA': -9999,
+            'RANGE_BOUNDARIES': 2,
+            'RASTER_BAND': 1,
+            'TABLE': [1,1,0,0,0,1],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['LoadRed'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
-                                            is_child_algorithm=True)
+        outputs['BluetmpReclass'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(12)
         if feedback.isCanceled():
@@ -293,31 +282,12 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NO_DATA': -9999,
             'RANGE_BOUNDARIES': 0,
             'RASTER_BAND': 1,
-            'TABLE': [-1, 1, 0, 1, 2, 1, 2, 256, 0],
+            'TABLE': [-1,1,0,1,2,1,2,256,0],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['ReclassifyNodataToZero'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                           feedback=feedback, is_child_algorithm=True)
+        outputs['ReclassifyNodataToZero'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(13)
-        if feedback.isCanceled():
-            return {}
-
-        # blueTmp reclass
-        alg_params = {
-            'DATA_TYPE': 3,
-            'INPUT_RASTER': outputs['LoadRed']['OUTPUT'],
-            'NODATA_FOR_MISSING': False,
-            'NO_DATA': -9999,
-            'RANGE_BOUNDARIES': 2,
-            'RASTER_BAND': 1,
-            'TABLE': [1, 1, 0, 0, 0, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
-        outputs['BluetmpReclass'] = processing.run('native:reclassifybytable', alg_params, context=context,
-                                                   feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(14)
         if feedback.isCanceled():
             return {}
 
@@ -342,10 +312,9 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RTYPE': 4,
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['Bluecalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context,
-                                                   feedback=feedback, is_child_algorithm=True)
+        outputs['Bluecalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(15)
+        feedback.setCurrentStep(14)
         if feedback.isCanceled():
             return {}
 
@@ -370,22 +339,9 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RTYPE': 5,
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
-        outputs['RasterCalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context,
-                                                     feedback=feedback, is_child_algorithm=True)
+        outputs['RasterCalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(16)
-        if feedback.isCanceled():
-            return {}
-
-        # Load blue
-        alg_params = {
-            'INPUT': outputs['Bluecalculator']['OUTPUT'],
-            'NAME': 'Blue'
-        }
-        outputs['LoadBlue'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
-                                             is_child_algorithm=True)
-
-        feedback.setCurrentStep(17)
+        feedback.setCurrentStep(15)
         if feedback.isCanceled():
             return {}
 
@@ -394,8 +350,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'INPUT': outputs['RasterCalculator']['OUTPUT'],
             'NAME': 'DFM'
         }
-        outputs['LoadDfmGdal'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
-                                                is_child_algorithm=True)
+        outputs['LoadDfmGdal'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         return results
 
     def name(self):
@@ -413,7 +368,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'confidencemap.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'hybrid.png')))
         return icon
 
     def groupId(self):
@@ -427,26 +382,31 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         return 'Analysis'
 
     def shortHelpString(self):
-        return """<html><body><h2>Algorithm description</h2>
-    <p>This algorithm calculates a hybrid interpolation of DFM/DEM. 
-    It uses IDW (Inverse Distance Weighing) interpolation in areas of low DFM confidence (levels 1-3) 
-    and TLI ( Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6).
-    The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under 
-    very similar conditions, such as those provided by Golden Software Surfer.</p>
-    <h2>Input parameters</h2>
+        return """<html><body>
+    <p>This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance Weighing) interpolation in areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
+    This interpolator is best suited for low or medium point density data characterized by significant local variation in point density, such as an open landscape interspersed with hedgerows or other patches of dense vegetation. For high point density data, the TLI by itself usually gives better results.</p>
+    <h2>Input</h2>
     <h3>DFM Confidence Map</h3>
-    <p>Result of the DFM Confidence Map module calculated from IDW interpolation for the desired cell size.</p>
+    <p>Must be calculated with DFM Confidence Map module from IDW interpolation for the desired cell size.</p>
     <h3>IDW Interpolation</h3>
-    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing), for example with Whitebox Tools: LidarIDWInterpolation or with an external tool like Golden Software Surfer.</p>
+    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.</p>
     <h3>TLI Interpolation</h3>
-    <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation, for example with Whitebox Tools: LidarTINGridding or with an external tool like Golden Software Surfer.</p>
+    <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.</p>
+    <h2>Parameters</h2>
     <h3>Cell Size</h3>
     <p>The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.</p>
     <h3>Grow Radius (Cell Size) </h3>
-    <p>Grow radius for "RED" areas with low DFM confidence. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.
-</p>
-
+    <p>Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.</p>
     <p></p>
+    <h2>Troubleshooting</h2>
+    <h3>I have NoData holes in my DFM/DEM</h3>
+    <p>Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW or too small setting for maximum triangle size in TLI.</p>
+    <h3>The artifacts (noise) in the contact areas are too big and tweaking the Grow radius doesn't help</h3>
+    <p>Some amount of artifacts is inevitable. In our testing the artifacts were significantly smaller when the input layers have been calculated with Golden Software Surfer, since exactly same parameters for neighborhood search can be set. If the artifacts are so strong, that they can misguide archaeological interpretation, then we suggest using IDW interpolation instead.</p>
+    <p></p>
+    <br>
+    <p><b>Literature:</b> Štular, Lozić, Eichert 2021b (in press).</p>
+    <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 
     def tr(self, string):
