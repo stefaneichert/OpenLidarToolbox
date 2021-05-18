@@ -1,6 +1,6 @@
 # **Open LiDAR Tools**
 
-![Logo]( src/plugin/open_lidar_tools/icon.png "Open LiDAR Tools")
+![Logo]( src/QGISplugin/open_lidar_tools/icon.png "Open LiDAR Tools")
 
 Under active development, please check for updates! (Currently only one module is available: [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").)
 
@@ -101,10 +101,10 @@ The resolution or cell size of the final DFM/DEM. For best results, all inputs s
 ***Grow Radius (Cell Size):***  
 Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.  
 
-![correct]( src/plugin/open_lidar_tools/help/correct.jpg "Correct radius (3)")  
+![correct]( src/QGISplugin/open_lidar_tools/help/correct.jpg "Correct radius (3)")  
 correct radius (3) 
 
-![wrong]( src/plugin/open_lidar_tools/help/wrong.jpg "Wrong radius (2)")  
+![wrong]( src/QGISplugin/open_lidar_tools/help/wrong.jpg "Wrong radius (2)")  
 wrong radius (1)  
 
 

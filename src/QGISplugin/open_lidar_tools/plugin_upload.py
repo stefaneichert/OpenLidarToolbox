@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-"""This script uploads a plugin package to the plugin repository.
+"""This script uploads a QGISplugin package to the QGISplugin repository.
         Authors: A. Pasotti, V. Picavet
         git sha              : $TemplateVCSFormat
 """
@@ -58,7 +58,7 @@ def main(parameters, arguments):
 def hide_password(url, start=6):
     """Returns the http url with password part replaced with '*'.
 
-    :param url: URL to upload the plugin to.
+    :param url: URL to upload the QGISplugin to.
     :type url: str
 
     :param start: Position of start of password.
@@ -73,13 +73,13 @@ def hide_password(url, start=6):
 
 
 if __name__ == "__main__":
-    parser = OptionParser(usage="%prog [options] plugin.zip")
+    parser = OptionParser(usage="%prog [options] QGISplugin.zip")
     parser.add_option(
         "-w", "--password", dest="password",
-        help="Password for plugin site", metavar="******")
+        help="Password for QGISplugin site", metavar="******")
     parser.add_option(
         "-u", "--username", dest="username",
-        help="Username of plugin site", metavar="user")
+        help="Username of QGISplugin site", metavar="user")
     parser.add_option(
         "-p", "--port", dest="port",
         help="Server port to connect to", metavar="80")
