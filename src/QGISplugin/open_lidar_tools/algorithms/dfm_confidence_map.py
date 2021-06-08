@@ -773,6 +773,9 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 outputs['SetStyleForRasterLayer'] = processing.run('qgis:setstyleforrasterlayer', alg_params,
                                                                    context=context,
                                                                    feedback=feedback, is_child_algorithm=True)
+
+            results['CFM' + appendix] = outputs['Calccranfinal' + appendix]['OUTPUT']
+
         return results
 
     def name(self):
