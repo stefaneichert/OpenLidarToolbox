@@ -316,7 +316,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
         if parameters['GPD']:
             alg_params = {
                 'INPUT': GPDfileR,
-                'NAME': parameters['prefix'] + 'GPD'
+                'NAME': parameters['prefix'] + 'Ground Point Density'
             }
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
@@ -391,7 +391,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
         if parameters['LVD']:
             alg_params = {
                 'INPUT': LVDfileR,
-                'NAME': parameters['prefix'] + 'LVD'
+                'NAME': parameters['prefix'] + 'Low Vegetation Density'
             }
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)

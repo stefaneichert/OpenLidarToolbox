@@ -25,7 +25,7 @@ hasProcessingProvider=yes
 # Tags are comma separated with spaces allowed
 tags=python, lidar, raster, archaeology, archeology, laser scanning, ALS, Airborne laser scanning
 
-homepage=https://github.com/stefaneichert/OpenLidarTools
+homepage=https://github.com/stefaneichert/OpenLidarToolbox
 category=Analysis
 icon=icon.png
 # experimental flag
