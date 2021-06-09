@@ -1,7 +1,7 @@
 #/***************************************************************************
 # OpenLidarTools
 #
-# Open Lidar Tools
+# Open LiDAR Toolbox
 #							 -------------------
 #		begin				: 2021-03-10
 #		git sha				: $Format:%H$
@@ -40,7 +40,7 @@ SOURCES = \
 	__init__.py \
 	open_lidar_tools.py 
 
-PLUGINNAME = open_lidar_tools
+PLUGINNAME = open_lidar_toolbox
 
 PY_FILES = \
 	__init__.py \
