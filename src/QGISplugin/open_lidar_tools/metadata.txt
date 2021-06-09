@@ -6,7 +6,7 @@
 name=Open LiDAR Toolbox
 qgisMinimumVersion=3.0
 description=Open Tools for LiDAR Data Preparation and Analysis in Archaeology
-version=1
+version=1.1
 author=Stefan Eichert, Benjamin Štular, Edisa Lozić
 email=stefaneichert@gmail.com, bstular@zrc-sazu.si, Edisa.lozic@gmail.com
 
@@ -37,7 +37,7 @@ deprecated=False
 # Since QGIS 3.8, a comma separated list of plugins to be installed
 # (or upgraded) can be specified.
 # Check the documentation for more information.
-plugin_dependencies=LAStools, Relief Visualization Toolbox
+plugin_dependencies=LAStools, rvt-qgis
 
 Category of the plugin: Raster, Vector, Database or Web
 # category=Raster
