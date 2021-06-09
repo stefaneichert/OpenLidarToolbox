@@ -43,7 +43,7 @@ In addition to the one-click solution, several stand-alone modules are available
 
 # **Installation**
 
-The easiest way to install it, is to [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarTools/raw/main/src/plugin/open_lidar_tools.zip "Download Plugin as ZIP").
+The easiest way to install it, is to [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/develop/src/QGISplugin/open_lidar_tools.zip "Download Plugin as ZIP").
 Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu.
 Then Open LiDAR Toolbox will then show up in the processing toolbox.
 Users who need deeper access to even more settings can download individual QGIS models [here](https://github.com/stefaneichert/OpenLidarTools/tree/develop/src/models).
