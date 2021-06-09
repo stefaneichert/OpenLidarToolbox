@@ -20,7 +20,7 @@ https://www.mdpi.com/2072-4292/12/18/3025
 - [**Modules**](#modules)
   * [**Confidence Map**](#confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
-  * [**ONE Step Processing**](#one-step-processing)
+  * [**ONE Step Processing**](#one-one-step-processing)
 
 # **Data**
 
