@@ -2686,7 +2686,7 @@
     <Option type="QString" name="gdal:rastercalculator_11:Confidence Map" value=""/>
   </Option>
   <Option name="modelVariables"/>
-  <Option type="QString" name="model_group" value="Open LiDAR Tools for Archaeology"/>
+  <Option type="QString" name="model_group" value="Open LiDAR Toolbox for Archaeology"/>
   <Option type="QString" name="model_name" value="DFM Confidence Map"/>
   <Option type="Map" name="parameterDefinitions">
     <Option type="Map" name="DEMDFM">
