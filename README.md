@@ -20,6 +20,7 @@ https://www.mdpi.com/2072-4292/12/18/3025
 - [**Modules**](#modules)
   * [**Confidence Map**](#confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
+  * [**ONE Step Processing**](#one-step-processing)
 
 # **Data**
 
@@ -114,3 +115,36 @@ I have NoData holes in my DFM/DEM.
 Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.
 
 **Literature:** Štular, Lozić, Eichert 2021b (in press).
+
+## **ONE (One-step-processing)**  
+This is an algorithm pipeline that takes an unclassified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.
+The pipeline introduces several additional steps compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used four of the state-of-the-art solutions available.
+### **Input:**  
+
+***Unclassified point cloud:***  
+Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+
+### **Parameters:**  
+***Cell Size:***  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.
+***Source file coordinate system (CRS):***  
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+
+### **Outputs:** 
+***Classified point cloud***  
+***DFM***  
+DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+***Ground Point Density***  
+***Low Vegetation Density***  
+***DFM CM 0.5m***  
+DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)  
+***DFM visualisations:***  
+Sky view factor  
+Openness – positive  
+Difference from mean elevation  
+Visualisation for archaeological topography (VAT)  
+Hillshade/Relief
+
+### **FAQ:**  
+The edges of my outputs are black.
+This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.
