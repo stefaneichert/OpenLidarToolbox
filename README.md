@@ -161,5 +161,5 @@ Some amount of artifacts is inevitable. In our testing the artifacts were signif
 |4|Data Quality|4.1|DFM Confidence Map|OK|v1.0
 | | | 4.2|Info (4 Archaeology)|Normal|v1.x
 |5|Other|5.1|Change detection map|Low|v2.x
-| |Fork all to high density / medium density / low density data| | | | VLow|v3.x
+| |Fork all to high density / medium density / low density data| | | VLow|v3.x
 
