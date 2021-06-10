@@ -24,6 +24,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
 # **Table of Content**
 - [**Installation**](#installation)
 - [**Dependencies**](#dependencies)
+- [**General notes on input LiDAR data**](#general-notes-on-input-lidar-data)
 - [**Modules**](#modules)
   * [**ONE Step Processing**](#one-one-step-processing)
   * [**DFM Confidence Map**](#dfm-confidence-map)
@@ -38,6 +39,10 @@ Users who need deeper access to even more settings can download individual QGIS 
 # **Dependencies**
 Open LiDAR Toolbox are a "shell" that uses several excellent tools under the hood: GDAL, GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before the Open LiDAR Toolbox: LAStools, Whitebox Tools and RVT. While RVT and LAStools can be installed via the official QGIS plugin repository Whitebox Tools need to be installed as described [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/).  
 For further and detailed LAStools installation instructions see [here](https://rapidlasso.com/2013/09/29/how-to-install-lastools-toolbox-in-qgis/).
+
+# **General notes on input LiDAR data**
+All tools are designed to work best with data that is in square tiles between one and about 25 million points. Processing time increases exponentially with the number of points, as does the RAM memory requirement. The best practice for processing large datasets is to split the data into overlapping tiles (e.g., 20 m overlap), batch process the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets.
+
 
 # **Modules**
 
