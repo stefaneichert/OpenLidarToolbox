@@ -29,10 +29,6 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
 
-- [**Data**](#data)
-- [**Metadata**](#metadata)
-
-
 
 # **Installation**
 The easiest way to install is from QGIS/Plugins/Manage and Install Plugins…  
