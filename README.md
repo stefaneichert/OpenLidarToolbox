@@ -28,7 +28,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
   * [**ONE Step Processing**](#one-one-step-processing)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
-
+- [**Roadmap**](#roadmap)
 
 # **Installation**
 The easiest way to install is from QGIS/Plugins/Manage and Install Plugins…  
@@ -70,7 +70,7 @@ Difference from mean elevation
 Visualisation for archaeological topography (VAT)  
 Hillshade/Relief
 
-###**References:**
+### **References:**
 Štular, Lozić, Eichert 2021 (in press).
 
 ### **FAQ:**  
@@ -100,7 +100,7 @@ DFM/DEM Resolution (multiple choice).
 ***Output Cell Size:***  
 Define the cell size of the Confidence Map. 0.5 or 1 m is recommended. (It is possible to calculate DFM Confidence Map for high resolution, e.g. 0.25 m, but display the result at lower resolution, e.g. 1 m.)
 
-###**References:**
+### **References:**
 Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021, 13, 1855. https://doi.org/10.3390/rs13091855.
 
 ### **FAQ:**  
@@ -135,7 +135,7 @@ correct radius (3)
 ![wrong]( src/QGISplugin/open_lidar_tools/help/wrong.jpg "Wrong radius (2)")  
 wrong radius (1)  
 
-###**References:**  
+### **References:**  
 Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021, 13, 1855. https://doi.org/10.3390/rs13091855.
 
 ### **FAQ:**  
