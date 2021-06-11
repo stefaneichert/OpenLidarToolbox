@@ -1338,7 +1338,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p>This is an algorithm pipeline that takes an unclassified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
-    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.</p>
+    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+    <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
     <h3>Source File Coordinate System</h3>
     <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
     <h3>Cell Size</h3>
