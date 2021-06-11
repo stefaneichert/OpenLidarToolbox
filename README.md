@@ -37,8 +37,25 @@ You can also [download the plugin ZIP file](https://github.com/stefaneichert/Ope
 Users who need deeper access to even more settings can download individual QGIS models [here](https://github.com/stefaneichert/OpenLidarToolbox/tree/main/src/models "download models").
 
 # **Dependencies**
-Open LiDAR Toolbox are a "shell" that uses several excellent tools under the hood: GDAL, GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before the Open LiDAR Toolbox: LAStools, Whitebox Tools and RVT. While RVT and LAStools can be installed via the official QGIS plugin repository Whitebox Tools need to be installed as described [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/).  
-For further and detailed LAStools installation instructions see [here](https://rapidlasso.com/2013/09/29/how-to-install-lastools-toolbox-in-qgis/).
+Open LiDAR Toolbox are a &quot;shell&quot; that uses several excellent tools under the hood: GDAL,
+GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following
+plug-ins must be installed before Open LiDAR Toolbox: LAStools, Whitebox Tools and RVT.
+If you do not already have these plug-ins installed, RVT and LAStools will be installed
+automatically with the Open LiDAR Toolbox. However, additional steps must be taken.
+
+LAStools
+1) Download the actual LAStools software from here and unzip it to a permanent location,
+e.g., c:LAStools
+2) Select the Processing tab and the Providers list item. You should find the LAStools entry
+there. Select the down arrow, and check the Activate checkbox. Lastly, enter name of the
+LAStools folder that you downloaded previously (see note above). If you are using a Mac or
+Linux computer, things get a bit more complicated*. Wine is your friend!
+*If you manage to make LAStools working on a recent macOS, please let us know how!
+   
+![Plugins]( src/QGISplugin/open_lidar_tools/help/lastools.jpg "Plugin Providers")
+
+Whitebox tools  
+Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/). 
 
 # **General notes on input LiDAR data**
 All tools are designed to work best with data that is in square tiles between one and about 25 million points. Processing time increases exponentially with the number of points, as does the RAM memory requirement. The best practice for processing large datasets is to split the data into overlapping tiles (e.g., 20 m overlap), batch process the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets.
@@ -52,7 +69,9 @@ The pipeline introduces several additional steps compared to a traditional appro
 ### **Input:**  
 
 ***Unclassified point cloud:***  
-Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
+will be exempt from the processing, all other preexisting classification will be ignored.
+Point clouds with more than 30 million points will fail or will take very long to process.
 
 ### **Parameters:**  
 ***Cell Size:***  
