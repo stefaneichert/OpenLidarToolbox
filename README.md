@@ -58,7 +58,13 @@ Whitebox tools
 Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/). 
 
 # **General notes on input LiDAR data**
-All tools are designed to work best with data that is in square tiles between one and about 25 million points. Processing time increases exponentially with the number of points, as does the RAM memory requirement. The best practice for processing large datasets is to split the data into overlapping tiles (e.g., 20 m overlap), batch process the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets.
+All tools are designed to work best with data that is in 
+**square tiles between one and about 25 million points**.   
+**Processing time increases exponentially with the number of points**, 
+as does the RAM memory requirement. The best practice for processing large 
+datasets is to split the data into overlapping tiles (e.g., 20 m overlap), 
+batch process the tiles, and “de-collar" (remove the overlaps) the resulting 
+raster datasets.
 
 
 # **Modules**
@@ -71,7 +77,7 @@ The pipeline introduces several additional steps compared to a traditional appro
 ***Unclassified point cloud:***  
 Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
 will be exempt from the processing, all other preexisting classification will be ignored.
-Point clouds with more than 30 million points will fail or will take very long to process.
+**Point clouds with more than 30 million points will fail or will take very long to process.**
 
 ### **Parameters:**  
 ***Cell Size:***  
