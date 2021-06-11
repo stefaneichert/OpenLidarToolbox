@@ -49,7 +49,7 @@ e.g., c:LAStools
 2) Select the Processing tab and the Providers list item. You should find the LAStools entry
 there. Select the down arrow, and check the Activate checkbox. Lastly, enter name of the
 LAStools folder that you downloaded previously (see note above). If you are using a Mac or
-Linux computer, things get a bit more complicated*. Wine is your friend!
+Linux computer, things get a bit more complicated*. Wine is your friend!  
 *If you manage to make LAStools working on a recent macOS, please let us know how!
    
 ![Plugins]( src/QGISplugin/open_lidar_tools/help/lastools.jpg "Plugin Providers")
