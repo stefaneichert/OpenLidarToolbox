@@ -82,6 +82,7 @@ will be exempt from the processing, all other preexisting classification will be
 ### **Parameters:**  
 ***Cell Size:***  
 DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+
 ***Source file coordinate system (CRS):***  
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
