@@ -44,36 +44,26 @@ from qgis.core import QgsProcessing
 from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
 from qgis.core import QgsProcessingParameterRasterLayer
-from qgis.core import QgsProcessingParameterFile
 from qgis.core import QgsProcessingParameterNumber
-from qgis.core import QgsProcessingParameterRasterDestination
+from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterEnum
+from qgis.core import QgsProcessingParameterDefinition
 import processing
 from os.path import exists
 
 
 class dfmConfidenceMap(QgsProcessingAlgorithm):
-    """
-    This is an example algorithm that takes a vector layer and
-    creates a new identical one.
 
-    It is meant to be used as an example of how to create your own
-    algorithms and explain methods and variables used to do it. An
-    algorithm like this will be available in all elements, and there
-    is not need for additional work.
-
-    All Processing algorithms should extend the QgsProcessingAlgorithm
-    class.
-    """
-
-    # Constants used to refer to parameters and outputs. They will be
-    # used when calling the algorithm from another algorithm, or when
-    # calling from the QGIS console.
 
     OUTPUT = 'OUTPUT'
     INPUT = 'INPUT'
 
     def initAlgorithm(self, config=None):
+        param = QgsProcessingParameterBoolean('loadCFM', 'LoadFile', defaultValue=True)
+        param.setName('loadCFM')
+        param.setFlags(param.flags() | QgsProcessingParameterDefinition.FlagHidden)
+
+        self.addParameter(param)
         self.addParameter(QgsProcessingParameterRasterLayer('DEMDFM', 'DEM/DFM Layer', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterRasterLayer('Groundlayer', 'Ground Point Density Layer', defaultValue=None))
@@ -132,7 +122,20 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'veglow': [0, 0.25, 1, 0.25000001, 100000, 0]
         }
 
+        feedback.setCurrentStep(1)
+        if feedback.isCanceled():
+            return {}
+
         # resampleVEG
+        feedback.pushInfo('')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo(' Open LiDAR Toolbox ')
+        feedback.pushInfo(' Resampling Vegetation ')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo('')
+
+        feedback.pushInfo(str(parameters))
+
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
@@ -144,21 +147,19 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         outputs['Resampleveg'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(1)
-        if feedback.isCanceled():
-            return {}
-
-        # Conditional branch
-        alg_params = {
-        }
-        outputs['ConditionalBranch'] = processing.run('native:condition', alg_params, context=context,
-                                                      feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(2)
         if feedback.isCanceled():
             return {}
 
         # resampleGPD
+        feedback.pushInfo('')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo(' Open LiDAR Toolbox ')
+        feedback.pushInfo(' Resampling Ground Points ')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo('')
+
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
@@ -175,6 +176,12 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             return {}
 
         # resampleDEM
+        feedback.pushInfo('')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo(' Open LiDAR Toolbox ')
+        feedback.pushInfo(' Resampling DEM ')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo('')
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
@@ -207,6 +214,14 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 appendix = ' 2m'
 
             # Density Hi
+
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Density High ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resamplegpd']['output'],
@@ -225,6 +240,13 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
             # Density Mid
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Density Mid ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resamplegpd']['output'],
@@ -244,6 +266,13 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
             # Density Low
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Density Low ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resamplegpd']['output'],
@@ -263,6 +292,13 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
             # Density Vlow
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Density Vlow ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resamplegpd']['output'],
@@ -282,6 +318,14 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
             # VegLow
+
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Vegetation Low ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resampleveg']['output'],
@@ -302,6 +346,14 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
             # VegHi
+
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Vegetation High ')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
             alg_params = {
                 'DATA_TYPE': 3,
                 'INPUT_RASTER': outputs['Resampleveg']['output'],
@@ -321,6 +373,14 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 return {}
 
         # Slope Qgis
+
+        feedback.pushInfo('')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo(' Open LiDAR Toolbox ')
+        feedback.pushInfo(' Slope ')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo('')
+
         alg_params = {
             'INPUT': outputs['Resampledem']['output'],
             'Z_FACTOR': 1,
@@ -333,6 +393,13 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+
+        feedback.pushInfo('')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo(' Open LiDAR Toolbox ')
+        feedback.pushInfo(' Reclassify Slope ')
+        feedback.pushInfo('*****************************')
+        feedback.pushInfo('')
 
         # Slope 12
         alg_params = {
@@ -422,6 +489,14 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 appendix = ' 1m'
             if row == 3:
                 appendix = ' 2m'
+
+            feedback.pushInfo('')
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo(' Open LiDAR Toolbox ')
+            feedback.pushInfo(' Calculating CFM for' + appendix)
+            feedback.pushInfo('*****************************')
+            feedback.pushInfo('')
+
 
             # Calc 1a
             alg_params = {
@@ -747,18 +822,19 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             if feedback.isCanceled():
                 return {}
 
-            # Load result
-            alg_params = {
-                'INPUT': outputs['Calccranfinal' + appendix]['OUTPUT'],
-                'NAME': 'DFM confidence map' + appendix
-            }
-            outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
-                                                   is_child_algorithm=True)
+            if parameters['loadCFM']:
+                # Load result
+                alg_params = {
+                    'INPUT': outputs['Calccranfinal' + appendix]['OUTPUT'],
+                    'NAME': 'DFM confidence map' + appendix
+                }
+                outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
+                                                       is_child_algorithm=True)
 
-            iter = iter + 1
-            feedback.setCurrentStep(iter)
-            if feedback.isCanceled():
-                return {}
+                iter = iter + 1
+                feedback.setCurrentStep(iter)
+                if feedback.isCanceled():
+                    return {}
 
             # Set style for raster layer
             # Set style for raster layer

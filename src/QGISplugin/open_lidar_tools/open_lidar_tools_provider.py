@@ -34,6 +34,8 @@ from qgis.core import QgsProcessingProvider
 from .algorithms.lidar_prep import LidarPipeline
 from .algorithms.dfm_confidence_map import dfmConfidenceMap
 from .algorithms.hybrid_interpolation import HybridInterpolation
+from .algorithms.to_class_las import ToClassLas
+from .algorithms.from_class_las import FromClassLas
 import os
 import inspect
 from qgis.PyQt.QtGui import QIcon
@@ -61,6 +63,8 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         self.addAlgorithm(dfmConfidenceMap())
         self.addAlgorithm((HybridInterpolation()))
         self.addAlgorithm((LidarPipeline()))
+        self.addAlgorithm((ToClassLas()))
+        self.addAlgorithm((FromClassLas()))
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 
