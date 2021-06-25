@@ -57,7 +57,7 @@ import processing
 from os.path import exists
 
 
-class FromClassLas(QgsProcessingAlgorithm):
+class LidarPipeline(QgsProcessingAlgorithm):
 
     def initAlgorithm(self, config=None):
 
@@ -65,6 +65,9 @@ class FromClassLas(QgsProcessingAlgorithm):
             QgsProcessingParameterFile('InputFilelaslaz', 'Input File', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
+        self.addParameter(
+            QgsProcessingParameterFileDestination('LAS', 'Classified LAZ', fileFilter='Lidar Files (*.laz)',
+                                                  defaultValue=None, optional=False, createByDefault=True))
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
@@ -96,26 +99,38 @@ class FromClassLas(QgsProcessingAlgorithm):
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
-        lasheightclassifyfile = parameters['InputFilelaslaz']
 
-        if parameters['InputFilelaslaz'][-4:] == '.laz':
 
-            # laszip
+        alg_params = {
+            'InputFilelaslaz': parameters['InputFilelaslaz'],
+            'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las')
+        }
+        outputs['ClassifyLaslaz'] = processing.run('Open LiDAR Toolbox:ToClassLas', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+        lasheightclassifyfile = outputs['ClassifyLaslaz']['classifiedLAZ']
+        results['LAS'] = outputs['ClassifyLaslaz']['classifiedLAZ']
+
+        if parameters['LAS'] != 'TEMPORARY_OUTPUT':
+            # lasduplicate
             alg_params = {
-                'ADDITIONAL_OPTIONS': '',
-                'APPEND_LAX': False,
+                'ADDITIONAL_OPTIONS': '-unique_xyz',
                 'CPU64': False,
-                'CREATE_LAX': False,
                 'GUI': False,
-                'INPUT_LASLAZ': parameters['InputFilelaslaz'],
-                'OUTPUT_LASLAZ': QgsProcessingUtils.generateTempFilename('lasheight.las'),
-                'REPORT_SIZE': False,
+                'HIGHEST_Z': False,
+                'INPUT_LASLAZ': lasheightclassifyfile,
+                'LOWEST_Z': False,
+                'NEARBY': False,
+                'NEARBY_TOLERANCE': 0.02,
+                'OUTPUT_LASLAZ': parameters['LAS'],
+                'RECORD_REMOVED': False,
+                'SINGLE_RETURNS': False,
+                'UNIQUE_XYZ': False,
                 'VERBOSE': False
             }
-            lasheightclassifyfile = alg_params['OUTPUT_LASLAZ']
-            outputs['Laszip'] = processing.run('LAStools:laszip', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+            outputs['Lasduplicate'] = processing.run('LAStools:lasduplicate', alg_params, context=context,
+                                                     feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(1)
+
+        feedback.setCurrentStep(6)
         if feedback.isCanceled():
             return {}
 
@@ -134,7 +149,7 @@ class FromClassLas(QgsProcessingAlgorithm):
         outputs['Lidarpointdensity1_ground'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(7)
         if feedback.isCanceled():
             return {}
 
@@ -151,7 +166,7 @@ class FromClassLas(QgsProcessingAlgorithm):
         outputs['Resamplegpd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(8)
         if feedback.isCanceled():
             return {}
 
@@ -177,7 +192,7 @@ class FromClassLas(QgsProcessingAlgorithm):
                                                   is_child_algorithm=True)
         GPDfileR = alg_params['OUTPUT']
 
-        feedback.setCurrentStep(4)
+        feedback.setCurrentStep(9)
         if feedback.isCanceled():
             return {}
 
@@ -190,7 +205,7 @@ class FromClassLas(QgsProcessingAlgorithm):
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(10)
         if feedback.isCanceled():
             return {}
 
@@ -209,7 +224,7 @@ class FromClassLas(QgsProcessingAlgorithm):
         outputs['Lidarpointdensity2_lowveg'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(6)
+        feedback.setCurrentStep(11)
         if feedback.isCanceled():
             return {}
 
@@ -1175,10 +1190,10 @@ class FromClassLas(QgsProcessingAlgorithm):
         return results
 
     def name(self):
-        return 'FromClassLas'
+        return 'ONE'
 
     def displayName(self):
-        return 'ONE (One-Step-Processing from classified LAS/LAZ)'
+        return 'ONE (One-Step-Processing)'
 
     def group(self):
         """
@@ -1204,10 +1219,18 @@ class FromClassLas(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This is an algorithm pipeline that takes a classified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
+    <p>This is an algorithm pipeline that takes an unclassified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
-    <p>Classified point cloud</p>
+    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+    <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
+    <h3>Source File Coordinate System</h3>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
+    <h3>Cell Size</h3>
+    <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
+    <h3>Name prefix for layers</h3>
+    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p><b>Classified LAZ: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ file. Specify folder and file name.</p>
     <h3>Outputs:</h3>
     <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
     <p><b>Ground Point Density</b></p>
@@ -1233,4 +1256,4 @@ class FromClassLas(QgsProcessingAlgorithm):
         return QCoreApplication.translate('Processing', string)
 
     def createInstance(self):
-        return FromClassLas()
+        return LidarPipeline()

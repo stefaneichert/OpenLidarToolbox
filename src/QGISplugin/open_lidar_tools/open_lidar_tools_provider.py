@@ -31,11 +31,14 @@ __copyright__ = '(C) 2021 by Benjamin Štular, Edisa Lozić, Stefan Eichert'
 __revision__ = '$Format:%H$'
 
 from qgis.core import QgsProcessingProvider
-from .algorithms.lidar_prep import LidarPipeline
+from .algorithms.one_step_processing import LidarPipeline
 from .algorithms.dfm_confidence_map import dfmConfidenceMap
 from .algorithms.hybrid_interpolation import HybridInterpolation
-from .algorithms.to_class_las import ToClassLas
-from .algorithms.from_class_las import FromClassLas
+from .algorithms.classify_las import ToClassLas
+from .algorithms.base_data import BaseData
+from .algorithms.visualisations import visualise
+from .algorithms.one_step_processing_from_class_las import FromClassLas
+
 import os
 import inspect
 from qgis.PyQt.QtGui import QIcon
@@ -65,6 +68,8 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         self.addAlgorithm((LidarPipeline()))
         self.addAlgorithm((ToClassLas()))
         self.addAlgorithm((FromClassLas()))
+        self.addAlgorithm((visualise()))
+        self.addAlgorithm((BaseData()))
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 

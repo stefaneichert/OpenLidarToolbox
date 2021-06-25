@@ -47,7 +47,8 @@ from qgis.core import QgsProcessingParameterRasterLayer
 from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterEnum
-from qgis.core import QgsProcessingParameterDefinition
+from qgis.core import QgsProcessingParameterCrs
+from qgis.core import QgsProcessingUtils
 import processing
 from os.path import exists
 
@@ -59,23 +60,19 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     INPUT = 'INPUT'
 
     def initAlgorithm(self, config=None):
-        param = QgsProcessingParameterBoolean('loadCFM', 'LoadFile', defaultValue=True)
-        param.setName('loadCFM')
-        param.setFlags(param.flags() | QgsProcessingParameterDefinition.FlagHidden)
-
-        self.addParameter(param)
         self.addParameter(QgsProcessingParameterRasterLayer('DEMDFM', 'DEM/DFM Layer', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterRasterLayer('Groundlayer', 'Ground Point Density Layer', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterRasterLayer('LowVegetation', 'Low Vegetation Density Layer', defaultValue=None))
+        self.addParameter(QgsProcessingParameterCrs('CRS', 'Source Files Coordinate System', defaultValue=None))
         self.addParameter(QgsProcessingParameterEnum('Createconfidencemapfor', 'Resolution',
                                                      options=['0.25m', '0.5m', '1m', '2m'], allowMultiple=True,
                                                      defaultValue=[0,1,2,3]))
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Output Cell Size:', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
-
+        self.addParameter(QgsProcessingParameterBoolean('loadCFM', 'Load results as layer ', optional=False, defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
@@ -817,15 +814,44 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                                                       feedback=feedback, is_child_algorithm=True)
             results['ConfidenceMap' + appendix] = outputs['Calccranfinal' + appendix]['OUTPUT']
 
+            cfm = outputs['Calccranfinal' + appendix]['OUTPUT']
+
             iter = iter + 1
             feedback.setCurrentStep(iter)
             if feedback.isCanceled():
                 return {}
 
+            # Warp (reproject)
+            alg_params = {
+                'DATA_TYPE': 0,
+                'EXTRA': '',
+                'INPUT': cfm,
+                'MULTITHREADING': False,
+                'NODATA': None,
+                'OPTIONS': '',
+                'RESAMPLING': 0,
+                'SOURCE_CRS': parameters['CRS'],
+                'TARGET_CRS': parameters['CRS'],
+                'TARGET_EXTENT': None,
+                'TARGET_EXTENT_CRS': None,
+                'TARGET_RESOLUTION': None,
+                'OUTPUT': QgsProcessingUtils.generateTempFilename('cfm'+ appendix +'.tif')
+            }
+
+            outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context,
+                                                      feedback=feedback,
+                                                      is_child_algorithm=True)
+            cfm = alg_params['OUTPUT']
+
+            feedback.setCurrentStep(44)
+            if feedback.isCanceled():
+                return {}
+
+
             if parameters['loadCFM']:
                 # Load result
                 alg_params = {
-                    'INPUT': outputs['Calccranfinal' + appendix]['OUTPUT'],
+                    'INPUT': cfm,
                     'NAME': 'DFM confidence map' + appendix
                 }
                 outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
@@ -836,7 +862,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 if feedback.isCanceled():
                     return {}
 
-            # Set style for raster layer
+
             # Set style for raster layer
             folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
             styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
@@ -850,7 +876,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                                                                    context=context,
                                                                    feedback=feedback, is_child_algorithm=True)
 
-            results['CFM' + appendix] = outputs['Calccranfinal' + appendix]['OUTPUT']
+            results['CFM' + appendix] = cfm
 
         return results
 

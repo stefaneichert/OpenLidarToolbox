@@ -57,7 +57,7 @@ class ToClassLas(QgsProcessingAlgorithm):
     def initAlgorithm(self, config=None):
 
         self.addParameter(
-            QgsProcessingParameterFile('InputFilelaslaz', 'Input File', behavior=QgsProcessingParameterFile.File,
+            QgsProcessingParameterFile('InputFilelaslaz', 'LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterFileDestination('LAS', 'Classified LAZ', fileFilter='Lidar Files (*.laz, *.las)',
@@ -216,7 +216,7 @@ class ToClassLas(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'one.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_1_Classify_LASLAZ.png')))
         return icon
 
     def groupId(self):
@@ -231,27 +231,19 @@ class ToClassLas(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>The algorithm will classify the airborne LiDAR point cloud. This process – also known as
-&quot;filtering&quot; or semantic labeling of the point cloud – is optimized for archaeology, but is
-also useful for other purposes.</p>
+    <p>The algorithm will classify the airborne LiDAR point cloud. This process – also known as &quot;filtering&quot; or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
-    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be
-exempt from the processing, all other preexisting classification will be ignored.
+    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
     <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
     <h2>Outputs</h2>
     <p><h3>Classified LAZ/LAS</h3>
     Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Specify folder and file name.</p>
-    <br>Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high
-vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining
-that have not been classified (0).
+    <br>Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
     <p></p>
     <h2>FAQ</h2>
     <h3>The quality of classification does not meet my expectations, how can I improve it?</h3>
-    <p>This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool
-without any user defined parameters it is designed to produce OK results for any
-dataset, but will by definition never be the best possible. Feel free to experiment with
-other dedicated software, e.g., LAStools or Whitebox tools.</p>
+    <p>This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.</p>
     <br>
     <p><b>Literature:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>

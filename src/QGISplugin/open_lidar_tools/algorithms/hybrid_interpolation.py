@@ -45,7 +45,7 @@ from qgis.core import QgsProcessingMultiStepFeedback
 from qgis.core import QgsProcessingParameterRasterLayer
 from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingUtils
-from qgis.core import QgsProcessingParameterRasterDestination
+from qgis.core import QgsProcessingParameterCrs
 from qgis.core import QgsProcessingParameterBoolean
 import processing
 import os
@@ -58,6 +58,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterRasterLayer('ConfidenceMapRaster', 'DFM Confidence Map', defaultValue=None))
         self.addParameter(QgsProcessingParameterRasterLayer('IDW', 'IDW Interpolation', defaultValue=None))
         self.addParameter(QgsProcessingParameterRasterLayer('TLI', 'TLI (TIN) Interpolation', defaultValue=None))
+        self.addParameter(QgsProcessingParameterCrs('CRS', 'Source Files Coordinate System', defaultValue=None))
         self.addParameter(QgsProcessingParameterNumber('CellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double, minValue=0.1, defaultValue=0.5))
         self.addParameter(QgsProcessingParameterNumber('REDgrowradiusinrastercells', 'RED grow radius in raster cells', type=QgsProcessingParameterNumber.Integer, minValue=0, maxValue=9999, defaultValue=3))
         self.addParameter(QgsProcessingParameterBoolean('loadDFM', 'Add DFM to MAP', optional=False, defaultValue=True))
@@ -483,6 +484,28 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Rpatch'] = processing.run('grass7:r.patch', alg_params, context=context, feedback=feedback,
                                            is_child_algorithm=True)
         DFMPatched = outputs['Rpatch']['output']
+
+        # Warp (reproject)
+        alg_params = {
+            'DATA_TYPE': 0,
+            'EXTRA': '',
+            'INPUT': DFMPatched,
+            'MULTITHREADING': False,
+            'NODATA': None,
+            'OPTIONS': '',
+            'RESAMPLING': 0,
+            'SOURCE_CRS': parameters['CRS'],
+            'TARGET_CRS': parameters['CRS'],
+            'TARGET_EXTENT': None,
+            'TARGET_EXTENT_CRS': None,
+            'TARGET_RESOLUTION': None,
+            'OUTPUT': QgsProcessingUtils.generateTempFilename('dfmpatched.tif')
+        }
+
+        outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context,
+                                                  feedback=feedback,
+                                                  is_child_algorithm=True)
+        DFMPatched = outputs['WarpReproject']['OUTPUT']
 
         if parameters['loadDFM']:
             # Load layer into project
