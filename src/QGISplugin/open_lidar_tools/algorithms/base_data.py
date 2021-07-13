@@ -39,22 +39,17 @@ With QGIS : 31604
 
 import inspect
 import os
-import pathlib
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtCore import QCoreApplication
-from qgis.core import QgsProcessing
 from qgis.core import QgsProcessingUtils
 from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
 from qgis.core import QgsProcessingParameterFile
-from qgis.core import QgsProcessingParameterFileDestination
 from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterCrs
 from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterString
-from qgis.core import QgsProcessingParameterDefinition
 import processing
-from os.path import exists
 
 
 class BaseData(QgsProcessingAlgorithm):
@@ -69,8 +64,8 @@ class BaseData(QgsProcessingAlgorithm):
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
         self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
-                                                       defaultValue='ONE ', optional=False))
-        self.addParameter(QgsProcessingParameterBoolean('TIN', 'TIN', optional=False, defaultValue=True))
+                                                       defaultValue='', optional=True))
+        self.addParameter(QgsProcessingParameterBoolean('TIN', 'TLI', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('IDW', 'IDW', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
@@ -78,14 +73,15 @@ class BaseData(QgsProcessingAlgorithm):
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(54, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
         results = {}
         outputs = {}
+
+        lasheightclassifyfile = parameters['InputFilelaslaz']
 
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
-        lasheightclassifyfile = parameters['InputFilelaslaz']
 
         if parameters['InputFilelaslaz'][-4:] == '.laz':
 
@@ -104,7 +100,7 @@ class BaseData(QgsProcessingAlgorithm):
             lasheightclassifyfile = alg_params['OUTPUT_LASLAZ']
             outputs['Laszip'] = processing.run('LAStools:laszip', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(1)
+        feedback.setCurrentStep(2)
         if feedback.isCanceled():
             return {}
 
@@ -123,7 +119,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidarpointdensity1_ground'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(3)
         if feedback.isCanceled():
             return {}
 
@@ -140,7 +136,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Resamplegpd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(4)
         if feedback.isCanceled():
             return {}
 
@@ -167,22 +163,10 @@ class BaseData(QgsProcessingAlgorithm):
         GPDfileR = alg_params['OUTPUT']
         results['GPD'] = GPDfileR
 
-        feedback.setCurrentStep(4)
-        if feedback.isCanceled():
-            return {}
-
-        # Load layer into project
-        if parameters['GPD']:
-            alg_params = {
-                'INPUT': GPDfileR,
-                'NAME': parameters['prefix'] + 'Ground Point Density'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
-
         feedback.setCurrentStep(5)
         if feedback.isCanceled():
             return {}
+
 
         # LidarPointDensity2_LowVeg
         alg_params = {
@@ -216,7 +200,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Resamplelvd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(12)
+        feedback.setCurrentStep(7)
         if feedback.isCanceled():
             return {}
 
@@ -242,20 +226,8 @@ class BaseData(QgsProcessingAlgorithm):
                                                   is_child_algorithm=True)
         LVDfileR = alg_params['OUTPUT']
         results['LVD'] = LVDfileR
-        feedback.setCurrentStep(13)
-        if feedback.isCanceled():
-            return {}
 
-        # Load layer into project
-        if parameters['LVD']:
-            alg_params = {
-                'INPUT': LVDfileR,
-                'NAME': parameters['prefix'] + 'Low Vegetation Density'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(14)
+        feedback.setCurrentStep(8)
         if feedback.isCanceled():
             return {}
 
@@ -275,7 +247,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidartingridding'] = processing.run('wbt:LidarTINGridding', alg_params, context=context,
                                                      feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(15)
+        feedback.setCurrentStep(9)
         if feedback.isCanceled():
             return {}
 
@@ -292,7 +264,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['ResampleTin'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(16)
+        feedback.setCurrentStep(10)
         if feedback.isCanceled():
             return {}
 
@@ -318,22 +290,10 @@ class BaseData(QgsProcessingAlgorithm):
         TINfileR = alg_params['OUTPUT']
         results['DEM'] = TINfileR
 
-        feedback.setCurrentStep(17)
+        feedback.setCurrentStep(11)
         if feedback.isCanceled():
             return {}
 
-        # Load layer into project
-        if parameters['TIN']:
-            alg_params = {
-                'INPUT': TINfileR,
-                'NAME': parameters['prefix'] + 'TIN'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(14)
-        if feedback.isCanceled():
-            return {}
 
         # LidarIdwInterpolation
         alg_params = {
@@ -352,7 +312,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidaridwinterpolation'] = processing.run('wbt:LidarIdwInterpolation', alg_params, context=context,
                                                           feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(18)
+        feedback.setCurrentStep(12)
         if feedback.isCanceled():
             return {}
 
@@ -369,7 +329,7 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['ResampleIDW'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(19)
+        feedback.setCurrentStep(13)
         if feedback.isCanceled():
             return {}
 
@@ -395,7 +355,7 @@ class BaseData(QgsProcessingAlgorithm):
         IDWfileR = alg_params['OUTPUT']
         results['IDW'] = IDWfileR
 
-        feedback.setCurrentStep(20)
+        feedback.setCurrentStep(14)
         if feedback.isCanceled():
             return {}
 
@@ -407,6 +367,49 @@ class BaseData(QgsProcessingAlgorithm):
             }
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(15)
+        if feedback.isCanceled():
+            return {}
+
+        # Load layer into project
+        if parameters['GPD']:
+            alg_params = {
+                'INPUT': GPDfileR,
+                'NAME': parameters['prefix'] + 'Ground Point Density'
+            }
+            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
+                                                             feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(16)
+        if feedback.isCanceled():
+            return {}
+
+        # Load layer into project
+        if parameters['TIN']:
+            alg_params = {
+                'INPUT': TINfileR,
+                'NAME': parameters['prefix'] + 'TIN'
+            }
+            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
+                                                             feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(17)
+        if feedback.isCanceled():
+            return {}
+
+        # Load layer into project
+        if parameters['LVD']:
+            alg_params = {
+                'INPUT': LVDfileR,
+                'NAME': parameters['prefix'] + 'Low Vegetation Density'
+            }
+            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
+                                                             feedback=feedback, is_child_algorithm=True)
+
+        feedback.setCurrentStep(18)
+        if feedback.isCanceled():
+            return {}
 
         return results
 
@@ -425,7 +428,7 @@ class BaseData(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '3_1_All_Derivatives.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_4_Metadata.png')))
         return icon
 
     def groupId(self):
@@ -440,26 +443,17 @@ class BaseData(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This is an algorithm pipeline that takes a classified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
+    <p>This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
-    <p>Classified point cloud</p>
+    <p>Point cloud</p>
+    <h3>The input LAS/LAZ file is already classified</h3>
+    <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
     <h3>Outputs:</h3>
-    <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
+    <p><b>TLI:</b> Interpolation of DFM</p>
+    <p><b>IDW:</b> Inverse distance weighting interpolation of DFM</p>
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
-    <p><b>DFM CM 0.5m: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
-    <p><b>Classified LAZ: </b> Classified point cloud. This can saved to a ".laz" file which is not added to the map.</p>
-    <p><b>Visualisations:</b></p>
-    <p><b>VAT: </b> Visualisation for archaeological topography</p>
-    <p><b>SVF: </b> Sky view factor</p>
-    <p><b>Opennes: </b> Openness – positive</p>
-    <p><b>DME: </b> Difference from mean elevation</p>
-    <p><b>Hillshade: </b> Hillshade/Relief of DFM</p>
-    <h2>FAQ</h2>
-    <h3>The edges of my outputs are black</h3>
-    <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>
-    <p></p>
     <br><br>
     <p><b>Literature:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>

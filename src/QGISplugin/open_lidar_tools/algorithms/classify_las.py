@@ -42,7 +42,6 @@ import os
 
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtCore import QCoreApplication
-from qgis.core import QgsProcessing
 from qgis.core import QgsProcessingUtils
 from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
@@ -60,13 +59,13 @@ class ToClassLas(QgsProcessingAlgorithm):
             QgsProcessingParameterFile('InputFilelaslaz', 'LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
         self.addParameter(
-            QgsProcessingParameterFileDestination('LAS', 'Classified LAZ', fileFilter='Lidar Files (*.laz, *.las)',
+            QgsProcessingParameterFileDestination('LAS', 'Classified LAS/LAZ', fileFilter='Lidar Files (*.laz *.las)',
                                                   defaultValue=None, optional=False, createByDefault=False))
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(5, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(6, model_feedback)
         results = {}
         outputs = {}
 
@@ -95,7 +94,7 @@ class ToClassLas(QgsProcessingAlgorithm):
                                                is_child_algorithm=True)
         lasground1file = alg_params['OUTPUT_LASLAZ']
 
-        feedback.setCurrentStep(1)
+        feedback.setCurrentStep(2)
         if feedback.isCanceled():
             return {}
 
@@ -120,7 +119,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasheight'] = processing.run('LAStools:lasheight', alg_params, context=context, feedback=feedback,
                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(3)
         if feedback.isCanceled():
             return {}
 
@@ -141,7 +140,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasclassify'] = processing.run('LAStools:lasclassify', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(4)
         if feedback.isCanceled():
             return {}
 
@@ -165,7 +164,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasground2'] = processing.run('LAStools:lasground', alg_params, context=context, feedback=feedback,
                                                is_child_algorithm=True)
 
-        feedback.setCurrentStep(4)
+        feedback.setCurrentStep(5)
         if feedback.isCanceled():
             return {}
 
@@ -195,7 +194,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasheight_classify'] = processing.run('LAStools:lasheight_classify', alg_params, context=context,
                                                        feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(6)
         if feedback.isCanceled():
             return {}
         results['classifiedLAZ'] = lasheightclassifyfile
@@ -240,7 +239,7 @@ class ToClassLas(QgsProcessingAlgorithm):
     <p><h3>Classified LAZ/LAS</h3>
     Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Specify folder and file name.</p>
     <br>Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
-    <p></p>
+    <br>Please make sure that the path for the file to be created ends with 'name.laz' or 'name.las'. If there is an additional '.laz', you must delete it manually.<p></p>
     <h2>FAQ</h2>
     <h3>The quality of classification does not meet my expectations, how can I improve it?</h3>
     <p>This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.</p>

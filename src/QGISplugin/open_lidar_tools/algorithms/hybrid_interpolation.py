@@ -66,7 +66,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(21, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(23, model_feedback)
         results = {}
         outputs = {}
 
@@ -83,8 +83,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
                                                  is_child_algorithm=True)
 
         feedback.setCurrentStep(1)
+        iter = 1
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # r.resample TLI
         alg_params = {
@@ -98,9 +100,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['RresampleTli'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                  is_child_algorithm=True)
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # RedTmp classify
         alg_params = {
@@ -116,9 +119,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['RedtmpClassify'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                    feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # r.resample IDW
         alg_params = {
@@ -132,9 +136,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['RresampleIdw'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                  is_child_algorithm=True)
 
-        feedback.setCurrentStep(4)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # tmpRed Neighbours
         alg_params = {
@@ -156,9 +161,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['TmpredNeighbours'] = processing.run('grass7:r.neighbors', alg_params, context=context,
                                                      feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # allToOne
         alg_params = {
@@ -174,9 +180,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Alltoone'] = processing.run('native:reclassifybytable', alg_params, context=context, feedback=feedback,
                                              is_child_algorithm=True)
 
-        feedback.setCurrentStep(6)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Reclassify redtmpOneNodata
         alg_params = {
@@ -192,9 +199,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['ReclassifyRedtmponenodata'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(7)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Translate 1
         alg_params = {
@@ -210,9 +218,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Translate1'] = processing.run('gdal:translate', alg_params, context=context, feedback=feedback,
                                                is_child_algorithm=True)
 
-        feedback.setCurrentStep(8)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # r.grow 2 cells tmpred
         alg_params = {
@@ -231,9 +240,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Rgrow2CellsTmpred'] = processing.run('grass7:r.grow', alg_params, context=context, feedback=feedback,
                                                       is_child_algorithm=True)
 
-        feedback.setCurrentStep(9)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Translate redGrow
         alg_params = {
@@ -249,9 +259,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['TranslateRedgrow'] = processing.run('gdal:translate', alg_params, context=context, feedback=feedback,
                                                      is_child_algorithm=True)
 
-        feedback.setCurrentStep(10)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Reclassify nodata to zero red
         alg_params = {
@@ -267,9 +278,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['ReclassifyNodataToZeroRed'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(11)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # OneZeroTable
         alg_params = {
@@ -285,9 +297,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Onezerotable'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                  feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(12)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # red minus idw Null
         alg_params = {
@@ -313,9 +326,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['RedMinusIdwNull'] = processing.run('gdal:rastercalculator', alg_params, context=context,
                                                     feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(13)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # MakeredNodata
         alg_params = {
@@ -337,9 +351,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Makerednodata'] = processing.run('grass7:r.null', alg_params, context=context, feedback=feedback,
                                                   is_child_algorithm=True)
 
-        feedback.setCurrentStep(14)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # blueTmp reclass
         alg_params = {
@@ -355,9 +370,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['BluetmpReclass'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                    feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(15)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # r.buffer
         alg_params = {
@@ -374,9 +390,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Rbuffer'] = processing.run('grass7:r.buffer', alg_params, context=context, feedback=feedback,
                                             is_child_algorithm=True)
 
-        feedback.setCurrentStep(16)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Translate (convert format)
         alg_params = {
@@ -392,9 +409,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['TranslateConvertFormat'] = processing.run('gdal:translate', alg_params, context=context,
                                                            feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(17)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Reclassify nodata to zero
         alg_params = {
@@ -410,9 +428,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['ReclassifyNodataToZero'] = processing.run('native:reclassifybytable', alg_params, context=context,
                                                            feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(18)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # blueCalculator
         alg_params = {
@@ -438,9 +457,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Bluecalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context,
                                                    feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(19)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Raster calculator
         alg_params = {
@@ -467,9 +487,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['RasterCalculator'] = processing.run('gdal:rastercalculator', alg_params, context=context,
                                                      feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(20)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # r.patch
         alg_params = {
@@ -484,6 +505,11 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         outputs['Rpatch'] = processing.run('grass7:r.patch', alg_params, context=context, feedback=feedback,
                                            is_child_algorithm=True)
         DFMPatched = outputs['Rpatch']['output']
+
+        feedback.setCurrentStep(iter)
+        if feedback.isCanceled():
+            return {}
+        iter = iter + 1
 
         # Warp (reproject)
         alg_params = {
@@ -507,6 +533,11 @@ class HybridInterpolation(QgsProcessingAlgorithm):
                                                   is_child_algorithm=True)
         DFMPatched = outputs['WarpReproject']['OUTPUT']
 
+        feedback.setCurrentStep(iter)
+        if feedback.isCanceled():
+            return {}
+        iter = iter + 1
+
         if parameters['loadDFM']:
             # Load layer into project
             alg_params = {
@@ -520,13 +551,18 @@ class HybridInterpolation(QgsProcessingAlgorithm):
 
         results['Dfm'] = DFMPatched
 
+        feedback.setCurrentStep(iter)
+        if feedback.isCanceled():
+            return {}
+        iter = iter + 1
+
         return results
 
     def name(self):
-        return 'Hybrid Interpolation'
+        return 'Hybrid interpolation'
 
     def displayName(self):
-        return 'Hybrid Interpolation'
+        return 'Hybrid interpolation'
 
     def group(self):
         """
@@ -537,7 +573,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'hybrid.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_3_Hybrid.png')))
         return icon
 
     def groupId(self):

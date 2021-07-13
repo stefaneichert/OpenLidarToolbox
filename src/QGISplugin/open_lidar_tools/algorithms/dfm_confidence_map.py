@@ -32,14 +32,8 @@ __revision__ = '$Format:%H$'
 
 import inspect
 import os
-import pathlib
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtCore import QCoreApplication
-from qgis.core import (QgsProcessing,
-                       QgsFeatureSink,
-                       QgsProcessingAlgorithm,
-                       QgsProcessingParameterFeatureSource,
-                       QgsProcessingParameterFeatureSink)
 from qgis.core import QgsProcessing
 from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
@@ -72,7 +66,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Output Cell Size:', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
-        self.addParameter(QgsProcessingParameterBoolean('loadCFM', 'Load results as layer ', optional=False, defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean('loadCFM', 'Add results to map ', optional=False, defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
@@ -847,6 +841,18 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             if feedback.isCanceled():
                 return {}
 
+            # Set style for raster layer
+            folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+            styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
+
+            alg_params = {
+                'INPUT': cfm,
+                'STYLE': styleFile
+            }
+            if exists(styleFile) == True:
+                outputs['SetStyleForRasterLayer'] = processing.run('qgis:setstyleforrasterlayer', alg_params,
+                                                                   context=context,
+                                                                   feedback=feedback, is_child_algorithm=True)
 
             if parameters['loadCFM']:
                 # Load result
@@ -863,28 +869,15 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                     return {}
 
 
-            # Set style for raster layer
-            folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-            styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
-
-            alg_params = {
-                'INPUT': outputs['LoadResult']['OUTPUT'],
-                'STYLE': styleFile
-            }
-            if exists(styleFile) == True:
-                outputs['SetStyleForRasterLayer'] = processing.run('qgis:setstyleforrasterlayer', alg_params,
-                                                                   context=context,
-                                                                   feedback=feedback, is_child_algorithm=True)
-
             results['CFM' + appendix] = cfm
 
         return results
 
     def name(self):
-        return 'DFM Confidence Map'
+        return 'DFM confidence map'
 
     def displayName(self):
-        return 'DFM Confidence Map'
+        return 'DFM confidence map'
 
     def group(self):
         """
@@ -895,7 +888,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'confidencemap.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_0_confidencemap.png')))
         return icon
 
     def groupId(self):

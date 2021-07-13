@@ -57,7 +57,7 @@ import processing
 from os.path import exists
 
 
-class FromClassLas(QgsProcessingAlgorithm):
+class CreateDfmClass(QgsProcessingAlgorithm):
 
     def initAlgorithm(self, config=None):
 
@@ -70,21 +70,8 @@ class FromClassLas(QgsProcessingAlgorithm):
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
         self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
                                                        defaultValue='', optional=True))
-        self.addParameter(QgsProcessingParameterBoolean('VisualisationDFM', 'DFM', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
-        self.addParameter(
-            QgsProcessingParameterBoolean('VisualisationCM', 'DFM CM 0.5m', optional=False, defaultValue=True))
-        self.addParameter(
-            QgsProcessingParameterBoolean('VisualisationVAT', 'Visualisation VAT', optional=False, defaultValue=True))
-        self.addParameter(
-            QgsProcessingParameterBoolean('VisualisationSVF', 'Visualisation SVF', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('VisualisationOPN', 'Visualisation Openness', optional=False,
-                                                        defaultValue=True))
-        self.addParameter(
-            QgsProcessingParameterBoolean('VisualisationDfME', 'Visualisation DME', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('VisualisationHS', 'Visualisation Hillshade', optional=False,
-                                                        defaultValue=False))
+        self.addParameter(QgsProcessingParameterBoolean('VisualisationDFM', 'Add DFM to map', optional=False, defaultValue=True))
+
 
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
@@ -98,19 +85,21 @@ class FromClassLas(QgsProcessingAlgorithm):
             return {}
 
 
+
         # Create base data
         alg_params = {
             'CRS': parameters['CRS'],
-            'GPD': parameters['GPD'],
-            'IDW': True,
+            'GPD': False,
+            'IDW': False,
             'InputFilelaslaz': parameters['InputFilelaslaz'],
-            'LVD': parameters['LVD'],
+            'LVD': False,
             'SetCellSize': parameters['SetCellSize'],
-            'TIN': True,
+            'TIN': False,
             'prefix': parameters['prefix']
         }
         outputs['CreateBaseData'] = processing.run('Open LiDAR Toolbox:basedata', alg_params, context=context,
                                                    feedback=feedback, is_child_algorithm=True)
+
 
         feedback.setCurrentStep(2)
         if feedback.isCanceled():
@@ -129,18 +118,6 @@ class FromClassLas(QgsProcessingAlgorithm):
         outputs['DfmConfidenceMap'] = processing.run('Open LiDAR Toolbox:DFM Confidence Map', alg_params,
                                                      context=context, feedback=feedback, is_child_algorithm=True)
 
-        if parameters['VisualisationCM']:
-            # Load result
-            alg_params = {
-                'INPUT': outputs['DfmConfidenceMap']['CFM 0.5m'],
-                'NAME': parameters['prefix'] + 'DFM confidence map 0,5m'
-            }
-            outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
-                                                   is_child_algorithm=True)
-
-        feedback.setCurrentStep(3)
-        if feedback.isCanceled():
-            return {}
 
         # Hybrid Interpolation
         alg_params = {
@@ -155,6 +132,8 @@ class FromClassLas(QgsProcessingAlgorithm):
         outputs['HybridInterpolation'] = processing.run('Open LiDAR Toolbox:Hybrid interpolation', alg_params,
                                                         context=context, feedback=feedback, is_child_algorithm=True)
 
+        results['DFM'] = outputs['HybridInterpolation']['Dfm']
+
         if parameters['VisualisationDFM']:
             # Load result
             alg_params = {
@@ -168,26 +147,14 @@ class FromClassLas(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
 
-        # Visualisations (from DFM)
-        alg_params = {
-            'DFMDEM': outputs['HybridInterpolation']['Dfm'],
-            'VisualisationDfME': parameters['VisualisationDfME'],
-            'VisualisationHS': parameters['VisualisationHS'],
-            'VisualisationOPN': parameters['VisualisationOPN'],
-            'VisualisationSVF': parameters['VisualisationSVF'],
-            'VisualisationVAT': parameters['VisualisationVAT'],
-            'prefix': parameters['prefix']
-        }
-        outputs['VisualisationsFromDfm'] = processing.run('Open LiDAR Toolbox:Visualise', alg_params,
-                                                          context=context, feedback=feedback,
-                                                          is_child_algorithm=True)
+
         return results
 
     def name(self):
-        return 'FromClassLas'
+        return 'CreateDfmClass'
 
     def displayName(self):
-        return 'ONE (One-Step-Processing from classified LAS/LAZ)'
+        return 'Create DFM (from classified LAS/LAZ)'
 
     def group(self):
         """
@@ -198,7 +165,7 @@ class FromClassLas(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '1_2_ONE_from_classified.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_2_Create_DFM_classLas.png')))
         return icon
 
     def groupId(self):
@@ -213,10 +180,18 @@ class FromClassLas(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This is an algorithm pipeline that takes a classified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
+    <p>This is an algorithm pipeline that takes an unclassified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
-    <p>Classified point cloud</p>
+    <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+    <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
+    <h3>Source File Coordinate System</h3>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
+    <h3>Cell Size</h3>
+    <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
+    <h3>Name prefix for layers</h3>
+    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p><b>Classified LAZ: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ file. Specify folder and file name.</p>
     <h3>Outputs:</h3>
     <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
     <p><b>Ground Point Density</b></p>
@@ -242,4 +217,4 @@ class FromClassLas(QgsProcessingAlgorithm):
         return QCoreApplication.translate('Processing', string)
 
     def createInstance(self):
-        return FromClassLas()
+        return CreateDfmClass()

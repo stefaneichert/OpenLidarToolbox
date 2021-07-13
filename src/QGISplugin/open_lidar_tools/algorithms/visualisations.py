@@ -258,7 +258,7 @@ class visualise(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DTM to produce the most commonly used archaeological visualisations.</p>
+    <p>This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM to produce the most commonly used archaeological visualisations.</p>
     <h2>Input parameters</h2>
     <h3>DFM/DEM</h3>
     <p>DFM or DEM in any raster format supported by QGIS, e.g., GeoTIFF.</p>
