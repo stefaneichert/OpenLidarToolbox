@@ -32,6 +32,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
   * [**Create DFM**](#create-dfm)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
+  * [**Visualisations from DFM**](#visualisations-from-dfm)
 - [**Roadmap**](#roadmap)
 
 # **Installation**
@@ -76,7 +77,6 @@ raster datasets.
 This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.
 The pipeline introduces several additional steps compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used four of the state-of-the-art solutions available.
 ### **Input:**  
-
 ***Input LAS/LAZ file:***  
 Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
 will be exempt from the processing, all other preexisting classification will be ignored.
@@ -92,9 +92,13 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***Classified point cloud***  
+***Classified point cloud***    
 ***DFM***  
-DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+DFM (Digital feature model, which is a type of DEM that combines ground and buildings)    
+***TLI***  
+Triangulated interpolation of DFM  
+***IDW***  
+Inverse distance weighting interpolation of DFM  
 ***Ground Point Density***  
 ***Low Vegetation Density***  
 ***DFM CM 0.5m***  
@@ -143,8 +147,12 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***DFM***  
-DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+***TLI***  
+Triangulated interpolation of DFM  
+***IDW***  
+Inverse distance weighting interpolation of DFM  
+***Ground Point Density***  
+***Low Vegetation Density***  
 
 ### **References:**
 Štular, Lozić, Eichert 2021 (in press).
@@ -239,6 +247,26 @@ Wherever one of the inputs has a NoData value, the algorithm will return NoData.
 The artifacts (noise) in the contact areas are too big and tweaking the Grow radius doesn't help.
 Some amount of artifacts is inevitable. In our testing the artifacts were significantly smaller when the input layers have been calculated with Golden Software Surfer, since exactly same parameters for neighborhood search can be set. If the artifacts are so strong, that they can misguide archaeological interpretation, then we suggest using IDW interpolation instead.  
 
+## **Visualisations from DFM** 
+This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM to produce the most commonly used archaeological visualisations.
+### **Inputs:**  
+***DFM/DEM:***
+DFM or DEM in any raster format supported by QGIS, e.g., GeoTIFF.
+
+### **Outputs:** 
+***VAT***  
+Visualisation for archaeological topography  
+***SVF***  
+Sky view factor  
+***Opennes***  
+Openness – positive  
+***DME***  
+Difference from mean elevation  
+***Hillshade***  
+Analytical hillshade
+
+### **References:**
+Štular, Lozić, Eichert 2021 (in press).
 
 # **Roadmap**
 

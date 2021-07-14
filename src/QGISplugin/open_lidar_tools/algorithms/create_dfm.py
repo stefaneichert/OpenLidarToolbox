@@ -203,7 +203,7 @@ class CreateDfm(QgsProcessingAlgorithm):
         return """<html><body><h2>Algorithm description</h2>
     <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM) especially filtered for archaeological purposes</p>
     <h2>Input parameters</h2>
-    <h3>Input File</h3>
+    <h3>Input LAS/LAZ file</h3>
     <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
     <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
     <h3>The input LAS/LAZ file is already classified</h3>
@@ -221,7 +221,7 @@ class CreateDfm(QgsProcessingAlgorithm):
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>
     <p></p>
     <br><br>
-    <p><b>Literature:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

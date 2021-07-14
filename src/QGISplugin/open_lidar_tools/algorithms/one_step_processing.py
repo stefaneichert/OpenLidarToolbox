@@ -70,6 +70,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
                                                        defaultValue='', optional=True))
         self.addParameter(QgsProcessingParameterBoolean('VisualisationDFM', 'DFM', optional=False, defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean('TLI', 'Triangulated interpolation of DFM', optional=False, defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean('IDW', 'Inverse distance weighting interpolation of DFM', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
         self.addParameter(
@@ -141,11 +143,11 @@ class LidarPipeline(QgsProcessingAlgorithm):
         alg_params = {
             'CRS': parameters['CRS'],
             'GPD': parameters['GPD'],
-            'IDW': True,
+            'IDW': parameters['IDW'],
             'InputFilelaslaz': lasheightclassifyfile,
             'LVD': parameters['LVD'],
             'SetCellSize': parameters['SetCellSize'],
-            'TIN': True,
+            'TIN': parameters['TLI'],
             'prefix': parameters['prefix'],
             'classLas': True
         }
@@ -275,7 +277,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
         return """<html><body><h2>Algorithm description</h2>
     <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
     <h2>Input parameters</h2>
-    <h3>Input File</h3>
+    <h3>Input LAS/LAZ File</h3>
     <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
     <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
     <h3>The input LAS/LAZ file is already classified</h3>
@@ -289,6 +291,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p><b>Classified LAZ: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.</p>
     <h3>Outputs:</h3>
     <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
+    <p><b>TLI:</b> Triangulated interpolation of DFM</p>
+    <p><b>IDW:</b> Inverse distance weighting interpolation of DFM</p>
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
     <p><b>DFM CM 0.5m: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
@@ -304,7 +308,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>
     <p></p>
     <br><br>
-    <p><b>Literature:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

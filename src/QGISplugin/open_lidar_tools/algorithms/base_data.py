@@ -461,16 +461,23 @@ class BaseData(QgsProcessingAlgorithm):
     <p>This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.</p>
     <h2>Input parameters</h2>
     <h3>Input LAS/LAZ File</h3>
-    <p>Airborne LiDAR Point cloud in .LAS or .LAZ format</p>
+    <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.</p>
     <h3>The input LAS/LAZ file is already classified</h3>
     <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
+    <h3>Source File Coordinate System</h3>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
+    <h3>Cell Size</h3>
+    <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
+    <h3>Name prefix for layers</h3>
+    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
     <h3>Outputs:</h3>
-    <p><b>TLI:</b> Interpolation of DFM</p>
+    <p><b>TLI:</b> Triangulated interpolation of DFM</p>
     <p><b>IDW:</b> Inverse distance weighting interpolation of DFM</p>
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
     <br><br>
-    <p><b>Literature:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 
