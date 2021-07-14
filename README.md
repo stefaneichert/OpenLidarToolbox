@@ -27,6 +27,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
 - [**General notes on input LiDAR data**](#general-notes-on-input-lidar-data)
 - [**Modules**](#modules)
   * [**ONE Step Processing**](#one-one-step-processing)
+  * [**Classify LAS/LAZ**](#classify-las/laz)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
 - [**Roadmap**](#roadmap)
@@ -109,6 +110,20 @@ Hillshade/Relief
 ### **FAQ:**  
 **Q: The edges of my outputs are black/grey, what can I do?**  
 A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
+
+## **Classify LAS/LAZ**  
+The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
+### **Input:**
+***Input LAS/LAZ file:***
+Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
+### **Output:**
+***Classified LAZ/LAS:***
+Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.
+Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
+
+### **FAQ**
+**Q: The quality of classification does not meet my expectations, how can I improve it?**  
+A: This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.
 
 ## **DFM Confidence Map**  
 This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.

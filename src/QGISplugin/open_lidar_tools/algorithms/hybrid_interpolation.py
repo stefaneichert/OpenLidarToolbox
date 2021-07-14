@@ -615,7 +615,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     <p>Some amount of artifacts is inevitable. In our testing the artifacts were significantly smaller when the input layers have been calculated with Golden Software Surfer, since exactly same parameters for neighborhood search can be set. If the artifacts are so strong, that they can misguide archaeological interpretation, then we suggest using IDW interpolation instead.</p>
     <p></p>
     <br>
-    <p><b>Literature:</b> Štular, Lozić, Eichert 2021b (in press).</p>
+    <p><b>References:</b> Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology.Remote Sens.2021,13, 1855. <a href="https://doi.org/10.3390/rs13091855">https://doi.org/10.3390/rs13091855</a></p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 
