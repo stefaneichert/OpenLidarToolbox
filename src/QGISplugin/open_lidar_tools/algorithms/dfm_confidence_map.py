@@ -42,6 +42,7 @@ from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterEnum
 from qgis.core import QgsProcessingParameterCrs
+from qgis.core import QgsProcessingParameterString
 from qgis.core import QgsProcessingUtils
 import processing
 from os.path import exists
@@ -66,6 +67,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Output Cell Size:', type=QgsProcessingParameterNumber.Double,
                                          minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
+        self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
+                                                       defaultValue='', optional=True))
         self.addParameter(QgsProcessingParameterBoolean('loadCFM', 'Add results to map ', optional=False, defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
@@ -843,7 +846,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
 
             # Set style for raster layer
             folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-            styleFile = os.path.join(os.path.join(folder, 'DFMconfidenceMap.qml'))
+            styleFile = os.path.join(os.path.join(folder, 'stylefiles/DFMconfidenceMap.qml'))
 
             alg_params = {
                 'INPUT': cfm,
@@ -858,7 +861,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 # Load result
                 alg_params = {
                     'INPUT': cfm,
-                    'NAME': 'DFM confidence map' + appendix
+                    'NAME': parameters['prefix'] + 'DFM CM' + appendix
                 }
                 outputs['LoadResult'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback,
                                                        is_child_algorithm=True)
@@ -888,7 +891,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_0_confidencemap.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/2_0_confidencemap.png')))
         return icon
 
     def groupId(self):
@@ -908,16 +911,18 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.</p>
     <h2>Input</h2>
     <h3>DEM/DFM Layer</h3>
-    <p>DFM (or any DEM) with cell size 0.5m in raster format</p>
+    <p>DFM (or any DEM) with a recommended cell size of 0.5m in raster format</p>
     <h3>Low Vegetation Density Layer</h3>
-    <p>Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
+    <p>Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
     <h3>Ground Point Density Layer</h3>
-    <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
+    <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
     <h2>Parameters</2>
     <h3>Resolution</h3>
     <p>DFM/DEM Resolution (multiple choice)</p>
     <h3>Output Cell Size:</h3>
     <p>Define the cell size of the Confidence Map. 0.5 or 1 m is recommended. (It is possible to calculate DFM Confidence Map for high resolution, e.g. 0.25 m, but display the result at lower resolution, e.g. 1 m.)</p>
+    <h3>Name prefix for layers</h3>
+    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
     <h2>FAQ</h2>
     <h3>I have NoData holes in my DFM/DEM</h3>
     <p>Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.</p>

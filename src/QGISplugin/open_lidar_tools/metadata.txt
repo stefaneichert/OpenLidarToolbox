@@ -6,7 +6,7 @@
 name=Open LiDAR Toolbox
 qgisMinimumVersion=3.0
 description=Open Tools for LiDAR Data Preparation and Analysis in Archaeology
-version=1.1
+version=2.0
 author=Stefan Eichert, Benjamin Štular, Edisa Lozić
 email=stefaneichert@gmail.com, bstular@zrc-sazu.si, Edisa.lozic@gmail.com
 
@@ -20,7 +20,10 @@ repository=https://github.com/stefaneichert/OpenLidarTools
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=1.0 initial version
+    1.1 bugfixes
+    2.0 Added modules for base data, visualisations, dfm, classify las/laz
+
 
 # Tags are comma separated with spaces allowed
 tags=python, lidar, raster, archaeology, archeology, laser scanning, ALS, Airborne laser scanning

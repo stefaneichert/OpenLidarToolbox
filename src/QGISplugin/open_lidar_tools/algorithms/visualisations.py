@@ -181,7 +181,7 @@ class visualise(QgsProcessingAlgorithm):
 
             # Set style for raster layer
             folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-            styleFile = os.path.join(os.path.join(folder, 'DfME.qml'))
+            styleFile = os.path.join(os.path.join(folder, 'stylefiles/DfME.qml'))
 
             alg_params = {
                 'INPUT': outputs['Difffrommeanelev']['output'],
@@ -243,7 +243,7 @@ class visualise(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '3_3_Visualisations.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/3_3_Visualisations.png')))
         return icon
 
     def groupId(self):

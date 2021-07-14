@@ -38,8 +38,6 @@ from .algorithms.classify_las import ToClassLas
 from .algorithms.base_data import BaseData
 from .algorithms.visualisations import visualise
 from .algorithms.create_dfm import CreateDfm
-#from .algorithms.create_dfm_class import CreateDfmClass
-#from .algorithms.one_step_processing_from_class_las import FromClassLas
 
 import os
 import inspect
@@ -69,11 +67,9 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         self.addAlgorithm((HybridInterpolation()))
         self.addAlgorithm((LidarPipeline()))
         self.addAlgorithm((ToClassLas()))
-        #self.addAlgorithm((FromClassLas()))
         self.addAlgorithm((visualise()))
         self.addAlgorithm((BaseData()))
         self.addAlgorithm((CreateDfm()))
-        #self.addAlgorithm((CreateDfmClass()))
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 

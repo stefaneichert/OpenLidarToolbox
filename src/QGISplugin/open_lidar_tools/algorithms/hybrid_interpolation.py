@@ -47,6 +47,7 @@ from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingUtils
 from qgis.core import QgsProcessingParameterCrs
 from qgis.core import QgsProcessingParameterBoolean
+from qgis.core import QgsProcessingParameterString
 import processing
 import os
 import inspect
@@ -60,7 +61,9 @@ class HybridInterpolation(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterRasterLayer('TLI', 'TLI (TIN) Interpolation', defaultValue=None))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source Files Coordinate System', defaultValue=None))
         self.addParameter(QgsProcessingParameterNumber('CellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double, minValue=0.1, defaultValue=0.5))
-        self.addParameter(QgsProcessingParameterNumber('REDgrowradiusinrastercells', 'RED grow radius in raster cells', type=QgsProcessingParameterNumber.Integer, minValue=0, maxValue=9999, defaultValue=3))
+        self.addParameter(QgsProcessingParameterNumber('REDgrowradiusinrastercells', 'Grow Radius (Cells)', type=QgsProcessingParameterNumber.Integer, minValue=0, maxValue=9999, defaultValue=3))
+        self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
+                                                       defaultValue='', optional=True))
         self.addParameter(QgsProcessingParameterBoolean('loadDFM', 'Add DFM to MAP', optional=False, defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
@@ -542,7 +545,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             # Load layer into project
             alg_params = {
                 'INPUT': DFMPatched,
-                'NAME': 'DFM'
+                'NAME': parameters['prefix'] + 'DFM'
             }
 
 
@@ -573,7 +576,7 @@ class HybridInterpolation(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_3_Hybrid.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/2_3_Hybrid.png')))
         return icon
 
     def groupId(self):
@@ -592,16 +595,18 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     This interpolator is best suited for low or medium point density data characterized by significant local variation in point density, such as an open landscape interspersed with hedgerows or other patches of dense vegetation. For high point density data, the TLI by itself usually gives better results.</p>
     <h2>Input</h2>
     <h3>DFM Confidence Map</h3>
-    <p>Must be calculated with DFM Confidence Map module from IDW interpolation for the desired cell size.</p>
+    <p>Must be calculated with DFM Confidence Map module from IDW/TLI interpolation for the desired cell size.</p>
     <h3>IDW Interpolation</h3>
-    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.</p>
+    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.</p>
     <h3>TLI Interpolation</h3>
-    <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.</p>
+    <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarTINGridding or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.</p>
     <h2>Parameters</h2>
     <h3>Cell Size</h3>
     <p>The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.</p>
-    <h3>Grow Radius (Cell Size) </h3>
-    <p>Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.</p>
+    <h3>Grow Radius (Cells) </h3>
+    <p>Grow radius in raster cells for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.</p>
+    <h3>Name prefix for layers</h3>
+    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
     <p></p>
     <h2>FAQ</h2>
     <h3>I have NoData holes in my DFM/DEM</h3>

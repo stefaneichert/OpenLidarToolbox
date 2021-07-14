@@ -57,8 +57,11 @@ class BaseData(QgsProcessingAlgorithm):
     def initAlgorithm(self, config=None):
 
         self.addParameter(
-            QgsProcessingParameterFile('InputFilelaslaz', 'Classified LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
+            QgsProcessingParameterFile('InputFilelaslaz', 'Input LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
+        self.addParameter(
+            QgsProcessingParameterBoolean('classLas', 'The input LAS/LAZ file is already classified', optional=False,
+                                          defaultValue=False))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
@@ -73,18 +76,30 @@ class BaseData(QgsProcessingAlgorithm):
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(19, model_feedback)
         results = {}
         outputs = {}
 
-        lasheightclassifyfile = parameters['InputFilelaslaz']
+        if not parameters['classLas']:
+
+            alg_params = {
+                'InputFilelaslaz': parameters['InputFilelaslaz'],
+                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las')
+            }
+            outputs['ClassifyLaslaz'] = processing.run('Open LiDAR Toolbox:ToClassLas', alg_params, context=context,
+                                                       feedback=feedback, is_child_algorithm=True)
+            lasheightclassifyfile = outputs['ClassifyLaslaz']['classifiedLAZ']
+            results['LAS'] = outputs['ClassifyLaslaz']['classifiedLAZ']
+
+
+        if parameters['classLas']:
+            lasheightclassifyfile = parameters['InputFilelaslaz']
 
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
 
         if parameters['InputFilelaslaz'][-4:] == '.laz':
-
             # laszip
             alg_params = {
                 'ADDITIONAL_OPTIONS': '',
@@ -389,7 +404,7 @@ class BaseData(QgsProcessingAlgorithm):
         if parameters['TIN']:
             alg_params = {
                 'INPUT': TINfileR,
-                'NAME': parameters['prefix'] + 'TIN'
+                'NAME': parameters['prefix'] + 'TLI'
             }
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
@@ -428,7 +443,7 @@ class BaseData(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_4_Metadata.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/2_4_basedata.png')))
         return icon
 
     def groupId(self):
@@ -445,8 +460,8 @@ class BaseData(QgsProcessingAlgorithm):
         return """<html><body><h2>Algorithm description</h2>
     <p>This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.</p>
     <h2>Input parameters</h2>
-    <h3>Input File</h3>
-    <p>Point cloud</p>
+    <h3>Input LAS/LAZ File</h3>
+    <p>Airborne LiDAR Point cloud in .LAS or .LAZ format</p>
     <h3>The input LAS/LAZ file is already classified</h3>
     <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
     <h3>Outputs:</h3>

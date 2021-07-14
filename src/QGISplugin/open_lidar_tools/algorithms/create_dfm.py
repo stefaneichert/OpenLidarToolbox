@@ -81,7 +81,7 @@ class CreateDfm(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
 
-        if not parameters['classLas']:
+        if parameters['classLas'] == False:
             alg_params = {
                 'InputFilelaslaz': parameters['InputFilelaslaz'],
                 'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las')
@@ -107,7 +107,8 @@ class CreateDfm(QgsProcessingAlgorithm):
             'LVD': False,
             'SetCellSize': parameters['SetCellSize'],
             'TIN': False,
-            'prefix': parameters['prefix']
+            'prefix': parameters['prefix'],
+            'classLas': parameters['classLas']
         }
         outputs['CreateBaseData'] = processing.run('Open LiDAR Toolbox:basedata', alg_params, context=context,
                                                    feedback=feedback, is_child_algorithm=True)
@@ -185,7 +186,7 @@ class CreateDfm(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, '2_2_Create_DFM.png')))
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/2_2_Create_DFM.png')))
         return icon
 
     def groupId(self):
@@ -200,7 +201,7 @@ class CreateDfm(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.</p>
+    <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM) especially filtered for archaeological purposes</p>
     <h2>Input parameters</h2>
     <h3>Input File</h3>
     <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
@@ -213,19 +214,8 @@ class CreateDfm(QgsProcessingAlgorithm):
     <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
     <h3>Name prefix for layers</h3>
     <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
-    <p><b>Classified LAZ: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ file. Specify folder and file name.</p>
     <h3>Outputs:</h3>
     <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
-    <p><b>Ground Point Density</b></p>
-    <p><b>Low Vegetation Density</b></p>
-    <p><b>DFM CM 0.5m: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
-    <p><b>Classified LAZ: </b> Classified point cloud. This can saved to a ".laz" file which is not added to the map.</p>
-    <p><b>Visualisations:</b></p>
-    <p><b>VAT: </b> Visualisation for archaeological topography</p>
-    <p><b>SVF: </b> Sky view factor</p>
-    <p><b>Opennes: </b> Openness – positive</p>
-    <p><b>DME: </b> Difference from mean elevation</p>
-    <p><b>Hillshade: </b> Hillshade/Relief of DFM</p>
     <h2>FAQ</h2>
     <h3>The edges of my outputs are black</h3>
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>

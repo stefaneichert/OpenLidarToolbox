@@ -52,7 +52,7 @@ LAStools folder that you downloaded previously (see note above). If you are usin
 Linux computer, things get a bit more complicated*. Wine is your friend!  
 *If you manage to make LAStools working on a recent macOS, please let us know how!
    
-![Plugins]( src/QGISplugin/open_lidar_tools/help/lastools.jpg "Plugin Providers")
+![Plugins]( src/help/lastools.jpg "Plugin Providers")
 
 Whitebox tools  
 Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/). 
@@ -70,13 +70,15 @@ raster datasets.
 # **Modules**
 
 ## **ONE (One-step-processing)**  
-This is an algorithm pipeline that takes an unclassified airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.
+This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.
 The pipeline introduces several additional steps compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used four of the state-of-the-art solutions available.
 ### **Input:**  
 
-***Unclassified point cloud:***  
-Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
+***ALS point cloud:***  
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
 will be exempt from the processing, all other preexisting classification will be ignored.
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
+If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
 **Point clouds with more than 30 million points will fail or will take very long to process.**
 
 ### **Parameters:**  
@@ -148,10 +150,10 @@ This interpolator is best suited for low or medium point density data characteri
 Must be calculated with DFM Confidence Map module from IDW interpolation for the desired cell size.
 
 ***IDW Interpolation:***  
-Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.
+Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.
 
 ***TLI Interpolation:***  
-Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.
+Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.
 
 ### **Parameters:**  
 ***Cell Size:***  
@@ -160,10 +162,10 @@ The resolution or cell size of the final DFM/DEM. For best results, all inputs s
 ***Grow Radius (Cell Size):***    
 Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.  
 
-![correct]( src/QGISplugin/open_lidar_tools/help/correct.jpg "Correct radius (3)")  
+![correct]( src/help/correct.jpg "Correct radius (3)")  
 correct radius (3) 
 
-![wrong]( src/QGISplugin/open_lidar_tools/help/wrong.jpg "Wrong radius (2)")  
+![wrong]( src/help/wrong.jpg "Wrong radius (1)")  
 wrong radius (1)  
 
 ### **References:**  
