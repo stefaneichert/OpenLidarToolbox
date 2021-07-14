@@ -92,7 +92,8 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***Classified point cloud***    
+***Classified point cloud***  
+Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).  
 ***DFM***  
 DFM (Digital feature model, which is a type of DEM that combines ground and buildings)    
 ***TLI***  
