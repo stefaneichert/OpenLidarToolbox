@@ -28,6 +28,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
 - [**Modules**](#modules)
   * [**ONE Step Processing**](#one-one-step-processing)
   * [**Classify LAS LAZ**](#classify-las-laz)
+  * [**Create base data**](#create-base-data)
   * [**Create DFM**](#create-dfm)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
@@ -76,7 +77,7 @@ This is an algorithm pipeline that takes an airborne LiDAR point cloud to produc
 The pipeline introduces several additional steps compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used four of the state-of-the-art solutions available.
 ### **Input:**  
 
-***ALS point cloud:***  
+***Input LAS/LAZ file:***  
 Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
 will be exempt from the processing, all other preexisting classification will be ignored.
 Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
@@ -126,7 +127,49 @@ Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0
 **Q: The quality of classification does not meet my expectations, how can I improve it?**  
 A: This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.
 
+## **Create base data**  
+This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.
+### **Inputs:**  
+***Input LAS/LAZ file:***
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
+If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
+**Point clouds with more than 30 million points will fail or will take very long to process.**
+### **Parameters:**  
+***Cell Size:***  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+
+***Source file coordinate system (CRS):***  
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+
+### **Outputs:** 
+***DFM***  
+DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+
+### **References:**
+Štular, Lozić, Eichert 2021 (in press).
+
 ## **Create DFM**  
+This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM) especially filtered for archaeological purposes
+### **Inputs:**  
+***Input LAS/LAZ file:***
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
+If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
+**Point clouds with more than 30 million points will fail or will take very long to process.**
+### **Parameters:**  
+***Cell Size:***  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+
+***Source file coordinate system (CRS):***  
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+
+### **Outputs:** 
+***DFM***  
+DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+
+### **References:**
+Štular, Lozić, Eichert 2021 (in press).
 
 ## **DFM Confidence Map**  
 This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
