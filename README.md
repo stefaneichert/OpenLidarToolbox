@@ -265,6 +265,10 @@ Difference from mean elevation
 ***Hillshade***  
 Analytical hillshade
 
+### **FAQ:**  
+**Q: The edges of my outputs are black/grey, what can I do?**  
+A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
+
 ### **References:**
 Štular, Lozić, Eichert 2021 (in press).
 
