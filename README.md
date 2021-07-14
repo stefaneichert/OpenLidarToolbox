@@ -111,7 +111,7 @@ Hillshade/Relief
 **Q: The edges of my outputs are black/grey, what can I do?**  
 A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
 
-## **Classify LAS/LAZ**  
+## **Classify LAS LAZ**  
 The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
 ### **Input:**
 ***Input LAS/LAZ file:***
