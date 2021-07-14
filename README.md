@@ -28,6 +28,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
 - [**Modules**](#modules)
   * [**ONE Step Processing**](#one-one-step-processing)
   * [**Classify LAS LAZ**](#classify-las-laz)
+  * [**Create DFM**](#create-dfm)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
 - [**Roadmap**](#roadmap)
@@ -121,9 +122,11 @@ Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7
 Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.
 Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
 
-### **FAQ**
+### **FAQ:**
 **Q: The quality of classification does not meet my expectations, how can I improve it?**  
 A: This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.
+
+## **Create DFM**  
 
 ## **DFM Confidence Map**  
 This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
