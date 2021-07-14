@@ -601,6 +601,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     <h3>TLI Interpolation</h3>
     <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarTINGridding or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.</p>
     <h2>Parameters</h2>
+    <h3>Source File Coordinate System</h3>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
     <h3>Cell Size</h3>
     <p>The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.</p>
     <h3>Grow Radius (Cells) </h3>

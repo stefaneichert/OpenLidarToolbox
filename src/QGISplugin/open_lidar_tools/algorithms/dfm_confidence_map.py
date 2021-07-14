@@ -917,6 +917,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     <h3>Ground Point Density Layer</h3>
     <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
     <h2>Parameters</2>
+    <h3>Source File Coordinate System</h3>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
     <h3>Resolution</h3>
     <p>DFM/DEM Resolution (multiple choice)</p>
     <h3>Output Cell Size:</h3>

@@ -57,12 +57,12 @@ class LidarPipeline(QgsProcessingAlgorithm):
     def initAlgorithm(self, config=None):
 
         self.addParameter(
-            QgsProcessingParameterFile('InputFilelaslaz', 'Input File', behavior=QgsProcessingParameterFile.File,
+            QgsProcessingParameterFile('InputFilelaslaz', 'Input LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
         self.addParameter(QgsProcessingParameterBoolean('classLas', 'The input LAS/LAZ file is already classified', optional=False, defaultValue=False))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
         self.addParameter(
-            QgsProcessingParameterFileDestination('LAS', 'Classified LAZ', fileFilter='Lidar Files (*.laz *.las)',
+            QgsProcessingParameterFileDestination('LAS', 'Classified LAS/LAZ file', fileFilter='Lidar Files (*.laz *.las)',
                                                   defaultValue=None, optional=False, createByDefault=False))
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
@@ -70,8 +70,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
                                                        defaultValue='', optional=True))
         self.addParameter(QgsProcessingParameterBoolean('VisualisationDFM', 'DFM', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('TLI', 'Triangulated interpolation of DFM', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('IDW', 'Inverse distance weighting interpolation of DFM', optional=False, defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean('TLI', 'TLI', optional=False, defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean('IDW', 'IDW', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
         self.addParameter(
@@ -288,7 +288,6 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
     <h3>Name prefix for layers</h3>
     <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
-    <p><b>Classified LAZ: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.</p>
     <h3>Outputs:</h3>
     <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
     <p><b>TLI:</b> Triangulated interpolation of DFM</p>
@@ -296,13 +295,13 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
     <p><b>DFM CM 0.5m: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
-    <p><b>Classified LAZ: </b> Classified point cloud. This can saved to a ".laz" file which is not added to the map.</p>
     <p><b>Visualisations:</b></p>
     <p><b>VAT: </b> Visualisation for archaeological topography</p>
     <p><b>SVF: </b> Sky view factor</p>
     <p><b>Opennes: </b> Openness – positive</p>
     <p><b>DME: </b> Difference from mean elevation</p>
     <p><b>Hillshade: </b> Hillshade/Relief of DFM</p>
+    <p><b>Classified LAS/LAZ file: </b> Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.</p>
     <h2>FAQ</h2>
     <h3>The edges of my outputs are black</h3>
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>
