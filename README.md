@@ -92,17 +92,17 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***Classified point cloud***  
+***Classified LAS/LAZ file:***  
 Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).  
-***DFM***  
+***DFM:***  
 DFM (Digital feature model, which is a type of DEM that combines ground and buildings)    
-***TLI***  
+***TLI:***  
 Triangulated interpolation of DFM  
-***IDW***  
+***IDW:***  
 Inverse distance weighting interpolation of DFM  
 ***Ground Point Density***  
 ***Low Vegetation Density***  
-***DFM CM 0.5m***  
+***DFM CM 0.5m:***  
 DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)  
 ***DFM visualisations:***  
 Sky view factor  
@@ -121,10 +121,10 @@ A: This is due to the so called edge effect. In many steps the values are calcul
 ## **Classify LAS LAZ**  
 The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
 ### **Input:**
-***Input LAS/LAZ file:***
+***Input LAS/LAZ file:***  
 Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
 ### **Output:**
-***Classified LAZ/LAS:***
+***Classified LAS/LAZ:***  
 Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.
 Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
 
@@ -135,7 +135,7 @@ A: This tool is a one-size-fits-all and is designed for the simplicity. As any o
 ## **Create base data**  
 This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.
 ### **Inputs:**  
-***Input LAS/LAZ file:***
+***Input LAS/LAZ file:***  
 Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
 Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
 If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
@@ -148,9 +148,9 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***TLI***  
+***TLI:***  
 Triangulated interpolation of DFM  
-***IDW***  
+***IDW:***  
 Inverse distance weighting interpolation of DFM  
 ***Ground Point Density***  
 ***Low Vegetation Density***  
@@ -174,7 +174,7 @@ DFM grid resolution, default value is 0.5 m. Optimal resolution for any given po
 Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
 
 ### **Outputs:** 
-***DFM***  
+***DFM:***  
 DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
 
 ### **References:**
@@ -251,19 +251,19 @@ Some amount of artifacts is inevitable. In our testing the artifacts were signif
 ## **Visualisations from DFM** 
 This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM to produce the most commonly used archaeological visualisations.
 ### **Inputs:**  
-***DFM/DEM:***
+***DFM/DEM:***  
 DFM or DEM in any raster format supported by QGIS, e.g., GeoTIFF.
 
 ### **Outputs:** 
-***VAT***  
+***VAT:***  
 Visualisation for archaeological topography  
-***SVF***  
+***SVF:***  
 Sky view factor  
-***Opennes***  
+***Opennes:***  
 Openness – positive  
-***DME***  
+***DME:***  
 Difference from mean elevation  
-***Hillshade***  
+***Hillshade:***  
 Analytical hillshade
 
 ### **FAQ:**  
