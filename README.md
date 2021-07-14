@@ -27,7 +27,7 @@ Point cloud processing, point cloud classification, ground point filtering; DEM/
 - [**General notes on input LiDAR data**](#general-notes-on-input-lidar-data)
 - [**Modules**](#modules)
   * [**ONE Step Processing**](#one-one-step-processing)
-  * [**Classify LAS/LAZ**](#classify-las/laz)
+  * [**Classify LAS/LAZ**](#classify-las-laz)
   * [**DFM Confidence Map**](#dfm-confidence-map)
   * [**Hybrid Interpolation**](#hybrid-interpolation)
 - [**Roadmap**](#roadmap)
