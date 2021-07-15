@@ -597,18 +597,20 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     <h3>DFM Confidence Map</h3>
     <p>Must be calculated with DFM Confidence Map module from IDW/TLI interpolation for the desired cell size.</p>
     <h3>IDW Interpolation</h3>
-    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.</p>
+    <p>Input DFM/DEM interpolated with IDW (Inverse Distance Weighing; use Create base data tool or, if available, Golden Software Surfer).</p>
     <h3>TLI Interpolation</h3>
-    <p>Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarTINGridding or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.</p>
+    <p>Input DFM/DEM interpolated with TLI (Triangulation with Linear Interpolation; use Create base data tool).</p>
     <h2>Parameters</h2>
     <h3>Source File Coordinate System</h3>
-    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS /LAZ file. Make sure the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is the correct CRS and you only need it temporarily, you can select any Cartesian CRS, for example, EPSG:8687. XYZ should be in m. <b> <br>The tool will not work correctly with data in feet, km, cm etc.</b></p>
     <h3>Cell Size</h3>
     <p>The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.</p>
     <h3>Grow Radius (Cells) </h3>
     <p>Grow radius in raster cells for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.</p>
     <h3>Name prefix for layers</h3>
-    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p>The output layers are added to the map as temporary layers with default names. They can then be saved as files. To distinguish them from files previously created with the same tool, a prefix should be defined to prevent duplication (which may cause errors on some systems).</p>
+    <h3>Outputs:</h3>
+    <p><b>DFM: </b>Digital Feature Model (archaeology-specific DEM, combining ground and buildings)</p>
     <p></p>
     <h2>FAQ</h2>
     <h3>I have NoData holes in my DFM/DEM</h3>

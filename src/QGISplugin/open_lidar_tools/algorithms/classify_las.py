@@ -230,7 +230,7 @@ class ToClassLas(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>The algorithm will classify an airborne LiDAR point cloud. This process – also known as &quot;filtering&quot; or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.</p>
+    <p>The algorithm classifies (filters, semantically labels) an airborne LiDAR point cloud. The algorithm is optimized for archaeology, but may be useful for other purposes as well.</p>
     <h2>Input parameters</h2>
     <h3>Input LAS/LAZ File</h3>
     <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
@@ -241,7 +241,7 @@ class ToClassLas(QgsProcessingAlgorithm):
     <br>Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
     <h2>FAQ</h2>
     <h3>The quality of classification does not meet my expectations, how can I improve it?</h3>
-    <p>This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.</p>
+    <p>This tool is one-size-fits-all and is designed for simplicity. Like any other tool without user-defined parameters, it will produce OK results for any dataset, but it will often not return the best possible result. We recommend specialized software, such as LAStools or Whitebox tools, to optimize results.</p>
     <br>
     <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>

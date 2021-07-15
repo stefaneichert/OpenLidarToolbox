@@ -263,13 +263,13 @@ class visualise(QgsProcessingAlgorithm):
     <h3>DFM/DEM</h3>
     <p>DFM or DEM in any raster format supported by QGIS, e.g., GeoTIFF.</p>
     <h3>Name prefix for layers</h3>
-    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p>The output layers are added to the map as temporary layers with default names. They can then be saved as files. To distinguish them from files previously created with the same tool, a prefix should be defined to prevent duplication (which may cause errors on some systems).</p>
     <h3>Outputs:</h3>
     <p><b>VAT: </b> Visualisation for archaeological topography</p>
     <p><b>SVF: </b> Sky view factor</p>
     <p><b>Opennes: </b> Openness – positive</p>
     <p><b>DME: </b> Difference from mean elevation</p>
-    <p><b>Hillshade: </b> Analytical hillshade</p>
+    <p><b>Hillshade: </b> Hillshade/Relief shading</p>
     <h2>FAQ</h2>
     <h3>The edges of my outputs are black</h3>
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>

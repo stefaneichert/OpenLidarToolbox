@@ -201,7 +201,7 @@ class CreateDfm(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return """<html><body><h2>Algorithm description</h2>
-    <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM) especially filtered for archaeological purposes</p>
+    <p>This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM), which is archaeology-specific DEM, combining ground and buildings.</p>
     <h2>Input parameters</h2>
     <h3>Input LAS/LAZ file</h3>
     <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
@@ -209,13 +209,13 @@ class CreateDfm(QgsProcessingAlgorithm):
     <h3>The input LAS/LAZ file is already classified</h3>
     <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
     <h3>Source File Coordinate System</h3>
-    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS /LAZ file. Make sure the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is the correct CRS and you only need it temporarily, you can select any Cartesian CRS, for example, EPSG:8687. XYZ should be in m. <b> <br>The tool will not work correctly with data in feet, km, cm etc.</b></p>
     <h3>Cell Size</h3>
     <p>DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.</p>
     <h3>Name prefix for layers</h3>
-    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p>The output layers are added to the map as temporary layers with default names. They can then be saved as files. To distinguish them from files previously created with the same tool, a prefix should be defined to prevent duplication (which may cause errors on some systems).</p>
     <h3>Outputs:</h3>
-    <p><b>DFM: </b> Digital feature model, which is a type of DEM that combines ground and buildings</p>
+    <p><b>DFM: </b>Digital Feature Model (archaeology-specific DEM, combining ground and buildings)</p>
     <h2>FAQ</h2>
     <h3>The edges of my outputs are black</h3>
     <p>This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger areas or to create overlapping mosaics.</p>

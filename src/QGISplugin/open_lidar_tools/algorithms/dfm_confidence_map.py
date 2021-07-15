@@ -61,7 +61,7 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterRasterLayer('LowVegetation', 'Low Vegetation Density Layer', defaultValue=None))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source Files Coordinate System', defaultValue=None))
-        self.addParameter(QgsProcessingParameterEnum('Createconfidencemapfor', 'Resolution',
+        self.addParameter(QgsProcessingParameterEnum('Createconfidencemapfor', 'Resolution of target DFM',
                                                      options=['0.25m', '0.5m', '1m', '2m'], allowMultiple=True,
                                                      defaultValue=[0,1,2,3]))
         self.addParameter(
@@ -905,26 +905,24 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         return ''
 
     def shortHelpString(self):
-        return """<html><body>
-    <p>This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
-    Digital Feature Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
-    This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.</p>
+        return """<html><body><h2>Algorithm description</h2>
+    <p>This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for quality assessment of the DFM (archaeology- specific DEM, combining ground and buildings) or DEM, but can also be used to determine the optimal resolution of the DFM/DEM.</p>
     <h2>Input</h2>
     <h3>DEM/DFM Layer</h3>
-    <p>DFM (or any DEM) with a recommended cell size of 0.5m in raster format</p>
+    <p>DFM (or any DEM) with a recommended cell size of 0.5m in raster format (use Create DFM tool)</p>
     <h3>Low Vegetation Density Layer</h3>
-    <p>Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
+    <p>Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m (use Create base data tool).</p>
     <h3>Ground Point Density Layer</h3>
-    <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).</p>
+    <p>Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m (use Create base data tool).</p>
     <h2>Parameters</2>
     <h3>Source File Coordinate System</h3>
-    <p>Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which the is correct CRS and you only need it temporarily you can choose any Cartesian CRS, for example, EPSG:8687.</p>
-    <h3>Resolution</h3>
-    <p>DFM/DEM Resolution (multiple choice)</p>
+    <p>Select the Coordinate Reference System (CRS) of the input LAS /LAZ file. Make sure the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is the correct CRS and you only need it temporarily, you can select any Cartesian CRS, for example, EPSG:8687. XYZ should be in m. <b> <br>The tool will not work correctly with data in feet, km, cm etc.</b></p>
+    <h3>Resolution of target DFM</h3>
+    <p>DFM/DEM resolution (multiple choice ) refers to the cell size of the target DFM for which the confidence is calculated (i.e., 0.5 m provides information about the confidence level if 0.5 m DFM is calculated in the next step).</p>
     <h3>Output Cell Size:</h3>
     <p>Define the cell size of the Confidence Map. 0.5 or 1 m is recommended. (It is possible to calculate DFM Confidence Map for high resolution, e.g. 0.25 m, but display the result at lower resolution, e.g. 1 m.)</p>
     <h3>Name prefix for layers</h3>
-    <p>The output layers are added to the map as temporary layers with default names. They can be saved as files afterwards. In order to distinguish them from previously created files with the same tool a prefix should be defined to avoid the same names for different layers</p>
+    <p>The output layers are added to the map as temporary layers with default names. They can then be saved as files. To distinguish them from files previously created with the same tool, a prefix should be defined to prevent duplication (which may cause errors on some systems).</p>
     <h2>FAQ</h2>
     <h3>I have NoData holes in my DFM/DEM</h3>
     <p>Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.</p>
