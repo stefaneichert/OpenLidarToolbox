@@ -303,6 +303,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p>This is due to what is known as the edge effect. In 0NE processing, the values are computed from surrounding points; since there are no surrounding points at the edge, the output values are "strange", e.g., they are displayed as black in most visualisations. This cannot be avoided and the only solution is to process larger areas or create overlapping mosaics.</p>
     <p></p>
     <br><br>
+    0NE incorporates parts of Lastools, Whitebox tools, Relief Visualisation Toolbox, GDAL, GRASS GIS, and QGIS core tools.
+    <br><br>
     <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""

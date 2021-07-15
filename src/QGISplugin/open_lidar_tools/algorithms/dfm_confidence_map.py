@@ -928,6 +928,10 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
     <p>Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.</p>
     <p></p>
     <br>
+    <br>
+    DFM confidence map incorporates parts of GDAL, GRASS GIS, and QGIS core tools.
+    <br>
+    <br>
     <p><b>References:</b> Štular, Lozić, Eichert 2021a (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""

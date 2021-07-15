@@ -243,6 +243,9 @@ class ToClassLas(QgsProcessingAlgorithm):
     <h3>The quality of classification does not meet my expectations, how can I improve it?</h3>
     <p>This tool is one-size-fits-all and is designed for simplicity. Like any other tool without user-defined parameters, it will produce OK results for any dataset, but it will often not return the best possible result. We recommend specialized software, such as LAStools or Whitebox tools, to optimize results.</p>
     <br>
+    Classify LAS/LAZ incorporates parts of Lastools
+    <br>
+    <br>
     <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""

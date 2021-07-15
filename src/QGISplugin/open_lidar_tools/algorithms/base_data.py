@@ -476,6 +476,8 @@ class BaseData(QgsProcessingAlgorithm):
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
     <br><br>
+    Create base data incorporates parts of Lastools, Whitebox tools, GDAL, GRASS GIS, and QGIS core tools.
+    <br><br>
     <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
