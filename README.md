@@ -414,7 +414,7 @@ Openness – positive
 ***DME:***  
 Difference from mean elevation  
 ***Hillshade:***  
-Analytical hillshade
+Hillshade/Relief shading
 
 ### **FAQ:**
 
