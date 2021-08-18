@@ -2,98 +2,140 @@
 
 ![Logo]( src/QGISplugin/open_lidar_tools/icon.png "Open LiDAR Toolbox")
 
-The toolbox is under active development, current version is 2.0 ( [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP") or install from within QGIS/Plugins/Manage and Install Plugins…)
+The toolbox is under active development, current version is
+2.0 ( [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP")
+or install from within QGIS/Plugins/Manage and Install Plugins…)
 
+Open LiDAR Toolbox is a QGIS plug-in that provides one-step-processing of airborne LiDAR data from point cloud to LiDAR
+visualisations. The input required is an unclassified point cloud in LAZ /LAS format and the tool returns several
+outputs needed for interpretative mapping of archaeological features. The tools are optimized for archaeology, but have
+broader application for anyone primarily interested in visual inspection of airborne LiDAR data.
 
-Open LiDAR Toolbox is a QGIS plug-in that provides one-step-processing of airborne LiDAR data from point cloud to LiDAR visualisations. The input required is an unclassified point cloud in LAZ /LAS format and the tool returns several outputs needed for interpretative mapping of archaeological features. The tools are optimized for archaeology, but have broader application for anyone primarily interested in visual inspection of airborne LiDAR data.
+Open LiDAR Toolbox is developed in collaboration between NHM Wien and ZRC SAZU as a part of the MALiAp scientific
+research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The
+scientific background for the tool is published in open access peer reviewed papers:
 
-Open LiDAR Toolbox is developed in collaboration between NHM Wien and ZRC SAZU as a part of the MALiAp scientific research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The scientific background for the tool is published in open access peer reviewed papers:  
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
 
-Lozić, E.; Štular, B. Documentation of Archaeology-Specific Workflow for Airborne LiDAR Data Processing. Geosciences 2021, 11, 26. https://doi.org/10.3390/geosciences11010026.  
+Lozić, E.; Štular, B. Documentation of Archaeology-Specific Workflow for Airborne LiDAR Data Processing. Geosciences
+2021, 11, 26. https://doi.org/10.3390/geosciences11010026.
 
-Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021, 13, 1855. https://doi.org/10.3390/rs13091855.  
+Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021,
+13, 1855. https://doi.org/10.3390/rs13091855.
 
-Štular, B.; Lozić, E. Comparison of Filters for Archaeology-Specific Ground Extraction from Airborne LiDAR Point Clouds. Remote Sens. 2020, 12, 3025. https://doi.org/10.3390/rs12183025.  
-
+Štular, B.; Lozić, E. Comparison of Filters for Archaeology-Specific Ground Extraction from Airborne LiDAR Point Clouds.
+Remote Sens. 2020, 12, 3025. https://doi.org/10.3390/rs12183025.
 
 ## **Keywords**
-Airborne LiDAR, airborne laser scanning (ALS), archaeology, archeology, free tools, freeware, QGIS, Phyton;
-Point cloud processing, point cloud classification, ground point filtering; DEM/DTM/DFM, DFM confidence map, hybrid interpolation; raster visualisations (sky view factor, visualization for archaeological topography, openness, difference from mean elevation)
 
+Airborne LiDAR, airborne laser scanning (ALS), archaeology, archeology, free tools, freeware, QGIS, Phyton; Point cloud
+processing, point cloud classification, ground point filtering; DEM/DTM/DFM, DFM confidence map, hybrid interpolation;
+raster visualisations (sky view factor, visualization for archaeological topography, openness, difference from mean
+elevation)
 
 # **Table of Content**
+
 - [**Installation**](#installation)
 - [**Dependencies**](#dependencies)
 - [**General notes on input LiDAR data**](#general-notes-on-input-lidar-data)
 - [**Modules**](#modules)
-  * [**ONE Step Processing**](#one-one-step-processing)
-  * [**Classify LAS LAZ**](#classify-las-laz)
-  * [**Create base data**](#create-base-data)
-  * [**Create DFM**](#create-dfm)
-  * [**DFM Confidence Map**](#dfm-confidence-map)
-  * [**Hybrid Interpolation**](#hybrid-interpolation)
-  * [**Visualisations from DFM**](#visualisations-from-dfm)
+    * [**ONE Step Processing**](#one-one-step-processing)
+    * [**Classify LAS LAZ**](#classify-las-laz)
+    * [**Create base data**](#create-base-data)
+    * [**Create DFM**](#create-dfm)
+    * [**DFM Confidence Map**](#dfm-confidence-map)
+    * [**Hybrid Interpolation**](#hybrid-interpolation)
+    * [**Visualisations from DFM**](#visualisations-from-dfm)
 - [**Roadmap**](#roadmap)
 
 # **Installation**
+
 The easiest way to install is from QGIS/Plugins/Manage and Install Plugins…  
-You can also [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP"). Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu. In both cases Open LiDAR Toolbox will show up in the processing toolbox. 
-Users who need deeper access to even more settings can download individual QGIS models [here](https://github.com/stefaneichert/OpenLidarToolbox/tree/main/src/models "download models").
+You can
+also [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP")
+. Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu. In both cases Open
+LiDAR Toolbox will show up in the processing toolbox. Users who need deeper access to even more settings can download
+individual QGIS models [here](https://github.com/stefaneichert/OpenLidarToolbox/tree/main/src/models "download models").
 
 # **Dependencies**
-Open LiDAR Toolbox are a &quot;shell&quot; that uses several excellent tools under the hood: GDAL,
-GRASS, QGIS native tools, LAStools, Whitebox Tools and RVT. Therefore, the following
-plug-ins must be installed before Open LiDAR Toolbox: LAStools, Whitebox Tools and RVT.
-If you do not already have these plug-ins installed, RVT and LAStools will be installed
-automatically with the Open LiDAR Toolbox. However, additional steps must be taken.
+
+Open LiDAR Toolbox are a &quot;shell&quot; that uses several excellent tools under the hood: GDAL, GRASS, QGIS native
+tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before Open LiDAR Toolbox:
+LAStools, Whitebox Tools and RVT. If you do not already have these plug-ins installed, RVT and LAStools will be
+installed automatically with the Open LiDAR Toolbox. However, additional steps must be taken.
 
 LAStools
-1) Download the actual LAStools software from here and unzip it to a permanent location,
-e.g., c:LAStools
-2) Select the Processing tab and the Providers list item. You should find the LAStools entry
-there. Select the down arrow, and check the Activate checkbox. Lastly, enter name of the
-LAStools folder that you downloaded previously (see note above). If you are using a Mac or
-Linux computer, things get a bit more complicated*. Wine is your friend!  
-*If you manage to make LAStools working on a recent macOS, please let us know how!
-   
+
+1) Download the actual LAStools software from here and unzip it to a permanent location, e.g., c:LAStools
+2) Select the Processing tab and the Providers list item. You should find the LAStools entry there. Select the down
+   arrow, and check the Activate checkbox. Lastly, enter name of the LAStools folder that you downloaded previously (see
+   note above). If you are using a Mac or Linux computer, things get a bit more complicated*. Wine is your friend!  
+   *If you manage to make LAStools working on a recent macOS, please let us know how!
+
 ![Plugins]( src/help/lastools.jpg "Plugin Providers")
 
 Whitebox tools  
-Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/). 
+Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/).
 
 # **General notes on input LiDAR data**
-All tools are designed to work best with data that is in 
-**square tiles between one and about 25 million points**.   
-**Processing time increases exponentially with the number of points**, 
-as does the RAM memory requirement. The best practice for processing large 
-datasets is to split the data into overlapping tiles (e.g., 20 m overlap), 
-batch process the tiles, and “de-collar" (remove the overlaps) the resulting 
-raster datasets.
 
+All tools are designed to work best with data that is in
+**square tiles between one and about 25 million points**.   
+**Processing time increases exponentially with the number of points**, as does the RAM memory requirement. The best
+practice for processing large datasets is to split the data into overlapping tiles (e.g., 20 m overlap), batch process
+the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets.
 
 # **Modules**
 
-## **ONE (One-step-processing)**  
-This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for archaeology and anyone interested in visual analysis of LiDAR data.
-The pipeline introduces several additional steps compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used four of the state-of-the-art solutions available.
-### **Input:**  
+## **ONE (One-step-processing)**
+
+This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for
+archaeology and anyone interested in visual analysis of LiDAR data. The pipeline introduces several additional steps
+compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class
+2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a
+DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still
+sufficient to make the difference between a positive identification of an archaeological feature or not. DFM Hybrid
+interpolation improves upon the state-of-the-art by combining the positive features of two different interpolation
+techniques. The crucial element that enabled the proposed hybrid interpolator was the application of the DFM confidence
+map as a segmentation key. Enhanced visualizations are a crucial step in the archaeological workflow and we have used
+four of the state-of-the-art solutions available.
+
+### **Input:**
+
 ***Input LAS/LAZ file:***  
-Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 
-will be exempt from the processing, all other preexisting classification will be ignored.
-Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
-If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other
+preexisting classification will be ignored. Open LiDAR toolbox will classify this point cloud for archaeological
+purposes using the LAStools plugin. If your point cloud is already classified, tick the checkbox in the dialog and the
+classification will be skipped.  
 **Point clouds with more than 30 million points will fail or will take very long to process.**
 
-### **Parameters:**  
+### **Parameters:**
+
+***The input LAS/LAZ file is already classified***
+Please tick this box, if your file (LAS/LAZ format) is already classified. If it is
+not, or you are not sure, leave it blank.
+
+***Remove low noise:***  
+Please tick this box if your data suffers from unclassified low noise 
+that causes the "Swiss cheese” effect (sharp holes where there are none).
+This will not work for low density datasets (less than 1 ground point per m2).
+
 ***Cell Size:***  
-DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM
+Confidence Map tool.
 
 ***Source file coordinate system (CRS):***  
-Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in
+meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any
+Cartesian CRS, for example, EPSG:8687.
 
-### **Outputs:** 
+### **Outputs:**
+
 ***Classified LAS/LAZ file:***  
-Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).  
+Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and
+file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5;
+2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).  
 ***DFM:***  
 DFM (Digital feature model, which is a type of DEM that combines ground and buildings)    
 ***TLI:***  
@@ -103,7 +145,8 @@ Inverse distance weighting interpolation of DFM
 ***Ground Point Density***  
 ***Low Vegetation Density***  
 ***DFM CM 0.5m:***  
-DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)  
+DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or
+completely blue – use the dedicated tool)  
 ***DFM visualisations:***  
 Sky view factor  
 Openness – positive  
@@ -112,149 +155,256 @@ Visualisation for archaeological topography (VAT)
 Hillshade/Relief
 
 ### **References:**
-Štular, Lozić, Eichert 2021 (in press).
 
-### **FAQ:**  
-**Q: The edges of my outputs are black/grey, what can I do?**  
-A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
 
-## **Classify LAS LAZ**  
-The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
-### **Input:**
-***Input LAS/LAZ file:***  
-Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
-### **Output:**
-***Classified LAS/LAZ:***  
-Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.
-Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5; 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
+
 
 ### **FAQ:**
-**Q: The quality of classification does not meet my expectations, how can I improve it?**  
-A: This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.
 
-## **Create base data**  
-This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used directly in archaeological (or similar) workflows.
-### **Inputs:**  
+**Q: The edges of my outputs are black/grey, what can I do?**  
+A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at
+the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most
+visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
+
+## **Classify LAS LAZ**
+
+The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic
+labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
+
+### **Parameters:** ##
+
+***Remove low noise:***  
+Please tick this box if your data suffers from unclassified low noise 
+that causes the "Swiss cheese” effect (sharp holes where there are none).
+This will not work for low density datasets (less than 1 ground point per m2).
+
+
+### **Input:**
+
 ***Input LAS/LAZ file:***  
-Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
-Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
-If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
+Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all
+other preexisting classification will be ignored.
+
+### **Output:**
+
+***Classified LAS/LAZ:***  
+Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and
+file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5;
+2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
+
+### **FAQ:**
+
+**Q: The quality of classification does not meet my expectations, how can I improve it?**  
+A: This tool is a one-size-fits-all and is designed for the simplicity. As any other such tool without any user defined
+parameters it is designed to produce OK results for any dataset, but will by definition never be the best possible. Feel
+free to experiment with other dedicated software, e.g., LAStools or Whitebox tools.
+
+## **Create base data**
+
+This is a pipeline that takes an airborne LiDAR point cloud to produce rasters needed for further processing or used
+directly in archaeological (or similar) workflows.
+
+### **Inputs:**
+
+***Input LAS/LAZ file:***  
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other
+preexisting classification will be ignored.  
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin. If your point
+cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
 **Point clouds with more than 30 million points will fail or will take very long to process.**
-### **Parameters:**  
+
+### **Parameters:**
+
+***The input LAS/LAZ file is already classified***
+Please tick this box, if your file (LAS/LAZ format) is already classified. If it is
+not, or you are not sure, leave it blank.
+
+***Remove low noise:***  
+Please tick this box if your data suffers from unclassified low noise 
+that causes the "Swiss cheese” effect (sharp holes where there are none).
+This will not work for low density datasets (less than 1 ground point per m2).
+
 ***Cell Size:***  
-DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM
+Confidence Map tool.
 
 ***Source file coordinate system (CRS):***  
-Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in
+meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any
+Cartesian CRS, for example, EPSG:8687.
 
-### **Outputs:** 
+### **Outputs:**
+
 ***TLI:***  
 Triangulated interpolation of DFM  
 ***IDW:***  
 Inverse distance weighting interpolation of DFM  
 ***Ground Point Density***  
-***Low Vegetation Density***  
+***Low Vegetation Density***
 
 ### **References:**
-Štular, Lozić, Eichert 2021 (in press).
 
-## **Create DFM**  
-This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM) especially filtered for archaeological purposes
-### **Inputs:**  
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
+
+## **Create DFM**
+
+This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital feature model (DFM)
+especially filtered for archaeological purposes
+
+### **Inputs:**
+
 ***Input LAS/LAZ file:***
-Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.  
-Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin.
-If your point cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
+Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other
+preexisting classification will be ignored.  
+Open LiDAR toolbox will classify this point cloud for archaeological purposes using the LAStools plugin. If your point
+cloud is already classified, tick the checkbox in the dialog and the classification will be skipped.  
 **Point clouds with more than 30 million points will fail or will take very long to process.**
-### **Parameters:**  
+
+### **Parameters:**
+
+***The input LAS/LAZ file is already classified***
+Please tick this box, if your file (LAS/LAZ format) is already classified. If it is
+not, or you are not sure, leave it blank.
+
+***Remove low noise:***  
+Please tick this box if your data suffers from unclassified low noise 
+that causes the "Swiss cheese” effect (sharp holes where there are none).
+This will not work for low density datasets (less than 1 ground point per m2).
+
 ***Cell Size:***  
-DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM Confidence Map tool.  
+DFM grid resolution, default value is 0.5 m. Optimal resolution for any given point cloud can be calculated with the DFM
+Confidence Map tool.
 
 ***Source file coordinate system (CRS):***  
-Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any Cartesian CRS, for example, EPSG:8687.
+Select the Coordinate Reference System (CRS) of the input LAS/LAZ file. Make sure that the CRS is Cartesian (x and y in
+meters, not degrees). If you are not sure which is correct CRS and you only need it temporary you can choose any
+Cartesian CRS, for example, EPSG:8687.
 
-### **Outputs:** 
+### **Outputs:**
+
 ***DFM:***  
-DFM (Digital feature model, which is a type of DEM that combines ground and buildings)  
+DFM (Digital feature model, which is a type of DEM that combines ground and buildings)
 
 ### **References:**
-Štular, Lozić, Eichert 2021 (in press).
 
-## **DFM Confidence Map**  
-This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
-Digital Feature Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM.
-This algorithm can also be used to calculate the prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
+
+## **DFM Confidence Map**
+
+This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence map is primarily used for
+the quality assessment of the DFM, but can also be used to determine the optimal resolution for the DFM. Digital Feature
+Model (DFM) is archaeology- specific DEM interpolated from airborne LiDAR data. This algorithm calculates DFM Confidence
+Map based on the CRAN decision tree. The confidence map is primarily used for the quality assessment of the DFM, but can
+also be used to determine the optimal resolution for the DFM. This algorithm can also be used to calculate the
+prediction uncertainty map for any DEM, but the settings must be adjusted for cell size.
 
 ### **Inputs:**
 
 ***DEM/DFM Layer:***  
-DFM (or any DEM) with cell size 0.5m in raster format.  
+DFM (or any DEM) with cell size 0.5m in raster format.
 
 ***Ground Point Density Layer:***  
-Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).
+Point density layer of ground (ASPRS class 2) and building (ASPRS class 6) points in raster format. Recommended cell
+size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).
 
 ***Low Vegetation Density Layer:***  
-Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format. Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a LAS file).
+Point density layer of low vegetation (ASPRS standard LIDAR point class 3, height 0.5-2.0 m) in raster format.
+Recommended cell size is 0.5 or 1.0 m. (Whitebox Tools / LidarPointDensity can be used to calculate this layer from a
+LAS file).
 
-### **Parameters:**  
+### **Parameters:**
+
 ***Resolution:***  
-DFM/DEM Resolution (multiple choice).  
+DFM/DEM Resolution (multiple choice).
 
 ***Output Cell Size:***  
-Define the cell size of the Confidence Map. 0.5 or 1 m is recommended. (It is possible to calculate DFM Confidence Map for high resolution, e.g. 0.25 m, but display the result at lower resolution, e.g. 1 m.)
+Define the cell size of the Confidence Map. 0.5 or 1 m is recommended. (It is possible to calculate DFM Confidence Map
+for high resolution, e.g. 0.25 m, but display the result at lower resolution, e.g. 1 m.)
 
 ### **References:**
-Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021, 13, 1855. https://doi.org/10.3390/rs13091855.
 
-### **FAQ:**  
+Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021,
+13, 1855. https://doi.org/10.3390/rs13091855.
+
+### **FAQ:**
+
 **Q: I have NoData holes in my DFM/DEM**  
-A: Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW.
+A: Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too
+low radius setting for IDW.
 
+## **Hybrid Interpolation**
 
-## **Hybrid Interpolation**  
-This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance Weighing) interpolation in areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer.
-This interpolator is best suited for low or medium point density data characterized by significant local variation in point density, such as an open landscape interspersed with hedgerows or other patches of dense vegetation. For high point density data, the TLI by itself usually gives better results.
-### **Inputs:**  
+This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance Weighing) interpolation in
+areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with Linear Interpolation) interpolation in areas of
+high DFM confidence (levels 4-6). The user provides DFM confidence map, TLI and IDW. The module works best when TLI and
+IDW are calculated under very similar conditions, such as those provided by Golden Software Surfer. This interpolator is
+best suited for low or medium point density data characterized by significant local variation in point density, such as
+an open landscape interspersed with hedgerows or other patches of dense vegetation. For high point density data, the TLI
+by itself usually gives better results.
+
+### **Inputs:**
 
 ***DFM Confidence Map:***  
 Must be calculated with DFM Confidence Map module from IDW interpolation for the desired cell size.
 
 ***IDW Interpolation:***  
-Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.
+Input DFM/DEM interpolated with IDW (Inverse Distance Weighing). (Open LiDAR Toolbox / Create base data or Whitebox
+Tools / LidarIDWInterpolation or Golden Software Surfer can be used to calculate this layer from a LAS file.)
+Alternatively, any interpolator deemed to be most suitable for undersampled areas can be used.
 
 ***TLI Interpolation:***  
-Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data or Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.) Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.
+Input DFM/DEM interpolated with TLI ( Triangulation with Linear Interpolation). (Open LiDAR Toolbox / Create base data
+or Whitebox Tools / LidarTINGriddin or Golden Software Surfer can be used to calculate this layer from a LAS file.)
+Alternatively, any interpolator deemed to be most suitable for properly sampled and oversampled areas can be used.
 
-### **Parameters:**  
+### **Parameters:**
+
 ***Cell Size:***  
-The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.  
+The resolution or cell size of the final DFM/DEM. For best results, all inputs should have the same cell size.
 
 ***Grow Radius (Cell Size):***    
-Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.  
+Grow radius for "RED" areas with low DFM confidence will increase (grow) the areas where IDW is used. Tweak this setting
+if you notice unwanted interpolation artefacts (noise) in contact areas between TLI and IDW.
 
 ![correct]( src/help/correct.jpg "Correct radius (3)")  
-correct radius (3) 
+correct radius (3)
 
 ![wrong]( src/help/wrong.jpg "Wrong radius (1)")  
-wrong radius (1)  
+wrong radius (1)
 
-### **References:**  
-Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology. Remote Sens. 2021, 13, 1855. https://doi.org/10.3390/rs13091855.
+### **References:**
 
-### **FAQ:**  
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
+
+### **FAQ:**
+
 **Q: I have NoData holes in my DFM/DEM.**  
-Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low radius setting for IDW or too small setting for maximum triangle size in TLI.
+Wherever one of the inputs has a NoData value, the algorithm will return NoData. Common sources for NoData are too low
+radius setting for IDW or too small setting for maximum triangle size in TLI.
 
-The artifacts (noise) in the contact areas are too big and tweaking the Grow radius doesn't help.
-Some amount of artifacts is inevitable. In our testing the artifacts were significantly smaller when the input layers have been calculated with Golden Software Surfer, since exactly same parameters for neighborhood search can be set. If the artifacts are so strong, that they can misguide archaeological interpretation, then we suggest using IDW interpolation instead.  
+The artifacts (noise) in the contact areas are too big and tweaking the Grow radius doesn't help. Some amount of
+artifacts is inevitable. In our testing the artifacts were significantly smaller when the input layers have been
+calculated with Golden Software Surfer, since exactly same parameters for neighborhood search can be set. If the
+artifacts are so strong, that they can misguide archaeological interpretation, then we suggest using IDW interpolation
+instead.
 
-## **Visualisations from DFM** 
-This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM to produce the most commonly used archaeological visualisations.
-### **Inputs:**  
+## **Visualisations from DFM**
+
+This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM to produce the most
+commonly used archaeological visualisations.
+
+### **Inputs:**
+
 ***DFM/DEM:***  
 DFM or DEM in any raster format supported by QGIS, e.g., GeoTIFF.
 
-### **Outputs:** 
+### **Outputs:**
+
 ***VAT:***  
 Visualisation for archaeological topography  
 ***SVF:***  
@@ -266,12 +416,17 @@ Difference from mean elevation
 ***Hillshade:***  
 Analytical hillshade
 
-### **FAQ:**  
+### **FAQ:**
+
 **Q: The edges of my outputs are black/grey, what can I do?**  
-A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
+A: This is due to the so called edge effect. In many steps the values are calculated from surrounding points; since at
+the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most
+visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
 
 ### **References:**
-Štular, Lozić, Eichert 2021 (in press).
+
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
 
 # **Roadmap**
 

@@ -62,6 +62,8 @@ class BaseData(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterBoolean('classLas', 'The input LAS/LAZ file is already classified', optional=False,
                                           defaultValue=False))
+        self.addParameter(
+            QgsProcessingParameterBoolean('LowNoise', 'Remove low noise', optional=False, defaultValue=False))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
@@ -76,7 +78,7 @@ class BaseData(QgsProcessingAlgorithm):
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(19, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
         results = {}
         outputs = {}
 
@@ -84,7 +86,8 @@ class BaseData(QgsProcessingAlgorithm):
 
             alg_params = {
                 'InputFilelaslaz': parameters['InputFilelaslaz'],
-                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las')
+                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las'),
+                'LowNoise': parameters['LowNoise']
             }
             outputs['ClassifyLaslaz'] = processing.run('Open LiDAR Toolbox:ToClassLas', alg_params, context=context,
                                                        feedback=feedback, is_child_algorithm=True)
@@ -95,9 +98,11 @@ class BaseData(QgsProcessingAlgorithm):
         if parameters['classLas']:
             lasheightclassifyfile = parameters['InputFilelaslaz']
 
-        feedback.setCurrentStep(1)
+        iter = 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         if parameters['InputFilelaslaz'][-4:] == '.laz':
             # laszip
@@ -115,9 +120,10 @@ class BaseData(QgsProcessingAlgorithm):
             lasheightclassifyfile = alg_params['OUTPUT_LASLAZ']
             outputs['Laszip'] = processing.run('LAStools:laszip', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # LidarPointDensity1_Ground
         alg_params = {
@@ -134,9 +140,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidarpointdensity1_ground'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # resampleGPD
         alg_params = {
@@ -151,9 +158,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Resamplegpd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(4)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Warp (reproject)
         alg_params = {
@@ -178,9 +186,10 @@ class BaseData(QgsProcessingAlgorithm):
         GPDfileR = alg_params['OUTPUT']
         results['GPD'] = GPDfileR
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
 
         # LidarPointDensity2_LowVeg
@@ -198,9 +207,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidarpointdensity2_lowveg'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
                                                               feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(6)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # resampleLVD
         alg_params = {
@@ -215,9 +225,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Resamplelvd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(7)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Warp (reproject)
         alg_params = {
@@ -242,9 +253,10 @@ class BaseData(QgsProcessingAlgorithm):
         LVDfileR = alg_params['OUTPUT']
         results['LVD'] = LVDfileR
 
-        feedback.setCurrentStep(8)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # LidarTINGridding
         alg_params = {
@@ -262,9 +274,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidartingridding'] = processing.run('wbt:LidarTINGridding', alg_params, context=context,
                                                      feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(9)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # resampleTIN
         alg_params = {
@@ -279,9 +292,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['ResampleTin'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(10)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Warp (reproject)
         alg_params = {
@@ -305,9 +319,10 @@ class BaseData(QgsProcessingAlgorithm):
         TINfileR = alg_params['OUTPUT']
         results['DEM'] = TINfileR
 
-        feedback.setCurrentStep(11)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
 
         # LidarIdwInterpolation
@@ -327,9 +342,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['Lidaridwinterpolation'] = processing.run('wbt:LidarIdwInterpolation', alg_params, context=context,
                                                           feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(12)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # resampleIDW
         alg_params = {
@@ -344,9 +360,10 @@ class BaseData(QgsProcessingAlgorithm):
         outputs['ResampleIDW'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(13)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Warp (reproject)
         alg_params = {
@@ -370,9 +387,10 @@ class BaseData(QgsProcessingAlgorithm):
         IDWfileR = alg_params['OUTPUT']
         results['IDW'] = IDWfileR
 
-        feedback.setCurrentStep(14)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Load layer into project
         if parameters['IDW']:
@@ -383,9 +401,10 @@ class BaseData(QgsProcessingAlgorithm):
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(15)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Load layer into project
         if parameters['GPD']:
@@ -396,9 +415,10 @@ class BaseData(QgsProcessingAlgorithm):
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(16)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Load layer into project
         if parameters['TIN']:
@@ -409,9 +429,10 @@ class BaseData(QgsProcessingAlgorithm):
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(17)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # Load layer into project
         if parameters['LVD']:
@@ -422,9 +443,10 @@ class BaseData(QgsProcessingAlgorithm):
             outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
                                                              feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(18)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+
 
         return results
 
@@ -464,6 +486,8 @@ class BaseData(QgsProcessingAlgorithm):
     <p>Point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.</p>
     <h3>The input LAS/LAZ file is already classified</h3>
     <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
+    <h3>Remove low noise</h3>
+    <p>Please tick this box if your data suffers from unclassified low noise that causes the "Swiss cheese” effect (sharp holes where there are none). This will not work for low density datasets (less than 1 ground point per m2).</p>
     <h3>Source File Coordinate System</h3>
     <p>Select the Coordinate Reference System (CRS) of the input LAS /LAZ file. Make sure the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is the correct CRS and you only need it temporarily, you can select any Cartesian CRS, for example, EPSG:8687. XYZ should be in m. <b> <br>The tool will not work correctly with data in feet, km, cm etc.</b></p>
     <h3>Cell Size</h3>
@@ -478,7 +502,7 @@ class BaseData(QgsProcessingAlgorithm):
     <br><br>
     Create base data incorporates parts of Lastools, Whitebox tools, GDAL, GRASS GIS, and QGIS core tools.
     <br><br>
-    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b><br><br> Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. Remote Sens. 2021, 16, 3225. (<a href="https://doi.org/10.3390/rs13163225">https://doi.org/10.3390/rs13163225</a>)</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

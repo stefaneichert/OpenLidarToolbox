@@ -47,6 +47,7 @@ from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
 from qgis.core import QgsProcessingParameterFile
 from qgis.core import QgsProcessingParameterFileDestination
+from qgis.core import QgsProcessingParameterBoolean
 import processing
 
 
@@ -58,6 +59,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFile('InputFilelaslaz', 'Input LAS/LAZ File', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
+        self.addParameter(QgsProcessingParameterBoolean('LowNoise', 'Remove low noise', optional=False, defaultValue=False))
         self.addParameter(
             QgsProcessingParameterFileDestination('LAS', 'Output classified LAS/LAZ', fileFilter='Lidar Files (*.laz *.las)',
                                                   defaultValue=None, optional=False, createByDefault=False))
@@ -65,13 +67,15 @@ class ToClassLas(QgsProcessingAlgorithm):
     def processAlgorithm(self, parameters, context, model_feedback):
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(6, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(7, model_feedback)
         results = {}
         outputs = {}
 
-        feedback.setCurrentStep(1)
+        iter = 1
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
 
         # lasground1
@@ -94,9 +98,10 @@ class ToClassLas(QgsProcessingAlgorithm):
                                                is_child_algorithm=True)
         lasground1file = alg_params['OUTPUT_LASLAZ']
 
-        feedback.setCurrentStep(2)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # lasheight
         alg_params = {
@@ -119,9 +124,10 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasheight'] = processing.run('LAStools:lasheight', alg_params, context=context, feedback=feedback,
                                               is_child_algorithm=True)
 
-        feedback.setCurrentStep(3)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # lasclassify
         alg_params = {
@@ -140,9 +146,39 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasclassify'] = processing.run('LAStools:lasclassify', alg_params, context=context, feedback=feedback,
                                                 is_child_algorithm=True)
 
-        feedback.setCurrentStep(4)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
+
+
+        if parameters['LowNoise']:
+            #lasnoise
+            alg_params = {
+                'ADDITIONAL_OPTIONS': '-ignore_class 3; -ignore_class 4; -ignore_class 6;',
+                'CLASSIFY_AS': 7,
+                'CPU64': False,
+                'GUI': False,
+                'IGNORE_CLASS1': 0,
+                'IGNORE_CLASS2': 0,
+                'INPUT_LASLAZ': lasclassifyfile,
+                'ISOLATED': 2,
+                'OPERATION': 0,
+                'STEP_XY': 0.5,
+                'STEP_Z': 0.5,
+                'VERBOSE': False,
+                'OUTPUT_LASLAZ': QgsProcessingUtils.generateTempFilename('lasnoise.laz')
+            }
+            lasnoise = alg_params['OUTPUT_LASLAZ']
+            outputs['lasnoise'] = processing.run('LAStools:lasnoise', alg_params, context=context, feedback=feedback,
+                                                 is_child_algorithm=True)
+        else:
+            lasnoise = lasclassifyfile
+
+        feedback.setCurrentStep(iter)
+        if feedback.isCanceled():
+            return {}
+        iter = iter + 1
 
         # lasground2
         alg_params = {
@@ -153,7 +189,7 @@ class ToClassLas(QgsProcessingAlgorithm):
             'GUI': False,
             'HORIZONTAL_FEET': False,
             'IGNORE_CLASS1': 0,
-            'INPUT_LASLAZ': lasclassifyfile,
+            'INPUT_LASLAZ': lasnoise,
             'NO_BULGE': False,
             'OUTPUT_LASLAZ': QgsProcessingUtils.generateTempFilename('lasground2.laz'),
             'TERRAIN': 1,
@@ -164,9 +200,10 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasground2'] = processing.run('LAStools:lasground', alg_params, context=context, feedback=feedback,
                                                is_child_algorithm=True)
 
-        feedback.setCurrentStep(5)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+        iter = iter + 1
 
         # lasheight_classify
         alg_params = {
@@ -194,9 +231,10 @@ class ToClassLas(QgsProcessingAlgorithm):
         outputs['Lasheight_classify'] = processing.run('LAStools:lasheight_classify', alg_params, context=context,
                                                        feedback=feedback, is_child_algorithm=True)
 
-        feedback.setCurrentStep(6)
+        feedback.setCurrentStep(iter)
         if feedback.isCanceled():
             return {}
+
         results['classifiedLAZ'] = lasheightclassifyfile
         return results
 
@@ -235,6 +273,8 @@ class ToClassLas(QgsProcessingAlgorithm):
     <h3>Input LAS/LAZ File</h3>
     <p>Unclassified point cloud in LAS or LAZ format. Noise classified as ASPRS class 7 will be exempt from the processing, all other preexisting classification will be ignored.
     <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
+    <h3>Remove low noise</h3>
+    <p>Please tick this box if your data suffers from unclassified low noise that causes the "Swiss cheese” effect (sharp holes where there are none). This will not work for low density datasets (less than 1 ground point per m2).</p>
     <h2>Outputs</h2>
     <p><h3>Classified LAZ/LAS</h3>
     Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and file name.</p>
@@ -243,10 +283,10 @@ class ToClassLas(QgsProcessingAlgorithm):
     <h3>The quality of classification does not meet my expectations, how can I improve it?</h3>
     <p>This tool is one-size-fits-all and is designed for simplicity. Like any other tool without user-defined parameters, it will produce OK results for any dataset, but it will often not return the best possible result. We recommend specialized software, such as LAStools or Whitebox tools, to optimize results.</p>
     <br>
-    Classify LAS/LAZ incorporates parts of Lastools
+    Classify LAS/LAZ incorporates parts of Lastools.
     <br>
     <br>
-    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b><br><br> Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. Remote Sens. 2021, 16, 3225. (<a href="https://doi.org/10.3390/rs13163225">https://doi.org/10.3390/rs13163225</a>)</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

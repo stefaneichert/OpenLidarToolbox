@@ -277,7 +277,7 @@ class visualise(QgsProcessingAlgorithm):
     <br><br>
     Visualisations (from DFM) incorporates parts of QGIS core tools and Relief Visualisation Toolbox.
     <br><br>
-    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b><br><br> Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. Remote Sens. 2021, 16, 3225. (<a href="https://doi.org/10.3390/rs13163225">https://doi.org/10.3390/rs13163225</a>)</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

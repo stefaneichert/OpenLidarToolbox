@@ -60,6 +60,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
             QgsProcessingParameterFile('InputFilelaslaz', 'Input LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
                                        fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
         self.addParameter(QgsProcessingParameterBoolean('classLas', 'The input LAS/LAZ file is already classified', optional=False, defaultValue=False))
+        self.addParameter(
+            QgsProcessingParameterBoolean('LowNoise', 'Remove low noise', optional=False, defaultValue=False))
         self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
         self.addParameter(
             QgsProcessingParameterFileDestination('LAS', 'Classified LAS/LAZ file', fileFilter='Lidar Files (*.laz *.las)',
@@ -73,7 +75,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
         self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
         self.addParameter(
-            QgsProcessingParameterBoolean('VisualisationCM', 'DFM CM 0.5m', optional=False, defaultValue=True))
+            QgsProcessingParameterBoolean('VisualisationCM', 'Confidence Map', optional=False, defaultValue=True))
         self.addParameter(
             QgsProcessingParameterBoolean('VisualisationVAT', 'Visualisation VAT', optional=False, defaultValue=True))
         self.addParameter(
@@ -101,7 +103,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
 
             alg_params = {
                 'InputFilelaslaz': parameters['InputFilelaslaz'],
-                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las')
+                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las'),
+                'LowNoise': parameters['LowNoise']
             }
             outputs['ClassifyLaslaz'] = processing.run('Open LiDAR Toolbox:ToClassLas', alg_params, context=context,
                                                        feedback=feedback, is_child_algorithm=True)
@@ -280,6 +283,8 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <b>Point clouds with more than 30 million points will fail or will take very long to process.</b></p>
     <h3>The input LAS/LAZ file is already classified</h3>
     <p>Please tick this box, if your file (LAS/LAZ format) is already classified. If it is not, or you are not sure, leave it blank.</p>
+    <h3>Remove low noise</h3>
+    <p>Please tick this box if your data suffers from unclassified low noise that causes the "Swiss cheese” effect (sharp holes where there are none). This will not work for low density datasets (less than 1 ground point per m2).</p>
     <h3>Source File Coordinate System</h3>
     <p>Select the Coordinate Reference System (CRS) of the input LAS /LAZ file. Make sure the CRS is Cartesian (x and y in meters, not degrees). If you are not sure which is the correct CRS and you only need it temporarily, you can select any Cartesian CRS, for example, EPSG:8687. XYZ should be in m. <b> <br>The tool will not work correctly with data in feet, km, cm etc.</b></p>
     <h3>Cell Size</h3>
@@ -290,7 +295,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <p><b>DFM: </b>Digital Feature Model (archaeology-specific DEM, combining ground and buildings)</p>
     <p><b>Ground Point Density</b></p>
     <p><b>Low Vegetation Density</b></p>
-    <p><b>DFM CM 0.5m: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
+    <p><b>Confidence Map: </b> DFM Confidence Map for 0.5 m resolution (if other resolutions are needed – e.g., the map is either completely red or completely blue – use the dedicated tool)</p>
     <p><b>Visualisations:</b></p>
     <p><b>VAT: </b> Visualisation for archaeological topography</p>
     <p><b>SVF: </b> Sky view factor</p>
@@ -305,7 +310,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
     <br><br>
     0NE incorporates parts of Lastools, Whitebox tools, Relief Visualisation Toolbox, GDAL, GRASS GIS, and QGIS core tools.
     <br><br>
-    <p><b>References:</b> Štular, Lozić, Eichert 2021 (in press).</p>
+    <p><b>References:</b><br><br> Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. Remote Sens. 2021, 16, 3225. (<a href="https://doi.org/10.3390/rs13163225">https://doi.org/10.3390/rs13163225</a>)</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 

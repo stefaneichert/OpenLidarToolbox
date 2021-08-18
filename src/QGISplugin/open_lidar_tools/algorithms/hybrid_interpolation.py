@@ -620,10 +620,10 @@ class HybridInterpolation(QgsProcessingAlgorithm):
     <p></p>
     <br>
     <br>
-    Hybrid interpolation incorporates parts of GDAL, GRASS GIS, and QGIS core tools
+    Hybrid interpolation incorporates parts of GDAL, GRASS GIS, and QGIS core tools.
     <br>
     <br>
-    <p><b>References:</b> Štular, B.; Lozić, E.; Eichert, S. Airborne LiDAR-Derived Digital Elevation Model for Archaeology.Remote Sens.2021,13, 1855. <a href="https://doi.org/10.3390/rs13091855">https://doi.org/10.3390/rs13091855</a></p>
+    <p><b>References:</b><br><br> Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. Remote Sens. 2021, 16, 3225. (<a href="https://doi.org/10.3390/rs13163225">https://doi.org/10.3390/rs13163225</a>)</p>
     <br><a href="https://github.com/stefaneichert/OpenLidarTools">Website</a>
     <br><p align="right">Algorithm author: Benjamin Štular, Edisa Lozić, Stefan Eichert </p><p align="right">Help author: Benjamin Štular, Edisa Lozić, Stefan Eichert</p></body></html>"""
 
