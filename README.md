@@ -8,12 +8,12 @@ or install from within QGIS/Plugins/Manage and Install Plugins…)
 
 Open LiDAR Toolbox is a QGIS plug-in that provides one-step-processing of airborne LiDAR data from point cloud to LiDAR
 visualisations. The input required is an unclassified point cloud in LAZ /LAS format and the tool returns several
-outputs needed for interpretative mapping of archaeological features. The tools are optimized for archaeology, but have
-broader application for anyone primarily interested in visual inspection of airborne LiDAR data.
+outputs needed for interpretative mapping of archaeological features. In addition, several other tools are available for multi-step data processing. The tools are optimized for archaeology, but have
+broader application for anyone primarily interested in visual inspection of airborne LiDAR data or LiDAR for topographic mapping.
 
-Open LiDAR Toolbox is developed in collaboration between NHM Wien and ZRC SAZU as a part of the MALiAp scientific
+Open LiDAR Toolbox is developed in collaboration between NHM Wien, ZRC SAZU, and Graz University as a part of the MALiAp scientific
 research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The
-scientific background for the tool is published in open access peer reviewed papers:
+scientific background for the toolbox is published in open access peer reviewed papers:
 
 Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
 Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
@@ -60,7 +60,7 @@ individual QGIS models [here](https://github.com/stefaneichert/OpenLidarToolbox/
 
 # **Dependencies**
 
-Open LiDAR Toolbox are a &quot;shell&quot; that uses several excellent tools under the hood: GDAL, GRASS, QGIS native
+Open LiDAR Toolbox is a &quot;shell&quot; that uses several excellent tools under the hood: GDAL, GRASS, QGIS native
 tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before Open LiDAR Toolbox:
 LAStools, Whitebox Tools and RVT. If you do not already have these plug-ins installed, RVT and LAStools will be
 installed automatically with the Open LiDAR Toolbox. However, additional steps must be taken.
@@ -91,7 +91,7 @@ the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets
 ## **ONE (One-step-processing)**
 
 This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce all derivatives essential for
-archaeology and anyone interested in visual analysis of LiDAR data. The pipeline introduces several additional steps
+archaeology and anyone interested in visual analysis of LiDAR data or uses it for topographic mapping. The pipeline introduces several additional steps
 compared to a traditional approach. The results are a moderate improvement in ground point classification (ASPRS class
 2) and a significant improvement in building classification (ASPRS class 6). The latter is particularly important for a
 DTM to be used for further processing. The overall improvements in the visual quality of the DFM are moderate, but still
@@ -168,7 +168,7 @@ A: This is due to the so called edge effect. In many steps the values are calcul
 the edge there are no surrounding points, the output values are distorted or "strange", e.g., showing as black on most
 visualisations. This cannot be avoided and the only solution is to process larger area or to create overlapping mosaics.
 
-## **Classify LAS LAZ**
+## **Classify LAS/LAZ**
 
 The algorithm will classify the airborne LiDAR point cloud. This process – also known as "filtering" or semantic
 labeling of the point cloud – is optimized for archaeology, but is also useful for other purposes.
@@ -193,6 +193,11 @@ other preexisting classification will be ignored.
 Classified point cloud. QGIS cannot load point clouds so it must be saved as a LAZ/LAS file. Please Specify folder and
 file name. Output is a LAZ/LAS point cloud classified into ground (2), low vegetation (3; 0.5-2 m), high vegetation (5;
 2-100m), and buildings (6); there are also likely some points remaining that have not been classified (0).
+
+### **References:**
+
+Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
+Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
 
 ### **FAQ:**
 
