@@ -125,7 +125,7 @@ class BaseData(QgsProcessingAlgorithm):
             las_height_classify_file = parameters['InputFilelaslaz']
         else:
             alg_params = {
-                'InputFileaslaz': parameters['InputFilelaslaz'],
+                'InputFilelaslaz': parameters['InputFilelaslaz'],
                 'LAS':
                     QgsProcessingUtils.generateTempFilename('lasheightCl.las'),
                 'LowNoise': parameters['LowNoise']}
