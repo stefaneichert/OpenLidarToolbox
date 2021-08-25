@@ -106,6 +106,7 @@ class CreateDfm(QgsProcessingAlgorithm):
             'CRS': parameters['CRS'],
             'GPD': False,
             'IDW': False,
+            'LowNoise': parameters['LowNoise'],
             'InputFilelaslaz': lasheightclassifyfile,
             'LVD': False,
             'SetCellSize': parameters['SetCellSize'],
