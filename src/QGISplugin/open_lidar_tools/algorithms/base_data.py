@@ -39,17 +39,15 @@ With QGIS : 31604
 
 import inspect
 import os
-from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtCore import QCoreApplication
-from qgis.core import QgsProcessingUtils
-from qgis.core import QgsProcessingAlgorithm
-from qgis.core import QgsProcessingMultiStepFeedback
-from qgis.core import QgsProcessingParameterFile
-from qgis.core import QgsProcessingParameterNumber
-from qgis.core import QgsProcessingParameterCrs
-from qgis.core import QgsProcessingParameterBoolean
-from qgis.core import QgsProcessingParameterString
+
 import processing
+from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtGui import QIcon
+from qgis.core import (
+    QgsProcessingAlgorithm, QgsProcessingMultiStepFeedback,
+    QgsProcessingParameterBoolean, QgsProcessingParameterCrs,
+    QgsProcessingParameterFile, QgsProcessingParameterNumber,
+    QgsProcessingParameterString, QgsProcessingUtils)
 
 
 class BaseData(QgsProcessingAlgorithm):
@@ -57,55 +55,97 @@ class BaseData(QgsProcessingAlgorithm):
     def initAlgorithm(self, config=None):
 
         self.addParameter(
-            QgsProcessingParameterFile('InputFilelaslaz', 'Input LAS/LAZ file', behavior=QgsProcessingParameterFile.File,
-                                       fileFilter='Lidar Files (*.las *.laz)', defaultValue=None))
+            QgsProcessingParameterFile(
+                'InputFilelaslaz',
+                'Input LAS/LAZ file',
+                behavior=QgsProcessingParameterFile.File,
+                fileFilter='Lidar Files (*.las *.laz)',
+                defaultValue=None))
         self.addParameter(
-            QgsProcessingParameterBoolean('classLas', 'The input LAS/LAZ file is already classified', optional=False,
-                                          defaultValue=False))
+            QgsProcessingParameterBoolean(
+                'classLas',
+                'The input LAS/LAZ file is already classified',
+                optional=False,
+                defaultValue=False))
         self.addParameter(
-            QgsProcessingParameterBoolean('LowNoise', 'Remove low noise', optional=False, defaultValue=False))
-        self.addParameter(QgsProcessingParameterCrs('CRS', 'Source File Coordinate System', defaultValue=None))
+            QgsProcessingParameterBoolean(
+                'LowNoise',
+                'Remove low noise',
+                optional=False,
+                defaultValue=False))
+        self.addParameter(QgsProcessingParameterCrs(
+            'CRS',
+            'Source File Coordinate System',
+            defaultValue=None))
         self.addParameter(
-            QgsProcessingParameterNumber('SetCellSize', 'Cell Size', type=QgsProcessingParameterNumber.Double,
-                                         minValue=0, maxValue=1.79769e+308, defaultValue=0.5))
-        self.addParameter(QgsProcessingParameterString('prefix', 'Name prefix for layers', multiLine=False,
-                                                       defaultValue='', optional=True))
-        self.addParameter(QgsProcessingParameterBoolean('TIN', 'TLI', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('IDW', 'IDW', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('GPD', 'Ground Point Density', optional=False, defaultValue=True))
-        self.addParameter(QgsProcessingParameterBoolean('LVD', 'Low Vegetation Density', optional=False, defaultValue=True))
+            QgsProcessingParameterNumber(
+                'SetCellSize',
+                'Cell Size',
+                type=QgsProcessingParameterNumber.Double,
+                minValue=0,
+                maxValue=1.79769e+308,
+                defaultValue=0.5))
+        self.addParameter(QgsProcessingParameterString(
+            'prefix',
+            'Name prefix for layers',
+            multiLine=False,
+            defaultValue='',
+            optional=True))
+        self.addParameter(QgsProcessingParameterBoolean(
+            'TIN',
+            'TLI',
+            optional=False,
+            defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean(
+            'IDW',
+            'IDW',
+            optional=False,
+            defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean(
+            'GPD',
+            'Ground Point Density',
+            optional=False,
+            defaultValue=True))
+        self.addParameter(QgsProcessingParameterBoolean(
+            'LVD',
+            'Low Vegetation Density',
+            optional=False,
+            defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
-        # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
-        # overall progress through the model
+        """Use a multi-step feedback, so that individual child algorithm
+        progress reports are adjusted for the overall progress through the
+        model
+        """
         feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
         results = {}
         outputs = {}
 
-        if not parameters['classLas']:
-
+        if parameters['classLas']:
+            las_height_classify_file = parameters['InputFilelaslaz']
+        else:
             alg_params = {
-                'InputFilelaslaz': parameters['InputFilelaslaz'],
-                'LAS': QgsProcessingUtils.generateTempFilename('lasheightCl.las'),
-                'LowNoise': parameters['LowNoise']
-            }
-            outputs['ClassifyLaslaz'] = processing.run('Open LiDAR Toolbox:ToClassLas', alg_params, context=context,
-                                                       feedback=feedback, is_child_algorithm=True)
-            lasheightclassifyfile = outputs['ClassifyLaslaz']['classifiedLAZ']
+                'InputFileaslaz': parameters['InputFilelaslaz'],
+                'LAS':
+                    QgsProcessingUtils.generateTempFilename('lasheightCl.las'),
+                'LowNoise': parameters['LowNoise']}
+            outputs['ClassifyLaslaz'] = processing.run(
+                'Open LiDAR Toolbox:ToClassLas',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
+            las_height_classify_file = \
+                outputs['ClassifyLaslaz']['classifiedLAZ']
             results['LAS'] = outputs['ClassifyLaslaz']['classifiedLAZ']
 
-
-        if parameters['classLas']:
-            lasheightclassifyfile = parameters['InputFilelaslaz']
-
-        iter = 1
-        feedback.setCurrentStep(iter)
+        step = 1
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         if parameters['InputFilelaslaz'][-4:] == '.laz':
-            # laszip
             alg_params = {
                 'ADDITIONAL_OPTIONS': '',
                 'APPEND_LAX': False,
@@ -113,55 +153,65 @@ class BaseData(QgsProcessingAlgorithm):
                 'CREATE_LAX': False,
                 'GUI': False,
                 'INPUT_LASLAZ': parameters['InputFilelaslaz'],
-                'OUTPUT_LASLAZ': QgsProcessingUtils.generateTempFilename('lasheight.las'),
+                'OUTPUT_LASLAZ':
+                    QgsProcessingUtils.generateTempFilename('lasheight.las'),
                 'REPORT_SIZE': False,
-                'VERBOSE': False
-            }
-            lasheightclassifyfile = alg_params['OUTPUT_LASLAZ']
-            outputs['Laszip'] = processing.run('LAStools:laszip', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+                'VERBOSE': False}
+            las_height_classify_file = alg_params['OUTPUT_LASLAZ']
+            outputs['Laszip'] = processing.run(
+                'LAStools:laszip',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
-        # LidarPointDensity1_Ground
         alg_params = {
             'exclude_cls': '0,1,3,4,5,7,8',
-            'input': lasheightclassifyfile,
+            'input': las_height_classify_file,
             'maxz': None,
             'minz': None,
             'radius': 10,
             'resolution': 2,
             'returns': 0,
-            'output': QgsProcessingUtils.generateTempFilename('gpd.tif')
-        }
-        GroundPointDensityfile = alg_params['output']
-        outputs['Lidarpointdensity1_ground'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
-                                                              feedback=feedback, is_child_algorithm=True)
+            'output': QgsProcessingUtils.generateTempFilename('gpd.tif')}
+        ground_point_density_file = alg_params['output']
+        outputs['Lidarpointdensity1_ground'] = processing.run(
+            'wbt:LidarPointDensity',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # resampleGPD
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
-            'GRASS_REGION_PARAMETER': GroundPointDensityfile,
-            'input': GroundPointDensityfile,
-            'output': QgsProcessingUtils.generateTempFilename('GPDres.tif')
-        }
+            'GRASS_REGION_PARAMETER': ground_point_density_file,
+            'input': ground_point_density_file,
+            'output': QgsProcessingUtils.generateTempFilename('GPDres.tif')}
         GPDfileR = alg_params['output']
-        outputs['Resamplegpd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                is_child_algorithm=True)
+        outputs['Resamplegpd'] = processing.run(
+            'grass7:r.resample',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Warp (reproject)
         alg_params = {
@@ -177,25 +227,26 @@ class BaseData(QgsProcessingAlgorithm):
             'TARGET_EXTENT': None,
             'TARGET_EXTENT_CRS': None,
             'TARGET_RESOLUTION': None,
-            'OUTPUT': QgsProcessingUtils.generateTempFilename('GPDres.tif')
-        }
-
-        outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context,
-                                                  feedback=feedback,
-                                                  is_child_algorithm=True)
+            'OUTPUT': QgsProcessingUtils.generateTempFilename('GPDres.tif')}
+        outputs['WarpReproject'] = processing.run(
+            'gdal:warpreproject',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
         GPDfileR = alg_params['OUTPUT']
         results['GPD'] = GPDfileR
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
 
         # LidarPointDensity2_LowVeg
         alg_params = {
             'exclude_cls': '0,1,2,4,5,6,7',
-            'input': lasheightclassifyfile,
+            'input': las_height_classify_file,
             'maxz': None,
             'minz': None,
             'radius': 10,
@@ -203,38 +254,46 @@ class BaseData(QgsProcessingAlgorithm):
             'returns': 0,
             'output': QgsProcessingUtils.generateTempFilename('lvd.tif')
         }
-        LowVegfile = alg_params['output']
-        outputs['Lidarpointdensity2_lowveg'] = processing.run('wbt:LidarPointDensity', alg_params, context=context,
-                                                              feedback=feedback, is_child_algorithm=True)
+        low_vegetation_file = alg_params['output']
+        outputs['Lidarpointdensity2_lowveg'] = processing.run(
+            'wbt:LidarPointDensity',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # resampleLVD
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
-            'GRASS_REGION_PARAMETER': GroundPointDensityfile,
-            'input': LowVegfile,
+            'GRASS_REGION_PARAMETER': ground_point_density_file,
+            'input': low_vegetation_file,
             'output': QgsProcessingUtils.generateTempFilename('LVD.tif')
         }
-        LVDfileR = alg_params['output']
-        outputs['Resamplelvd'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                is_child_algorithm=True)
+        low_vegetation_density_file_resampled = alg_params['output']
+        outputs['Resamplelvd'] = processing.run(
+            'grass7:r.resample',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Warp (reproject)
         alg_params = {
             'DATA_TYPE': 0,
             'EXTRA': '',
-            'INPUT': LVDfileR,
+            'INPUT': low_vegetation_density_file_resampled,
             'MULTITHREADING': False,
             'NODATA': None,
             'OPTIONS': '',
@@ -247,61 +306,70 @@ class BaseData(QgsProcessingAlgorithm):
             'OUTPUT': QgsProcessingUtils.generateTempFilename('LVD.tif')
         }
 
-        outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context,
-                                                  feedback=feedback,
-                                                  is_child_algorithm=True)
-        LVDfileR = alg_params['OUTPUT']
-        results['LVD'] = LVDfileR
+        outputs['WarpReproject'] = processing.run(
+            'gdal:warpreproject',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
+        low_vegetation_density_file_resampled = alg_params['OUTPUT']
+        results['LVD'] = low_vegetation_density_file_resampled
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # LidarTINGridding
         alg_params = {
             'exclude_cls': '0,1,3,4,5,7',
-            'input': lasheightclassifyfile,
+            'input': las_height_classify_file,
             'max_triangle_edge_length': None,
             'maxz': None,
             'minz': None,
             'parameter': 0,
             'resolution': 0.5,
             'returns': 0,
-            'output': QgsProcessingUtils.generateTempFilename('tin.tif')
-        }
-        tingrid = alg_params['output']
-        outputs['Lidartingridding'] = processing.run('wbt:LidarTINGridding', alg_params, context=context,
-                                                     feedback=feedback, is_child_algorithm=True)
+            'output': QgsProcessingUtils.generateTempFilename('tin.tif')}
+        triangulated_network_grid = alg_params['output']
+        outputs['Lidartingridding'] = processing.run(
+            'wbt:LidarTINGridding',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # resampleTIN
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
-            'GRASS_REGION_PARAMETER': GroundPointDensityfile,
-            'input': tingrid,
-            'output': QgsProcessingUtils.generateTempFilename('tinRes.tif')
-        }
-        TINfileR = alg_params['output']
-        outputs['ResampleTin'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                is_child_algorithm=True)
+            'GRASS_REGION_PARAMETER': ground_point_density_file,
+            'input': triangulated_network_grid,
+            'output': QgsProcessingUtils.generateTempFilename('tinRes.tif')}
+        tin_file_resampled = alg_params['output']
+        outputs['ResampleTin'] = processing.run(
+            'grass7:r.resample',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Warp (reproject)
         alg_params = {
             'DATA_TYPE': 0,
             'EXTRA': '',
-            'INPUT': TINfileR,
+            'INPUT': tin_file_resampled,
             'MULTITHREADING': False,
             'NODATA': None,
             'OPTIONS': '',
@@ -311,24 +379,28 @@ class BaseData(QgsProcessingAlgorithm):
             'TARGET_EXTENT': None,
             'TARGET_EXTENT_CRS': None,
             'TARGET_RESOLUTION': None,
-            'OUTPUT': QgsProcessingUtils.generateTempFilename('TINfileR.tif')
-        }
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                'tin_file_resampled.tif')}
 
-        outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context, feedback=feedback,
-                                                  is_child_algorithm=True)
-        TINfileR = alg_params['OUTPUT']
-        results['DEM'] = TINfileR
+        outputs['WarpReproject'] = processing.run(
+            'gdal:warpreproject',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        tin_file_resampled = alg_params['OUTPUT']
+        results['DEM'] = tin_file_resampled
+
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
-
+        step += 1
 
         # LidarIdwInterpolation
         alg_params = {
             'exclude_cls': '0,1,3,4,5,7,8,9',
-            'input': lasheightclassifyfile,
+            'input': las_height_classify_file,
             'maxz': None,
             'minz': None,
             'parameter': 0,
@@ -336,34 +408,40 @@ class BaseData(QgsProcessingAlgorithm):
             'resolution': 0.5,
             'returns': 0,
             'weight': 2,
-            'output': QgsProcessingUtils.generateTempFilename('idw.tif')
-        }
+            'output': QgsProcessingUtils.generateTempFilename('idw.tif')}
         lidarIDW = alg_params['output']
-        outputs['Lidaridwinterpolation'] = processing.run('wbt:LidarIdwInterpolation', alg_params, context=context,
-                                                          feedback=feedback, is_child_algorithm=True)
+        outputs['Lidaridwinterpolation'] = processing.run(
+            'wbt:LidarIdwInterpolation',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # resampleIDW
         alg_params = {
             'GRASS_RASTER_FORMAT_META': '',
             'GRASS_RASTER_FORMAT_OPT': '',
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
-            'GRASS_REGION_PARAMETER': GroundPointDensityfile,
+            'GRASS_REGION_PARAMETER': ground_point_density_file,
             'input': lidarIDW,
-            'output': QgsProcessingUtils.generateTempFilename('IDWres.tif')
-        }
+            'output': QgsProcessingUtils.generateTempFilename('IDWres.tif')}
         IDWfileR = alg_params['output']
-        outputs['ResampleIDW'] = processing.run('grass7:r.resample', alg_params, context=context, feedback=feedback,
-                                                is_child_algorithm=True)
+        outputs['ResampleIDW'] = processing.run(
+            'grass7:r.resample',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Warp (reproject)
         alg_params = {
@@ -382,71 +460,86 @@ class BaseData(QgsProcessingAlgorithm):
             'OUTPUT': QgsProcessingUtils.generateTempFilename('IDWres.tif')
         }
 
-        outputs['WarpReproject'] = processing.run('gdal:warpreproject', alg_params, context=context, feedback=feedback,
-                                                  is_child_algorithm=True)
+        outputs['WarpReproject'] = processing.run(
+            'gdal:warpreproject',
+            alg_params,
+            context=context,
+            feedback=feedback,
+            is_child_algorithm=True)
         IDWfileR = alg_params['OUTPUT']
         results['IDW'] = IDWfileR
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Load layer into project
         if parameters['IDW']:
             alg_params = {
                 'INPUT': IDWfileR,
-                'NAME': parameters['prefix'] + 'IDW'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
+                'NAME': f"{parameters['prefix']}IDW"}
+            outputs['LoadLayerIntoProject'] = processing.run(
+                'native:loadlayer',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Load layer into project
         if parameters['GPD']:
             alg_params = {
                 'INPUT': GPDfileR,
-                'NAME': parameters['prefix'] + 'Ground Point Density'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
+                'NAME': f"{parameters['prefix']}Ground Point Density"}
+            outputs['LoadLayerIntoProject'] = processing.run(
+                'native:loadlayer',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Load layer into project
         if parameters['TIN']:
             alg_params = {
-                'INPUT': TINfileR,
-                'NAME': parameters['prefix'] + 'TLI'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
+                'INPUT': tin_file_resampled,
+                'NAME': f"{parameters['prefix']}TLI"}
+            outputs['LoadLayerIntoProject'] = processing.run(
+                'native:loadlayer',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-        iter = iter + 1
+        step += 1
 
         # Load layer into project
         if parameters['LVD']:
             alg_params = {
-                'INPUT': LVDfileR,
-                'NAME': parameters['prefix'] + 'Low Vegetation Density'
-            }
-            outputs['LoadLayerIntoProject'] = processing.run('native:loadlayer', alg_params, context=context,
-                                                             feedback=feedback, is_child_algorithm=True)
+                'INPUT': low_vegetation_density_file_resampled,
+                'NAME': f"{parameters['prefix']}Low Vegetation Density"}
+            outputs['LoadLayerIntoProject'] = processing.run(
+                'native:loadlayer',
+                alg_params,
+                context=context,
+                feedback=feedback,
+                is_child_algorithm=True)
 
-        feedback.setCurrentStep(iter)
+        feedback.setCurrentStep(step)
         if feedback.isCanceled():
             return {}
-
 
         return results
 
@@ -465,7 +558,8 @@ class BaseData(QgsProcessingAlgorithm):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icons/2_4_basedata.png')))
+        icon = QIcon(
+            os.path.join(os.path.join(cmd_folder, 'icons/2_4_basedata.png')))
         return icon
 
     def groupId(self):

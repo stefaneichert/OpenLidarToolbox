@@ -30,18 +30,19 @@ __copyright__ = '(C) 2021 by Benjamin Štular, Edisa Lozić, Stefan Eichert'
 
 __revision__ = '$Format:%H$'
 
+import inspect
+import os
+
+from qgis.PyQt.QtGui import QIcon
 from qgis.core import QgsProcessingProvider
-from .algorithms.one_step_processing import LidarPipeline
+
+from .algorithms.base_data import BaseData
+from .algorithms.classify_las import ToClassLas
+from .algorithms.create_dfm import CreateDfm
 from .algorithms.dfm_confidence_map import dfmConfidenceMap
 from .algorithms.hybrid_interpolation import HybridInterpolation
-from .algorithms.classify_las import ToClassLas
-from .algorithms.base_data import BaseData
+from .algorithms.one_step_processing import LidarPipeline
 from .algorithms.visualisations import visualise
-from .algorithms.create_dfm import CreateDfm
-
-import os
-import inspect
-from qgis.PyQt.QtGui import QIcon
 
 
 class OpenLidarToolsProvider(QgsProcessingProvider):
@@ -70,8 +71,6 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
         self.addAlgorithm((visualise()))
         self.addAlgorithm((BaseData()))
         self.addAlgorithm((CreateDfm()))
-        # add additional algorithms here
-        # self.addAlgorithm(MyOtherAlgorithm())
 
     def id(self):
         """
@@ -92,8 +91,7 @@ class OpenLidarToolsProvider(QgsProcessingProvider):
 
     def icon(self):
         cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icon.png')))
-        return icon
+        return QIcon(os.path.join(os.path.join(cmd_folder, 'icon.png')))
 
     def longName(self):
         """

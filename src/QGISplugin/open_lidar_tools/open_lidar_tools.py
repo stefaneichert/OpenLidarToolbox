@@ -30,11 +30,12 @@ __copyright__ = '(C) 2021 by Benjamin Štular, Edisa Lozić, Stefan Eichert'
 
 __revision__ = '$Format:%H$'
 
+import inspect
 import os
 import sys
-import inspect
 
-from qgis.core import QgsProcessingAlgorithm, QgsApplication
+from qgis.core import QgsApplication
+
 from .open_lidar_tools_provider import OpenLidarToolsProvider
 
 cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
