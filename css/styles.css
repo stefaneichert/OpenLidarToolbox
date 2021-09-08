@@ -11685,3 +11685,11 @@ body {
 .footer {
   padding: 5rem 0;
 }
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(129, 129, 129, 1);
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: rgb(160, 155, 155);
+}
