@@ -14,17 +14,24 @@
             crossorigin="anonymous"></script>
 
     <link href="css/styles.css" rel="stylesheet"/>
+    <script src="js/scripts.js"></script>
 </head>
 <body id="page-top">
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg bg-black navbar-light fixed-top" id="mainNav">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#page-top"><img class="me-3" src="assets/logo.png" alt="" width="40" height="40">Open LiDAR Toolbox</a>
+        <a class="navbar-brand" href="#page-top"><img class="me-3" src="assets/logo.png" alt="" width="40" height="40">Open
+            LiDAR Toolbox</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars"></i>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            <span>Menu</span>
         </button>
         <div class="collapse navbar-collapse bg-black" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
@@ -32,11 +39,13 @@
                 <li class="nav-item"><a class="nav-link" href="#projects">Tools</a></li>
                 <li class="nav-item"><a class="nav-link" href="#references">References</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" title="GitHub" href="https://github.com/stefaneichert/OpenLidarToolbox">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-</svg>
-                    </a></li>
+                <li class="nav-item"><a class="nav-link" title="GitHub"
+                                        href="https://github.com/stefaneichert/OpenLidarToolbox">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                         class="bi bi-github" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                </a></li>
             </ul>
         </div>
     </div>
@@ -49,7 +58,7 @@
                 <h1 class="mx-auto my-0 text-uppercase">Open LiDAR Toolbox</h1>
                 <h2 class="text-white-50 mx-auto mt-2 mb-5">A QGIS plug-in for one-step-processing of airborne LiDAR
                     data from point cloud to LiDAR visualisations</h2>
-                <a class="btn btn-primary" href="#about">Get Started</a>
+                <a class="btn btn-primary" href="#about">Learn more</a>
             </div>
         </div>
     </div>
@@ -62,9 +71,12 @@
                 <h2 class="text-white mb-4">About</h2>
                 <p class="text-white-50">
                     Open Open LiDAR Toolbox is a QGIS plug-in for one-step-processing of airborne LiDAR data
-                    from point cloud to LiDAR visualisations. The required input is an unclassified point cloud
+                    from point cloud to LiDAR visualisations. <br>
+                    It is based on <a href="#references">peer-reviewed papers</a> published in open access journals<br>
+                    The required input is an unclassified point cloud
                     in LAZ/LAS format and the tool returns outputs needed for interpretative mapping of
-                    archaeological features. In addition, several <a href="#projects">other tools <a>are available for multi-step data
+                    archaeological features. In addition, several <a href="#projects">other tools </a>are available for
+                    multi-step data
                     processing. The tools are optimised for archaeology, but have a broader application for
                     anyone primarily interested in visual inspection of airborne LiDAR, e.g., topographic
                     mapping.
@@ -76,7 +88,9 @@
 </section>
 <!-- Projects-->
 <section class="projects-section bg-light" id="projects">
+    <h2 class="text-black text-center mb-5">Tools</h2>
     <div class="container px-4 px-lg-5">
+
         <!-- Featured Project Row-->
         <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
             <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-01.jpg"
@@ -84,9 +98,9 @@
             <div class="col-xl-4 col-lg-5">
                 <div class="featured-text text-center text-lg-left">
                     <h4>0NE (One-step- processing)</h4>
-                    <p class="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it
-                        for any project - even commercial projects! Download it, customize it, and publish your
-                        website!</p>
+                    <p class="text-black-50 mb-0">This is an algorithm pipeline that takes an airborne LiDAR point cloud
+                        to produce all derivatives essential for archaeology and anyone interested in visual analysis of
+                        LiDAR data or uses it for topographic mapping</p>
                 </div>
             </div>
         </div>
@@ -101,10 +115,9 @@
             <div class="col-xl-4 col-lg-5">
                 <div class="featured-text text-center text-lg-left">
                     <h4>Classify LAS/LAZ</h4>
-                    </h4>
-                    <p class="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it
-                        for any project - even commercial projects! Download it, customize it, and publish your
-                        website!</p>
+                    <p class="text-black-50 mb-0">The algorithm will classify the airborne LiDAR point cloud. This
+                        process – also known as "filtering" or semantic labeling of the point cloud – is optimized for
+                        archaeology, but is also useful for other purposes.</p>
                 </div>
             </div>
 
@@ -112,6 +125,111 @@
         </div>
 
     </div>
+
+    <div class="container px-4 px-lg-5">
+        <!-- Featured Project Row-->
+        <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-02.jpg"
+                                                alt="..."/></div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <h4>Create base data</h4>
+                    <p class="text-black-50 mb-0">This is a pipeline that takes an airborne LiDAR point cloud to produce
+                        rasters needed for further processing or used directly in archaeological (or similar) workflows.
+
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="container px-4 px-lg-5">
+        <!-- Featured Project Row-->
+        <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-02.jpg"
+                                                alt="..."/></div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <h4>Create DFM</h4>
+                    <p class="text-black-50 mb-0">
+                        This is an algorithm pipeline that takes an airborne LiDAR point cloud to produce a digital
+                        feature model (DFM) especially filtered for archaeological purposes
+
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="container px-4 px-lg-5">
+        <!-- Featured Project Row-->
+        <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-02.jpg"
+                                                alt="..."/></div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <h4>DFM Confidence Map</h4>
+                    <p class="text-black-50 mb-0">
+                        This algorithm calculates a DFM Confidence Map based on the CRAN decision tree. The confidence
+                        map is primarily used for the quality assessment of the DFM, but can also be used to determine
+                        the optimal resolution for the DFM.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="container px-4 px-lg-5">
+        <!-- Featured Project Row-->
+        <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-02.jpg"
+                                                alt="..."/></div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <h4>Hybrid Interpolation</h4>
+                    <p class="text-black-50 mb-0">
+                        This algorithm calculates a hybrid interpolation of DFM/DEM. It uses IDW (Inverse Distance
+                        Weighing) interpolation in areas of low DFM confidence (levels 1-3) and TLI ( Triangulation with
+                        Linear Interpolation) interpolation in areas of high DFM confidence (levels 4-6)
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="container px-4 px-lg-5">
+        <!-- Featured Project Row-->
+        <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/demo-image-02.jpg"
+                                                alt="..."/></div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <h4>Visualisations from DFM</h4>
+                    <p class="text-black-50 mb-0">
+                        This algorithm takes a digital feature model (DFM, which is archaeology-specific DEM) or any DEM
+                        to produce the most commonly used archaeological visualisations.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
 </section>
 
 <section class="about-section text-center" id="references">
@@ -121,17 +239,44 @@
                 <h2 class="text-white mb-4">References</h2>
                 <p class="text-white-50">
                     All of the tools are explained in detail in these open access publications:
-                    </p>
+                </p>
 
-<p class="text-white-50">Štular, Benjamin, Stefan Eichert, and Edisa Lozić. 2021. "Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox" Remote Sensing 13, no. 16: 3225. <a href="https://doi.org/10.3390/rs13163225" target="_blank">https://doi.org/10.3390/rs13163225</a></p>
+                <p class="text-white-50">Štular, Benjamin, Stefan Eichert, and Edisa Lozić. 2021. "Airborne LiDAR Point
+                    Cloud Processing for Archaeology. Pipeline and QGIS Toolbox" Remote Sensing 13, no. 16: 3225. <a
+                            href="https://doi.org/10.3390/rs13163225"
+                            target="_blank">https://doi.org/10.3390/rs13163225</a></p>
 
-<p class="text-white-50">Lozić, Edisa, and Benjamin Štular. 2021. "Documentation of Archaeology-Specific Workflow for Airborne LiDAR Data Processing" Geosciences 11, no. 1: 26. <a href="https://doi.org/10.3390/geosciences11010026" target="_blank">https://doi.org/10.3390/geosciences11010026</a></p>
+                <p class="text-white-50">Lozić, Edisa, and Benjamin Štular. 2021. "Documentation of Archaeology-Specific
+                    Workflow for Airborne LiDAR Data Processing" Geosciences 11, no. 1: 26. <a
+                            href="https://doi.org/10.3390/geosciences11010026" target="_blank">https://doi.org/10.3390/geosciences11010026</a>
+                </p>
 
-<p class="text-white-50">Štular, Benjamin, Edisa Lozić, and Stefan Eichert. 2021. "Airborne LiDAR-Derived Digital Elevation Model for Archaeology" Remote Sensing 13, no. 9: 1855. <a href="https://doi.org/10.3390/rs13091855" target="_blank">https://doi.org/10.3390/rs13091855</a></p>
+                <p class="text-white-50">Štular, Benjamin, Edisa Lozić, and Stefan Eichert. 2021. "Airborne
+                    LiDAR-Derived Digital Elevation Model for Archaeology" Remote Sensing 13, no. 9: 1855. <a
+                            href="https://doi.org/10.3390/rs13091855"
+                            target="_blank">https://doi.org/10.3390/rs13091855</a></p>
 
-<p class="text-white-50">Štular, Benjamin, and Edisa Lozić. 2020. "Comparison of Filters for Archaeology-Specific Ground Extraction from Airborne LiDAR Point Clouds" Remote Sensing 12, no. 18: 3025. <a href="https://doi.org/10.3390/rs12183025" target="_blank">https://doi.org/10.3390/rs12183025</a></p>https://doi.org/10.3390/rs12183025
+                <p class="text-white-50">Štular, Benjamin, and Edisa Lozić. 2020. "Comparison of Filters for
+                    Archaeology-Specific Ground Extraction from Airborne LiDAR Point Clouds" Remote Sensing 12, no. 18:
+                    3025. <a href="https://doi.org/10.3390/rs12183025" target="_blank">https://doi.org/10.3390/rs12183025</a>
+                </p>https://doi.org/10.3390/rs12183025
 
-<p class="text-white-50">Lozić, Edisa. 2021. "Application of Airborne LiDAR Data to the Archaeology of Agrarian Land Use: The Case Study of the Early Medieval Microregion of Bled (Slovenia)" Remote Sensing 13, no. 16: 3228. <a href="https://doi.org/10.3390/rs13163225" target="_blank">https://doi.org/10.3390/rs13163225</a></p>
+                <p class="text-white-50">Lozić, Edisa. 2021. "Application of Airborne LiDAR Data to the Archaeology of
+                    Agrarian Land Use: The Case Study of the Early Medieval Microregion of Bled (Slovenia)" Remote
+                    Sensing 13, no. 16: 3228. <a href="https://doi.org/10.3390/rs13163225" target="_blank">https://doi.org/10.3390/rs13163225</a>
+                </p>
+
+                <p class="text-white-50"><a href="https://plugins.qgis.org/plugins/open_lidar_tools/" target="_blank">QGIS
+                    Plugin Repository</a></p>
+
+                <p class="text-white-50"><a title="GitHub Repository"
+                                            href="https://github.com/stefaneichert/OpenLidarToolbox">
+                    Source Code and Documentation<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                         class="bi bi-github ms-2" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                </a></p>
+
 
             </div>
         </div>
@@ -141,15 +286,35 @@
 <!-- Signup-->
 <section class="signup-section" id="contact">
     <div class="container px-4 px-lg-5">
+        <h2 class="text-white text-center mb-5">Contact</h2>
         <div class="row gx-4 gx-lg-5">
-            <div class="col-md-10 col-lg-8 mx-auto text-center">
-                <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-                <h2 class="text-white mb-5">Contact</h2>
-                <p class="text-white-50 mb-0">Our addresses go here</p>
+            <div class="col-lg-4 mb-4 mx-auto text-center">
+                <p class="text-white-50 mb-0">
+                    Stefan Eichert<br>
+                    Natural History Museum Vienna<br>
+                    Burgring 7<br>
+                    1010 Wien/Austria<br>
+                    <a href="mailto:stefan.eichert@nhm-wien.ac.at">stefan.eichert@nhm-wien.ac.at</a></p></p>
+            </div>
+            <div class="col-lg-4 mb-4 mx-auto text-center">
+                <p class="text-white-50 mb-0">
+                    Benjamin Štular<br>
+                    ZRC SAZU<br>
+                    Novi trg 2<br>
+                    1000 Ljubljana/Slovenia<br>
+                    <a href="mailto:benjamin.stular@zrc-sazu.si">benjamin.stular@zrc-sazu.si</a></p>
+            </div>
+            <div class="col-lg-4 mb-4 mx-auto text-center">
+                <p class="text-white-50 mb-0">
+                    Edisa Lozić<br>
+                    Institute of Classics<br>
+                    University of Graz<br>
+                    8010 Graz/Austria<br>
+                    <a href="mailto:edisa.lozic@uni-graz.at">edisa.lozic@uni-graz.at</a></p>
             </div>
         </div>
     </div>
 </section>
-
 </body>
+
 </html>
