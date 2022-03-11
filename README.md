@@ -68,7 +68,8 @@ installed automatically with the Open LiDAR Toolbox. However, additional steps m
 LAStools
 
 1) Download the actual LAStools software from here and unzip it to a permanent location, e.g., c:LAStools
-2) Select the Processing tab and the Providers list item. You should find the LAStools entry there. Select the down
+2) Install the LAStools plugin in QGIS via QGIS/Plugins/Manage and Install Plugins… 
+3) Select the Processing tab and the Providers list item. You should find the LAStools entry there. Select the down
    arrow, and check the Activate checkbox. Lastly, enter name of the LAStools folder that you downloaded previously (see
    note above). If you are using a Mac or Linux computer, things get a bit more complicated*. Wine is your friend!  
    *If you manage to make LAStools working on a recent macOS, please let us know how!
@@ -76,7 +77,17 @@ LAStools
 ![Plugins]( src/help/lastools.jpg "Plugin Providers")
 
 Whitebox tools  
-Follow the instructions [here](https://rashms.com/qgis/install-whitebox-tools-plugin-on-qgis/).
+Download the binaries for your operating system [here](https://www.whiteboxgeo.com/download-whiteboxtools/).
+Extract them to a folder on your system.
+Install the whitebox QGIS plugin on your system. Currently (Mar 2022) it is no longer available 
+from the [developer's repository](https://plugins.bruy.me/). An alternative would be to install it from .zip
+in QGIS/Plugins/Manage and Install Plugins...
+Once the plugin is installed in QGIS you need to point QGIS to the path of the Whitebox 
+Tools executables:
+
+![Plugins]( src/help/wbt.jpg "Plugin Providers")
+
+
 
 # **General notes on input LiDAR data**
 
