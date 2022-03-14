@@ -67,7 +67,7 @@ installed automatically with the Open LiDAR Toolbox. However, additional steps m
 
 LAStools
 
-1) Download the actual LAStools software from here and unzip it to a permanent location, e.g., c:LAStools
+1) Download the actual LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g., c:LAStools
 2) Install the LAStools plugin in QGIS via QGIS/Plugins/Manage and Install Plugins… 
 3) Select the Processing tab and the Providers list item. You should find the LAStools entry there. Select the down
    arrow, and check the Activate checkbox. Lastly, enter name of the LAStools folder that you downloaded previously (see
