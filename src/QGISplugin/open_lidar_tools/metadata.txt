@@ -24,12 +24,13 @@ changelog=1.0 initial version
     1.1 bugfixes
     2.0 Added modules for base data, visualisations, dfm, classify las/laz
     2.1 Bugfix for create DFM, Description update
+    2.2 Workaround for bug with CRS selection, PEP8 formatting
 
 
 # Tags are comma separated with spaces allowed
 tags=python, lidar, raster, archaeology, archeology, laser scanning, ALS, Airborne laser scanning
 
-homepage=https://github.com/stefaneichert/OpenLidarToolbox
+homepage=https://stefaneichert.github.io/OpenLidarToolbox/
 category=Analysis
 icon=icon.png
 # experimental flag
