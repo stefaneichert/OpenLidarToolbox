@@ -24,7 +24,7 @@ changelog=1.0 initial version
     1.1 bugfixes
     2.0 Added modules for base data, visualisations, dfm, classify las/laz
     2.1 Bugfix for create DFM, Description update
-    2.2 Workaround for bug with CRS selection, PEP8 formatting
+    2.2 Workaround for bug with CRS selection, PEP8 formatting. Changed Whitebox dependencies
 
 
 # Tags are comma separated with spaces allowed
