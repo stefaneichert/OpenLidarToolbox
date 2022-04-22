@@ -514,7 +514,7 @@ Process "whitebox_tools" failed to start. Either "whitebox_tools" is missing, or
 </pre>
 
 This error is caused if the additional Whitebox files have not been installed properly respectively if 
-QGIS does not know their location. Please refer to [Whitebox installation instructions](#Whitebox_tools) on how 
+QGIS does not know their location. Please refer to [Whitebox installation instructions](#whitebox-tools) on how 
 to install them properly.
 <br>
 <br>
