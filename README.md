@@ -3,7 +3,7 @@
 ![Logo]( src/QGISplugin/open_lidar_tools/icon.png "Open LiDAR Toolbox")
 
 The toolbox is under active development, current version is
-2.0 ( [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP")
+2.2 ( [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP")
 or install from within QGIS/Plugins/Manage and Install Plugins…)
 
 Open LiDAR Toolbox is a QGIS plug-in that provides one-step-processing of airborne LiDAR data from point cloud to LiDAR
@@ -11,7 +11,7 @@ visualisations. The input required is an unclassified point cloud in LAZ /LAS fo
 outputs needed for interpretative mapping of archaeological features. In addition, several other tools are available for multi-step data processing. The tools are optimized for archaeology, but have
 broader application for anyone primarily interested in visual inspection of airborne LiDAR data or LiDAR for topographic mapping.
 
-Open LiDAR Toolbox is developed in collaboration between NHM Wien, ZRC SAZU, and Graz University as a part of the MALiAp scientific
+Open LiDAR Toolbox is developed in collaboration between Natural History Museum Vienna, ZRC SAZU, and Graz University as a part of the MALiAp scientific
 research project (ARRS N6-0132), which aims at the methodological maturity of airborne LiDAR in archaeology. The
 scientific background for the toolbox is published in open access peer reviewed papers:
 
@@ -47,46 +47,98 @@ elevation)
     * [**DFM Confidence Map**](#dfm-confidence-map)
     * [**Hybrid Interpolation**](#hybrid-interpolation)
     * [**Visualisations from DFM**](#visualisations-from-dfm)
+- [**Troubleshooting**](#troubleshooting)
 - [**Roadmap**](#roadmap)
 
 # **Installation**
 
-The easiest way to install is from QGIS/Plugins/Manage and Install Plugins…  
-You can
-also [download the plugin ZIP file](https://github.com/stefaneichert/OpenLidarToolbox/raw/main/src/QGISplugin/open_lidar_toolbox.zip "Download Plugin as ZIP")
-. Then in QGIS simply choose "Install from ZIP" from the Plugins / Manage and Install Plugins menu. In both cases Open
-LiDAR Toolbox will show up in the processing toolbox. Users who need deeper access to even more settings can download
-individual QGIS models [here](https://github.com/stefaneichert/OpenLidarToolbox/tree/main/src/models "download models").
+If you are installing Open LiDAR Toolbox for the first time:  
+ 
+1) Install QGIS 3.22 or a later version (It was tested on 3.22 and 3.24)  
+2) Install Open LiDAR Toolbox plugin for QGIS (in QGIS go to: Plugins / Manage and Install plugins / All / Open LiDAR Toolbox / Install Plugin).
+
+<pre>
+<img src="src/help/install1.jpg" alt="install">
+</pre>
+
+
+3) Make sure the following plugins are installed: 
+
+<pre>
+<img src="src/help/wbtpl.jpg" alt="wbt">
+WhiteboxTools for QGIS
+</pre>
+
+<pre>
+<img src="src/help/lastoolspl.jpg" alt="wbt">
+LAStools
+</pre>
+
+<pre>
+<img src="src/help/rvtpl.jpg" alt="wbt">
+Relief Visualisation Toolbox
+</pre>
+
+4) Install additional WhiteboxTools files (see instructions below).  
+5) Install additional LAStools files (see instructions below).
+
 
 # **Dependencies**
 
 Open LiDAR Toolbox is a &quot;shell&quot; that uses several excellent tools under the hood: GDAL, GRASS, QGIS native
 tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before Open LiDAR Toolbox:
-LAStools, Whitebox Tools and RVT. If you do not already have these plug-ins installed, RVT and LAStools will be
-installed automatically with the Open LiDAR Toolbox. However, additional steps must be taken.
+LAStools, Whitebox Tools and RVT. If you do not already have these plug-ins installed, they will be
+installed automatically with Open LiDAR Toolbox. However, additional steps must be taken:
 
-LAStools
 
-1) Download the actual LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g., c:LAStools
-2) Install the LAStools plugin in QGIS via QGIS/Plugins/Manage and Install Plugins… 
-3) Select the Processing tab and the Providers list item. You should find the LAStools entry there. Select the down
-   arrow, and check the Activate checkbox. Lastly, enter name of the LAStools folder that you downloaded previously (see
-   note above). If you are using a Mac or Linux computer, things get a bit more complicated*. Wine is your friend!  
-   *If you manage to make LAStools working on a recent macOS, please let us know how!
+## **Whitebox tools**
 
-![Plugins]( src/help/lastools.jpg "Plugin Providers")
+For Whitebox Tools not only the plugin needs to be installed but also the binaries/executables 
+for the respective operating system:
 
-Whitebox tools  
-Download the binaries for your operating system [here](https://www.whiteboxgeo.com/download-whiteboxtools/).
-Extract them to a folder on your system.
-Install the whitebox QGIS plugin on your system. Currently (Mar 2022) it is no longer available 
-from the [developer's repository](https://plugins.bruy.me/). An alternative would be to install it from .zip
-in QGIS/Plugins/Manage and Install Plugins...
-Once the plugin is installed in QGIS you need to point QGIS to the path of the Whitebox 
-Tools executables:
+1) Download the binaries for your operating system [here](https://www.whiteboxgeo.com/download-whiteboxtools/).
+2) Unzip the downloaded folder and put it somewhere safe, e.g. C:/mywhiteboxfolder/
+3) In Qgis, go to Settings / Options.
 
-![Plugins]( src/help/wbt.jpg "Plugin Providers")
+<pre>
+<img src="src/help/wbt1.jpg" alt="Options" width="500"/>
+</pre>
 
+4) Navigate to the Processing tab on the left, then double-click Providers, then double-click WhiteboxTools.
+5) Navigate to the executable file "whitebox_tools" ("whitebox_tools.exe" on Windows) in your WBT folder that you downloaded in step 1.
+6) Click on any other box, e.g. "Scripts", and only then click OK.
+<pre>
+<img src="src/help/wbt.png" alt="wbt">
+</pre>
+7) That is it, you have installed WhiteboxTools for QGIS and you can proceed with the installation of LAStools.
+
+**If you had previous versions of Open LiDAR Toolbox installed:**  
+Please note, as of February 2022, Alex Bruy is no longer distributing any of his numerous 
+QGIS plugins, in protest of the war in Ukraine. In order for QGIS to work properly, 
+you must remove the Alex Brury repository from the Plugin repositories 
+(Plugins / Settings / Plugin Repositories / Delete). 
+Then, remove the existing WhiteboxTools plugin and re-install it following the above instructions.
+
+
+## **LAStools**
+
+For LAStools not only the plugin needs to be installed but also the executables:
+
+1) Download the LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g. "c:/LAStools"
+2) In Qgis, go to Settings / Options.
+
+<pre>
+<img src="src/help/wbt1.jpg" alt="Options" width="500"/>
+</pre>
+
+3) Navigate to the Processing tab on the left, then double-click Providers, then double-click LAStools.
+4) Navigate to the LAStools folder that you downloded in step 1, e.g. "C:/LAStools".
+5) Click on any other box, e.g. "Scripts", and only then click OK.
+<pre>
+<img src="src/help/lastools.jpg" alt="las">
+</pre>
+
+6) If you are working on Linux or Mac, you must also point to a Wine folder in order to be able to execute the windows binaries from LAStools.
 
 
 # **General notes on input LiDAR data**
@@ -443,6 +495,49 @@ visualisations. This cannot be avoided and the only solution is to process large
 
 Štular, B.; Eichert, S.; Lozić, E. Airborne LiDAR Point Cloud Processing for Archaeology. Pipeline and QGIS Toolbox. 
 Remote Sens. 2021, 16, 3225. https://doi.org/10.3390/rs13163225
+
+# **Troubleshooting**
+
+**Error Messages:**
+<pre>LAStools console output
+The system cannot find the path specified.
+</pre>
+
+This error is caused if the additional LAStools files have not been installed properly respectively if 
+QGIS does not know their folder. Please refer to [LAStools installation instructions](#lastools) on how 
+to install them properly.
+<br>
+<br>
+<br>
+<pre>WhiteboxTools output:
+Process "whitebox_tools" failed to start. Either "whitebox_tools" is missing, or you may have insufficient permissions to run the program.
+</pre>
+
+This error is caused if the additional Whitebox files have not been installed properly respectively if 
+QGIS does not know their location. Please refer to [Whitebox installation instructions](#whitebox_tools) on how 
+to install them properly.
+<br>
+<br>
+<br>
+<pre>Traceback (most recent call last):
+File "C:\Users/user1/AppData/Roaming/QGIS/QGIS3\profiles\default/python/plugins\LAStools\LAStools\lasground.py", line 75, in processAlgorithm
+LAStoolsUtils.runLAStools(commands, feedback)
+File "C:\Users/user1/AppData/Roaming/QGIS/QGIS3\profiles\default/python/plugins\LAStools\LAStoolsUtils.py", line 61, in runLAStools
+feedback.pushConsoleInfo(output.decode("utf-8"))
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x9a in position 179: invalid start byte
+
+Execution failed after 56.15 seconds
+</pre>
+
+This error is caused if the file name contains special characters (like š, ž, č) that cannot be decoded by your system.
+In that case you can rename the file avoiding special characters.
+<br>
+<br>
+<br>
+<pre>TypeError: 'fileFilter' is an unknown keyword argument
+</pre>
+
+This error is most probably caused if you are running a QGIS version lower than 3.22
 
 # **Roadmap**
 
