@@ -2,6 +2,10 @@
 
 ![Logo]( src/QGISplugin/open_lidar_tools/icon.png "Open LiDAR Toolbox")
 
+[![version](https://img.shields.io/badge/Version-2.2.1-green)](#)
+[![license](https://img.shields.io/badge/License-GPL--3.0-brightgreen)](https://github.com/stefaneichert/OpenLidarToolbox/blob/main/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5786055.svg)](https://doi.org/10.5281/zenodo.5786055)  
+
 Open LiDAR Toolbox is an actively developed QGIS plug-in that provides one-step-processing of airborne LiDAR data from point cloud to LiDAR
 visualisations. The input required is an unclassified point cloud in LAZ /LAS format and the tool returns several
 outputs needed for interpretative mapping of archaeological features. In addition, several other tools are available for multi-step data processing. The tools are optimized for archaeology, but have
