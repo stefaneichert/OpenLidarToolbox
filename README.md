@@ -93,8 +93,9 @@ For Whitebox Tools not only the plugin needs to be installed but also the binari
 for the respective operating system:
 
 1) Download the binaries for your operating system [here](https://www.whiteboxgeo.com/download-whiteboxtools/).
-2) Unzip the downloaded folder and put it somewhere safe, e.g. C:/mywhiteboxfolder/
-3) In Qgis, go to Settings / Options.
+2) Unzip the downloaded folder and put it somewhere safe, e.g. C:/mywhiteboxfolder/   
+   > **!!! Important: Please make sure the path does not contain spaces or special characters**
+4) In Qgis, go to Settings / Options.
 
 <pre>
 <img src="src/help/wbt1.jpg" alt="Options" width="500"/>
@@ -120,7 +121,8 @@ Then, remove the existing WhiteboxTools plugin and re-install it following the a
 
 For LAStools not only the plugin needs to be installed but also the executables:
 
-1) Download the LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g. "c:/LAStools"
+1) Download the LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g. "c:/LAStools"  
+    > **!!! Important: Please make sure the path does not contain spaces or special characters**
 2) In Qgis, go to Settings / Options.
 
 <pre>
@@ -527,6 +529,74 @@ Execution failed after 56.15 seconds
 
 This error is caused if the file name contains special characters (like š, ž, č) that cannot be decoded by your system.
 In that case you can rename the file avoiding special characters.
+<br>
+<br>
+<br>
+<pre>TypeError: Input parameters:
+
+{ 'CRS' : QgsCoordinateReferenceSystem('EPSG:4882'), 'GPD' : True, 'InputFilelaslaz' :'C:\\LiDAR\\PointCloud.laz', 'LAS' : 'TEMPORARY_OUTPUT', 'LVD' : True, 'LowNoise' : True, 'SetCellSize' : 0.5, 'VisualisationCM' : True, 'VisualisationDFM' : True, 'VisualisationDfME' : True, 'VisualisationHS' : True, 'VisualisationOPN' : True, 'VisualisationSVF' : True, 'VisualisationVAT' : True, 'classLas' : False, 'prefix' : '' }
+
+
+
+LAStools command line
+
+C:/Folder with spaces in path/LAStools\bin\lasground -v -i "C:\LiDAR\PointCloud.laz" -ignore_class 7 -city -ultra_fine -o "C:/Users/Username/AppData/Local/Temp/processing_EgHuxH/c7a29a19bf6c4b148513db3fac318057/lasground1.laz"
+
+LAStools console output
+
+'C:/Folder' is not recognized as an internal or external command, 
+
+operable program or batch file. 
+
+
+
+Results: {'': None}
+</pre>
+
+This error is caused if the folder of the LAStools binaries has spaces in its path. Please refer 
+to [LAStools installation instructions](#lastools) on how to install them properly.
+<br>
+<br>
+<br>
+<pre>WhiteboxTools command:
+
+"C:/folder with spaces/WBT/whitebox_tools.exe" -v --run=LidarPointDensity --input="C:\Users\Username\AppData\Local\Temp\processing_EgHuxH\3b285912c0f2479997199fcd54f724ea\lasheight.las" --returns="all" --resolution=2.0 --radius=10.0 --exclude_cls="0,1,3,4,5,7,8" --output="C:\Users\Korisnik\AppData\Local\Temp\processing_EgHuxH\35588cdbcec74ec793e018ece309f90f\gpd.tif"
+
+WhiteboxTools output:
+
+********************************
+
+* Welcome to LidarPointDensity *
+
+* Powered by WhiteboxTools *
+
+* www.whiteboxgeo.com *
+
+********************************
+
+thread 'main' panicked at 'The system cannot find the file specified. (os error 2)', whitebox-tools-app\src\main.rs:72:21
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Process returned error code 101
+
+Results: {'output': 'C:/Users/Username/AppData/Local/Temp/processing_EgHuxH/35588cdbcec74ec793e018ece309f90f/gpd.tif'}
+
+Unable to execute algorithm
+
+Could not load source layer for input: C:/Users/Username/AppData/Local/Temp/processing_EgHuxH/35588cdbcec74ec793e018ece309f90f/gpd.tif not found
+
+Unable to execute algorithm
+
+Could not load source layer for input: C:/Users/Username/AppData/Local/Temp/processing_EgHuxH/35588cdbcec74ec793e018ece309f90f/gpd.tif not found
+
+Execution failed after 0.48 seconds
+
+</pre>
+
+This error is caused if the folder of the Whitebox binaries has spaces in its path.
+Please refer to [Whitebox installation instructions](#whitebox-tools) on how 
+to install them properly.
 <br>
 <br>
 <br>
