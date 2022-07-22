@@ -533,6 +533,8 @@ Execution failed after 56.15 seconds
 
 This error is caused if the file name contains special characters (like š, ž, č) that cannot be decoded by your system.
 In that case you can rename the file avoiding special characters.
+<br> 
+Also blank spaces in the path may cause this error. Use Folder names without spaces in order to avoid this.
 <br>
 <br>
 <br>
