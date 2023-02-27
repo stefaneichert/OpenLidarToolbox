@@ -115,14 +115,12 @@ class BaseData(QgsProcessingAlgorithm):
             defaultValue=True))
 
     def processAlgorithm(self, parameters, context, model_feedback):
-        """Use a multi-step feedback, so that individual child algorithm
-        progress reports are adjusted for the overall progress through the
-        model
-        """
+
         feedback = QgsProcessingMultiStepFeedback(18, model_feedback)
         results = {}
         outputs = {}
 
+        #if las/laz file is already classified, skip classification
         if parameters['classLas']:
             las_height_classify_file = parameters['InputFilelaslaz']
         else:
@@ -147,6 +145,7 @@ class BaseData(QgsProcessingAlgorithm):
             return {}
         step += 1
 
+        #convert from laz to las if necessary (needed for WBT)
         if parameters['InputFilelaslaz'][-4:] == '.laz':
             alg_params = {
                 'ADDITIONAL_OPTIONS': '',
@@ -172,13 +171,14 @@ class BaseData(QgsProcessingAlgorithm):
             return {}
         step += 1
 
+        #ground point density by WBT
         alg_params = {
             'exclude_cls': '0,1,3,4,5,7,8',
             'input': las_height_classify_file,
             'maxz': None,
             'minz': None,
             'radius': 10,
-            'resolution': 2,
+            'resolution': parameters['SetCellSize'],
             'returns': 0,
             'output': QgsProcessingUtils.generateTempFilename('gpd.tif')}
         ground_point_density_file = alg_params['output']
@@ -252,7 +252,7 @@ class BaseData(QgsProcessingAlgorithm):
             'maxz': None,
             'minz': None,
             'radius': 10,
-            'resolution': 2,
+            'resolution': parameters['SetCellSize'],
             'returns': 0,
             'output': QgsProcessingUtils.generateTempFilename('lvd.tif')
         }
@@ -330,7 +330,7 @@ class BaseData(QgsProcessingAlgorithm):
             'maxz': None,
             'minz': None,
             'parameter': 0,
-            'resolution': 0.5,
+            'resolution': parameters['SetCellSize'],
             'returns': 0,
             'output': QgsProcessingUtils.generateTempFilename('tin.tif')}
         triangulated_network_grid = alg_params['output']
@@ -407,7 +407,7 @@ class BaseData(QgsProcessingAlgorithm):
             'minz': None,
             'parameter': 0,
             'radius': 5,
-            'resolution': 0.5,
+            'resolution': parameters['SetCellSize'],
             'returns': 0,
             'weight': 2,
             'output': QgsProcessingUtils.generateTempFilename('idw.tif')}
