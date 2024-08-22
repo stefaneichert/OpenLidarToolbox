@@ -81,7 +81,7 @@ Relief Visualisation Toolbox
 
  
 4) Install additional LAStools files (see instructions below).
-5) TestInstall additional WhiteboxTools files (see instructions below). 
+5) Install additional WhiteboxTools files (see instructions below). 
 
 
 # **Dependencies**
