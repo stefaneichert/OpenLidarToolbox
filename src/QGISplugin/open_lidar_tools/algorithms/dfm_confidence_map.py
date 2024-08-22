@@ -47,7 +47,7 @@ from qgis.core import QgsProcessingParameterString
 from qgis.core import QgsProcessingUtils
 import processing
 from os.path import exists
-from .utils.utils import getHelpText, setCrs
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 class dfmConfidenceMap(QgsProcessingAlgorithm):
@@ -163,7 +163,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
             'GRASS_REGION_PARAMETER': parameters['DEMDFM'],
             'input': parameters['LowVegetation'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Resampleveg'] = processing.run(
             'grass7:r.resample',
@@ -190,7 +191,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
             'GRASS_REGION_PARAMETER': parameters['DEMDFM'],
             'input': parameters['Groundlayer'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Resamplegpd'] = processing.run(
             'grass7:r.resample',
@@ -216,7 +218,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['SetCellSize'],
             'GRASS_REGION_PARAMETER': parameters['DEMDFM'],
             'input': parameters['DEMDFM'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Resampledem'] = processing.run(
             'grass7:r.resample',
@@ -261,7 +264,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 2,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['denshi'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['DensityHi' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -291,7 +295,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 2,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['densmid'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['DensityMid' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -320,7 +325,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 1,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['denslow'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['DensityLow' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -350,7 +356,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 1,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['densvlow'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['DensityVlow' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -381,7 +388,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 2,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['veglow'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Veglow' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -412,7 +420,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'RANGE_BOUNDARIES': 2,
                 'RASTER_BAND': 1,
                 'TABLE': intermed_params['veghigh'],
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Veghi' + appendix] = processing.run(
                 'native:reclassifybytable',
@@ -438,7 +447,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
         alg_params = {
             'INPUT': outputs['Resampledem']['output'],
             'Z_FACTOR': 1,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['SlopeQgis'] = processing.run(
             'native:slope',
@@ -468,7 +478,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [0, 12.5, 1, 12.5000001, 90, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Slope12'] = processing.run(
             'native:reclassifybytable',
@@ -491,7 +502,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [0, 12.5, 0, 12.500000001, 22.5, 1, 22.500000001, 90, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Slope22'] = processing.run(
             'native:reclassifybytable',
@@ -514,7 +526,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [0, 22.5, 0, 22.50000001, 42.5, 1, 42.50000001, 90, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Slope42'] = processing.run(
             'native:reclassifybytable',
@@ -537,7 +550,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [0, 42.5, 0, 42.50000001, 90, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Slope90'] = processing.run(
             'native:reclassifybytable',
@@ -586,7 +600,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc1a' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -619,7 +634,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc1b' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -652,7 +668,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc2' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -685,7 +702,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc3' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -718,7 +736,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc4a' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -751,7 +770,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc4b' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -784,7 +804,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc5a' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -817,7 +838,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc5b' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -850,7 +872,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calc6' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -883,7 +906,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Calccran1' + appendix] = processing.run(
                 'gdal:rastercalculator',
@@ -916,7 +940,8 @@ class dfmConfidenceMap(QgsProcessingAlgorithm):
                 'NO_DATA': None,
                 'OPTIONS': '',
                 'RTYPE': 4,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
 
             outputs['Calccranfinal' + appendix] = processing.run(
