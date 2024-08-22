@@ -1,6 +1,17 @@
 from qgis.core import QgsCoordinateReferenceSystem
 from qgis.utils import iface
 
+
+def randomfilename():
+    import string
+    import random
+
+    N = 7
+
+    res = ''.join(random.choices(string.ascii_lowercase +
+                                 string.digits, k=N))
+    return str(res) + '.tif'
+
 def setCrs():
     crs = QgsCoordinateReferenceSystem(
         iface.mapCanvas().mapSettings().destinationCrs().authid())
