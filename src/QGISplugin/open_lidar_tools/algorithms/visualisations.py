@@ -50,7 +50,7 @@ from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterRasterLayer
 from qgis.core import QgsProcessingParameterString
 import processing
-from .utils.utils import getHelpText
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 class visualise(QgsProcessingAlgorithm):
@@ -273,7 +273,8 @@ class visualise(QgsProcessingAlgorithm):
                 'INPUT': DFMPatched,
                 'V_ANGLE': 40,
                 'Z_FACTOR': 1,
-                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
             }
             outputs['Hillshade'] = processing.run(
                 'native:hillshade',
