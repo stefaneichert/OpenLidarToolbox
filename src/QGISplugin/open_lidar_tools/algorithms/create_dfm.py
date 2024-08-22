@@ -51,7 +51,7 @@ from qgis.core import QgsProcessingParameterCrs
 from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterString
 import processing
-from .utils.utils import getHelpText, setCrs
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 class CreateDfm(QgsProcessingAlgorithm):
