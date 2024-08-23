@@ -79,8 +79,9 @@ LAStools
 Relief Visualisation Toolbox
 </pre>
 
-4) Install additional WhiteboxTools files (see instructions below).  
-5) Install additional LAStools files (see instructions below).
+ 
+4) Install additional LAStools files (see instructions below).
+5) Install additional WhiteboxTools files (see instructions below). 
 
 
 # **Dependencies**
@@ -89,6 +90,29 @@ Open LiDAR Toolbox is a &quot;shell&quot; that uses several excellent tools unde
 tools, LAStools, Whitebox Tools and RVT. Therefore, the following plug-ins must be installed before Open LiDAR Toolbox:
 LAStools, Whitebox Tools and RVT. If you do not already have these plug-ins installed, they will be
 installed automatically with Open LiDAR Toolbox. However, additional steps must be taken:
+
+
+
+## **LAStools**
+
+For LAStools not only the plugin needs to be installed but also the executables:
+
+1) Download the LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g. "c:/LAStools"  
+    > **!!! Important: Please make sure the path does not contain spaces or special characters**
+2) In Qgis, go to Settings / Options.
+
+<pre>
+<img src="src/help/wbt1.jpg" alt="Options" width="500"/>
+</pre>
+
+3) Navigate to the Processing tab on the left, then double-click Providers, then double-click LAStools.
+4) Navigate to the LAStools folder that you downloded in step 1, e.g. "C:/LAStools".
+5) Click on any other box, e.g. "Scripts", and only then click OK.
+<pre>
+<img src="src/help/lastools.jpg" alt="las">
+</pre>
+
+6) If you are working on Linux or Mac, you must also point to a Wine folder in order to be able to execute the windows binaries from LAStools.
 
 
 ## **Whitebox tools**
@@ -121,28 +145,6 @@ you must remove the Alex Brury repository from the Plugin repositories
 Then, remove the existing WhiteboxTools plugin and re-install it following the above instructions.
 
 
-## **LAStools**
-
-For LAStools not only the plugin needs to be installed but also the executables:
-
-1) Download the LAStools software from [here](https://rapidlasso.com/lastools/) and unzip it to a permanent location, e.g. "c:/LAStools"  
-    > **!!! Important: Please make sure the path does not contain spaces or special characters**
-2) In Qgis, go to Settings / Options.
-
-<pre>
-<img src="src/help/wbt1.jpg" alt="Options" width="500"/>
-</pre>
-
-3) Navigate to the Processing tab on the left, then double-click Providers, then double-click LAStools.
-4) Navigate to the LAStools folder that you downloded in step 1, e.g. "C:/LAStools".
-5) Click on any other box, e.g. "Scripts", and only then click OK.
-<pre>
-<img src="src/help/lastools.jpg" alt="las">
-</pre>
-
-6) If you are working on Linux or Mac, you must also point to a Wine folder in order to be able to execute the windows binaries from LAStools.
-
-
 # **General notes on input LiDAR data**
 
 All tools are designed to work best with data that is in
@@ -150,6 +152,7 @@ All tools are designed to work best with data that is in
 **Processing time increases exponentially with the number of points**, as does the RAM memory requirement. The best
 practice for processing large datasets is to split the data into overlapping tiles (e.g., 20 m overlap), batch process
 the tiles, and “de-collar" (remove the overlaps) the resulting raster datasets.
+
 
 # **Modules**
 

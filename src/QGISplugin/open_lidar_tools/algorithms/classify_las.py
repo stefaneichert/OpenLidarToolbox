@@ -50,7 +50,7 @@ from qgis.core import QgsProcessingParameterFile
 from qgis.core import QgsProcessingParameterFileDestination
 from qgis.core import QgsProcessingParameterBoolean
 import processing
-from .utils.utils import getHelpText
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 
@@ -63,20 +63,20 @@ class ToClassLas(QgsProcessingAlgorithm):
                 'InputFilelaslaz',
                 'Input LAS/LAZ File',
                 behavior=QgsProcessingParameterFile.File,
-                fileFilter='Lidar Files (*.las *.laz)', 
+                fileFilter='Lidar Files (*.las *.laz)',
                 defaultValue=None))
         self.addParameter(
             QgsProcessingParameterBoolean(
-                'LowNoise', 
-                'Remove low noise', 
-                optional=False, 
+                'LowNoise',
+                'Remove low noise',
+                optional=False,
                 defaultValue=False))
         self.addParameter(
             QgsProcessingParameterFileDestination(
-                'LAS', 'Output classified LAS/LAZ', 
+                'LAS', 'Output classified LAS/LAZ',
                 fileFilter='Lidar Files (*.laz *.las)',
                 defaultValue=None,
-                optional=False, 
+                optional=False,
                 createByDefault=False))
 
     def processAlgorithm(self, parameters, context, model_feedback):
@@ -112,7 +112,7 @@ class ToClassLas(QgsProcessingAlgorithm):
             'VERTICAL_FEET': False
         }
         outputs['Lasground1'] = processing.run(
-            'LAStools:lasground',
+            'LAStools:LasGround',
             alg_params,
             context=context,
             feedback=feedback,
@@ -144,7 +144,7 @@ class ToClassLas(QgsProcessingAlgorithm):
 
         lasheightfile = alg_params['OUTPUT_LASLAZ']
         outputs['Lasheight'] = processing.run(
-            'LAStools:lasheight',
+            'LAStools:LasHeight',
             alg_params,
             context=context,
             feedback=feedback,
@@ -171,7 +171,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         }
         lasclassifyfile = alg_params['OUTPUT_LASLAZ']
         outputs['Lasclassify'] = processing.run(
-            'LAStools:lasclassify',
+            'LAStools:LasClassify',
             alg_params,
             context=context,
             feedback=feedback,
@@ -204,7 +204,7 @@ class ToClassLas(QgsProcessingAlgorithm):
             }
             lasnoise = alg_params['OUTPUT_LASLAZ']
             outputs['lasnoise'] = processing.run(
-                'LAStools:lasnoise',
+                'LAStools:LasNoise',
                 alg_params,
                 context=context,
                 feedback=feedback,
@@ -236,7 +236,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         }
         lasground2file = alg_params['OUTPUT_LASLAZ']
         outputs['Lasground2'] = processing.run(
-            'LAStools:lasground',
+            'LAStools:LasGround',
             alg_params,
             context=context,
             feedback=feedback,
@@ -271,7 +271,7 @@ class ToClassLas(QgsProcessingAlgorithm):
         }
         lasheightclassifyfile = alg_params['OUTPUT_LASLAZ']
         outputs['Lasheight_classify'] = processing.run(
-            'LAStools:lasheight_classify',
+            'LAStools:LasHeightClassify',
             alg_params, context=context,
             feedback=feedback,
             is_child_algorithm=True)

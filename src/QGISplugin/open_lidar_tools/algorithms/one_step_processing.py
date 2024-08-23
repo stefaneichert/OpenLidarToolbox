@@ -51,7 +51,7 @@ from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterCrs
 from qgis.core import QgsProcessingParameterBoolean
 from qgis.core import QgsProcessingParameterString
-from .utils.utils import setCrs, getHelpText
+from .utils.utils import getHelpText, setCrs, randomfilename
 import processing
 
 
@@ -207,7 +207,7 @@ class LidarPipeline(QgsProcessingAlgorithm):
                 'OUTPUT_LASLAZ': parameters['LAS']
             }
             outputs['Laszip'] = processing.run(
-                'LAStools:laszip',
+                'LAStools:LasZip',
                 alg_params,
                 context=context,
                 feedback=feedback,

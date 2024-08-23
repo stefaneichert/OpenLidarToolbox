@@ -49,7 +49,7 @@ from qgis.core import (
     QgsProcessingParameterBoolean, QgsProcessingParameterCrs,
     QgsProcessingParameterFile, QgsProcessingParameterNumber,
     QgsProcessingParameterString, QgsProcessingUtils)
-from .utils.utils import getHelpText, setCrs
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 class BaseData(QgsProcessingAlgorithm):
@@ -160,7 +160,7 @@ class BaseData(QgsProcessingAlgorithm):
                 'VERBOSE': False}
             las_height_classify_file = alg_params['OUTPUT_LASLAZ']
             outputs['Laszip'] = processing.run(
-                'LAStools:laszip',
+                'LAStools:LasZip',
                 alg_params,
                 context=context,
                 feedback=feedback,

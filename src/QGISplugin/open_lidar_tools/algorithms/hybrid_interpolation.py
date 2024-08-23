@@ -52,7 +52,7 @@ from qgis.core import QgsProcessingParameterString
 import processing
 import os
 import inspect
-from .utils.utils import getHelpText, setCrs
+from .utils.utils import getHelpText, setCrs, randomfilename
 
 
 class HybridInterpolation(QgsProcessingAlgorithm):
@@ -113,7 +113,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['CellSize'],
             'GRASS_REGION_PARAMETER': parameters['ConfidenceMapRaster'],
             'input': parameters['ConfidenceMapRaster'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['RresampleCfm'] = processing.run(
             'grass7:r.resample',
@@ -135,7 +136,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['CellSize'],
             'GRASS_REGION_PARAMETER': parameters['ConfidenceMapRaster'],
             'input': parameters['TLI'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['RresampleTli'] = processing.run('grass7:r.resample',
                                                  alg_params, context=context,
@@ -156,7 +158,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 0,
             'RASTER_BAND': 1,
             'TABLE': [-0.001, 3, 1, 3, 6, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['RedtmpClassify'] = processing.run(
             'native:reclassifybytable',
@@ -177,7 +180,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'GRASS_REGION_CELLSIZE_PARAMETER': parameters['CellSize'],
             'GRASS_REGION_PARAMETER': parameters['ConfidenceMapRaster'],
             'input': parameters['IDW'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['RresampleIdw'] = processing.run(
             'grass7:r.resample',
@@ -206,7 +210,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'selection': None,
             'size': 11,
             'weight': '',
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['TmpredNeighbours'] = processing.run(
             'grass7:r.neighbors',
@@ -229,7 +234,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 0,
             'RASTER_BAND': 1,
             'TABLE': [-9998, 9999999999, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Alltoone'] = processing.run(
             'native:reclassifybytable',
@@ -252,7 +258,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [1, 1, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['ReclassifyRedtmponenodata'] = processing.run(
             'native:reclassifybytable',
@@ -275,7 +282,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NODATA': 0,
             'OPTIONS': '',
             'TARGET_CRS': None,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Translate1'] = processing.run(
             'gdal:translate',
@@ -301,7 +309,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'new': 1,
             'old': 1,
             'radius': parameters['REDgrowradiusinrastercells'],
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Rgrow2CellsTmpred'] = processing.run(
             'grass7:r.grow',
@@ -324,7 +333,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NODATA': 0,
             'OPTIONS': '',
             'TARGET_CRS': None,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['TranslateRedgrow'] = processing.run(
             'gdal:translate',
@@ -347,7 +357,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [-999999, 0.09, 0, 1, 1.01, 1, 2, 999999, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['ReclassifyNodataToZeroRed'] = processing.run(
             'native:reclassifybytable',
@@ -370,7 +381,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [-999999999, 0.9, 1, 1, 1, 0, 1.1, 9999999, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Onezerotable'] = processing.run(
             'native:reclassifybytable',
@@ -403,7 +415,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NO_DATA': None,
             'OPTIONS': '',
             'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['RedMinusIdwNull'] = processing.run(
             'gdal:rastercalculator',
@@ -456,7 +469,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 2,
             'RASTER_BAND': 1,
             'TABLE': [1, 1, 0, 0, 0, 1],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['BluetmpReclass'] = processing.run(
             'native:reclassifybytable',
@@ -480,7 +494,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'distances': '1',
             'input': redforbuffer,
             'units': 0,
-            'output': QgsProcessing.TEMPORARY_OUTPUT
+            'output': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Rbuffer'] = processing.run(
             'grass7:r.buffer',
@@ -503,7 +518,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NODATA': 0,
             'OPTIONS': '',
             'TARGET_CRS': None,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['TranslateConvertFormat'] = processing.run(
             'gdal:translate',
@@ -526,7 +542,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'RANGE_BOUNDARIES': 0,
             'RASTER_BAND': 1,
             'TABLE': [-1, 1, 0, 1, 2, 1, 2, 256, 0],
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['ReclassifyNodataToZero'] = processing.run(
             'native:reclassifybytable',
@@ -559,7 +576,8 @@ class HybridInterpolation(QgsProcessingAlgorithm):
             'NO_DATA': None,
             'OPTIONS': '',
             'RTYPE': 4,
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            'OUTPUT': QgsProcessingUtils.generateTempFilename(
+                randomfilename())
         }
         outputs['Bluecalculator'] = processing.run(
             'gdal:rastercalculator',

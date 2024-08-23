@@ -4,13 +4,13 @@
 
 [general]
 name=Open LiDAR Toolbox
-qgisMinimumVersion=3.18.0
+qgisMinimumVersion=3.34.1
 description=Open Tools for LiDAR Data Preparation and Analysis in Archaeology
-version=2.2.2
+version=2.4
 author=Stefan Eichert, Benjamin Štular, Edisa Lozić
 email=stefaneichert@gmail.com, bstular@zrc-sazu.si, Edisa.lozic@gmail.com
 
-about=Open Open LiDAR Toolbox is a QGIS plug-in for one-step-processing of airborne LiDAR data from point cloud to LiDAR visualisations. The required input is an unclassified point cloud in LAZ/LAS format and the tool returns outputs needed for interpretative mapping of archaeological features. In addition, several other tools are available for multi-step data processing. The tools are optimised for archaeology, but have a broader application for anyone primarily interested in visual inspection of airborne LiDAR, e.g., topographic mapping. List of tools: * 0NE (One-step- processing); * Classify LAS/LAZ; * Create base data; * DFM confidence map; * Hybrid interpolation; * Visualisations (from DFM).
+about=Open Open LiDAR Toolbox is a QGIS plug-in for one-step-processing of airborne LiDAR data from point cloud to LiDAR visualisations. The required input is an unclassified point cloud in LAZ/LAS format and the tool returns outputs needed for interpretative mapping of archaeological features. In addition, several other tools are available for multi-step data processing. The tools are optimised for archaeology, but have a broader application for anyone primarily interested in visual inspection of airborne LiDAR, e.g., topographic mapping. List of tools: * 0NE (One-step- processing); * Classify LAS/LAZ; * Create base data; * DFM confidence map; * Hybrid interpolation; * Visualisations (from DFM). Further contributers: Elias Grünbacher, Alexander Watzinger
 
 tracker=https://github.com/stefaneichert/OpenLidarTools/issues
 repository=https://github.com/stefaneichert/OpenLidarTools
@@ -27,6 +27,7 @@ changelog=1.0 initial version
     2.2 Workaround for bug with CRS selection, PEP8 formatting. Changed Whitebox dependencies
     2.2.1. Fixes for dependencies
     2.2.2. Fixed bug with non-default resolution
+    2.3 Adaptions to new WBT and LAStools Versions
 
 
 # Tags are comma separated with spaces allowed
