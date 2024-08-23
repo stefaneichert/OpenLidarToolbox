@@ -6,7 +6,7 @@
 name=Open LiDAR Toolbox
 qgisMinimumVersion=3.34.1
 description=Open Tools for LiDAR Data Preparation and Analysis in Archaeology
-version=2.4
+version=2.3
 author=Stefan Eichert, Benjamin Štular, Edisa Lozić
 email=stefaneichert@gmail.com, bstular@zrc-sazu.si, Edisa.lozic@gmail.com
 
@@ -27,7 +27,7 @@ changelog=1.0 initial version
     2.2 Workaround for bug with CRS selection, PEP8 formatting. Changed Whitebox dependencies
     2.2.1. Fixes for dependencies
     2.2.2. Fixed bug with non-default resolution
-    2.3 Adaptions to new WBT and LAStools Versions
+    2.3 Adaptions to new QGIS and LAStools Versions
 
 
 # Tags are comma separated with spaces allowed
